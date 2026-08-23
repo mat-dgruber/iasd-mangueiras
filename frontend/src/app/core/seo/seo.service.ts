@@ -15,7 +15,12 @@ export class SeoService {
 
     this.title.setTitle(page.title);
     this.meta.updateTag({ name: 'description', content: page.description });
-    this.meta.updateTag({ name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' });
+    this.meta.updateTag({
+      name: 'robots',
+      content: page.noIndex
+        ? 'noindex, nofollow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+    });
     this.meta.updateTag({ property: 'og:title', content: page.title });
     this.meta.updateTag({ property: 'og:description', content: page.description });
     this.meta.updateTag({ property: 'og:url', content: url });
@@ -25,15 +30,33 @@ export class SeoService {
     this.meta.updateTag({ name: 'twitter:title', content: page.title });
     this.meta.updateTag({ name: 'twitter:description', content: page.description });
 
-    if (page.image) {
-      this.meta.updateTag({ property: 'og:image', content: page.image });
-      this.meta.updateTag({ name: 'twitter:image', content: page.image });
-    }
+    const imageUrl = page.image || `${SITE_CONFIG.siteUrl}/favicon.ico`;
+    this.meta.updateTag({ property: 'og:image', content: imageUrl });
+    this.meta.updateTag({ name: 'twitter:image', content: imageUrl });
 
     this.setCanonical(url);
     this.setJsonLd('organization-jsonld', this.organizationJsonLd());
     this.setJsonLd('church-jsonld', this.churchJsonLd());
     this.setJsonLd('website-jsonld', this.websiteJsonLd());
+
+    if (page.faqs && page.faqs.length > 0) {
+      this.setJsonLd('faq-jsonld', this.faqJsonLd(page.faqs));
+    }
+  }
+
+  faqJsonLd(faqs: { question: string; answer: string }[]): object {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: faq.answer,
+        },
+      })),
+    };
   }
 
   organizationJsonLd(): object {
@@ -85,7 +108,6 @@ export class SeoService {
   }
 
   private websiteJsonLd(): object {
-
     return {
       '@context': 'https://schema.org',
       '@type': 'WebSite',

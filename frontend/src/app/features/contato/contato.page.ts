@@ -23,22 +23,25 @@ import { SITE_CONFIG } from '../../core/site/site.config';
           <span class="inline-block rounded bg-advent-neutral px-3 py-1 text-xs font-bold uppercase tracking-wider text-advent-blue">
             Estamos com Você
           </span>
-          <h1 class="mt-3 text-4xl font-bold tracking-tight text-advent-text md:text-5xl">Contato e Pedido de Oração</h1>
+          <h1 class="mt-3 text-4xl font-bold tracking-tight text-advent-text md:text-5xl">
+            Contato e Pedido de Oração
+          </h1>
           <p class="mt-4 text-lg text-advent-muted leading-relaxed">
-            Seja para tirar dúvidas sobre a igreja, pedir uma oração ou falar com nossa equipe pastoral, preencha o formulário abaixo ou fale conosco pelo WhatsApp.
+            Seja para tirar dúvidas sobre a igreja, pedir uma oração ou solicitar um estudo bíblico gratuito, preencha o formulário abaixo ou fale conosco pelo WhatsApp.
           </p>
+
         </header>
 
-        <div class="mt-12 grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+        <div class="mt-12 grid gap-10 lg:grid-cols-[1.25fr_0.75fr]">
           <!-- Área de Formulários -->
           <div class="rounded-section border border-advent-border bg-white p-6 md:p-8 shadow-sm">
             <!-- Alternador de Abas -->
-            <div class="flex border-b border-advent-border mb-8" role="tablist">
+            <div class="flex flex-wrap border-b border-advent-border mb-8 gap-2" role="tablist">
               <button
                 type="button"
                 role="tab"
                 [attr.aria-selected]="activeTab() === 'contato'"
-                class="pb-3 px-4 text-sm font-bold transition-colors relative"
+                class="pb-3 px-4 text-sm font-bold transition-colors relative cursor-pointer"
                 [class.text-advent-blue]="activeTab() === 'contato'"
                 [class.text-advent-muted]="activeTab() !== 'contato'"
                 (click)="setTab('contato')"
@@ -52,7 +55,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 type="button"
                 role="tab"
                 [attr.aria-selected]="activeTab() === 'oracao'"
-                class="pb-3 px-4 text-sm font-bold transition-colors relative"
+                class="pb-3 px-4 text-sm font-bold transition-colors relative cursor-pointer"
                 [class.text-advent-blue]="activeTab() === 'oracao'"
                 [class.text-advent-muted]="activeTab() !== 'oracao'"
                 (click)="setTab('oracao')"
@@ -62,13 +65,41 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                   <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-advent-blue"></span>
                 }
               </button>
+              <button
+                type="button"
+                role="tab"
+                [attr.aria-selected]="activeTab() === 'estudo'"
+                class="pb-3 px-4 text-sm font-bold transition-colors relative cursor-pointer"
+                [class.text-advent-blue]="activeTab() === 'estudo'"
+                [class.text-advent-muted]="activeTab() !== 'estudo'"
+                (click)="setTab('estudo')"
+              >
+                Estudo Bíblico 📖
+                @if (activeTab() === 'estudo') {
+                  <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-advent-blue"></span>
+                }
+              </button>
             </div>
 
             <!-- Feedback de Sucesso -->
             @if (successMessage()) {
-              <div class="mb-6 rounded-card border border-green-200 bg-green-50 p-4 text-green-800" role="status">
-                <p class="font-bold">✓ Sucesso!</p>
-                <p class="text-sm mt-1">{{ successMessage() }}</p>
+              <div class="mb-6 rounded-card border border-green-200 bg-green-50 p-4 text-green-800 animate-fadeIn" role="status">
+                <p class="font-bold flex items-center gap-2">
+                  <span class="flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-white text-xs">✓</span>
+                  Mensagem Enviada com Sucesso!
+                </p>
+                <p class="text-sm mt-1.5">{{ successMessage() }}</p>
+              </div>
+            }
+
+            <!-- Feedback de Erro -->
+            @if (errorMessage()) {
+              <div class="mb-6 rounded-card border border-red-200 bg-red-50 p-4 text-red-800 animate-fadeIn" role="alert">
+                <p class="font-bold flex items-center gap-2">
+                  <span class="flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-white text-xs">!</span>
+                  Não foi possível enviar
+                </p>
+                <p class="text-sm mt-1.5">{{ errorMessage() }}</p>
               </div>
             }
 
@@ -110,8 +141,10 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                       id="contato-telefone"
                       type="tel"
                       formControlName="telefone"
+                      (input)="formatPhone($event, contatoForm, 'telefone')"
                       class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
                       placeholder="(15) 99999-9999"
+                      maxlength="15"
                     />
                   </div>
                 </div>
@@ -133,7 +166,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 <button
                   type="submit"
                   [disabled]="contatoForm.invalid || isSubmitting()"
-                  class="w-full sm:w-auto rounded-card bg-advent-blue px-8 py-3 font-semibold text-white shadow transition-colors hover:bg-advent-blue-dark disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="w-full sm:w-auto rounded-card bg-advent-blue px-8 py-3.5 font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {{ isSubmitting() ? 'Enviando...' : 'Enviar Mensagem' }}
                 </button>
@@ -164,8 +197,10 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                       id="oracao-telefone"
                       type="tel"
                       formControlName="telefone"
+                      (input)="formatPhone($event, oracaoForm, 'telefone')"
                       class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
                       placeholder="(15) 99999-9999"
+                      maxlength="15"
                     />
                   </div>
                 </div>
@@ -189,9 +224,9 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                     id="oracao-confidencial"
                     type="checkbox"
                     formControlName="confidencial"
-                    class="h-4 w-4 rounded border-advent-border text-advent-blue focus:ring-advent-blue"
+                    class="h-4 w-4 rounded border-advent-border text-advent-blue focus:ring-advent-blue cursor-pointer"
                   />
-                  <label for="oracao-confidencial" class="text-sm text-advent-text">
+                  <label for="oracao-confidencial" class="text-sm text-advent-text cursor-pointer">
                     Desejo que este pedido seja confidencial (somente equipe pastoral e liderança).
                   </label>
                 </div>
@@ -199,9 +234,85 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 <button
                   type="submit"
                   [disabled]="oracaoForm.invalid || isSubmitting()"
-                  class="w-full sm:w-auto rounded-card bg-advent-blue px-8 py-3 font-semibold text-white shadow transition-colors hover:bg-advent-blue-dark disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="w-full sm:w-auto rounded-card bg-advent-blue px-8 py-3.5 font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {{ isSubmitting() ? 'Enviando...' : 'Enviar Pedido de Oração' }}
+                </button>
+              </form>
+            }
+
+            <!-- Formulário de Estudo Bíblico -->
+            @if (activeTab() === 'estudo') {
+              <form [formGroup]="estudoForm" (ngSubmit)="submitEstudo()" class="space-y-5" aria-label="Formulário de solicitação de estudo bíblico">
+                <div class="rounded-card border border-blue-100 bg-blue-50/60 p-4 text-xs text-advent-blue leading-relaxed">
+                  📖 <strong>Estudo Bíblico Gratuito:</strong> Você receberá materiais práticos para estudar as profecias e os ensinamentos bíblicos de forma dinâmica e sem custo algum.
+                </div>
+
+                <div>
+                  <label for="estudo-nome" class="block text-sm font-semibold text-advent-text mb-1">Seu Nome *</label>
+                  <input
+                    id="estudo-nome"
+                    type="text"
+                    formControlName="nome"
+                    class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
+                    placeholder="Seu nome"
+                  />
+                  @if (estudoForm.get('nome')?.touched && estudoForm.get('nome')?.invalid) {
+                    <p class="mt-1 text-xs text-red-600">Por favor, informe seu nome.</p>
+                  }
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label for="estudo-email" class="block text-sm font-semibold text-advent-text mb-1">E-mail *</label>
+                    <input
+                      id="estudo-email"
+                      type="email"
+                      formControlName="email"
+                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
+                      placeholder="seu@email.com"
+                    />
+                    @if (estudoForm.get('email')?.touched && estudoForm.get('email')?.invalid) {
+                      <p class="mt-1 text-xs text-red-600">Informe um e-mail válido.</p>
+                    }
+                  </div>
+
+                  <div>
+                    <label for="estudo-telefone" class="block text-sm font-semibold text-advent-text mb-1">WhatsApp / Telefone *</label>
+                    <input
+                      id="estudo-telefone"
+                      type="tel"
+                      formControlName="telefone"
+                      (input)="formatPhone($event, estudoForm, 'telefone')"
+                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
+                      placeholder="(15) 99999-9999"
+                      maxlength="15"
+                    />
+                    @if (estudoForm.get('telefone')?.touched && estudoForm.get('telefone')?.invalid) {
+                      <p class="mt-1 text-xs text-red-600">Informe seu WhatsApp para envio do material.</p>
+                    }
+                  </div>
+                </div>
+
+                <div>
+                  <label for="estudo-preferencia" class="block text-sm font-semibold text-advent-text mb-1">Como prefere estudar?</label>
+                  <select
+                    id="estudo-preferencia"
+                    formControlName="preferencia"
+                    class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue bg-white"
+                  >
+                    <option value="digital">Guia Digital por WhatsApp / E-mail</option>
+                    <option value="presencial">Presencialmente com um instrutor na igreja</option>
+                    <option value="correio">Material impresso gratuito</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  [disabled]="estudoForm.invalid || isSubmitting()"
+                  class="w-full sm:w-auto rounded-card bg-advent-blue px-8 py-3.5 font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  {{ isSubmitting() ? 'Enviando...' : 'Solicitar Estudo Gratuito' }}
                 </button>
               </form>
             }
@@ -211,13 +322,15 @@ import { SITE_CONFIG } from '../../core/site/site.config';
           <aside class="space-y-6">
             <!-- Card de WhatsApp -->
             <div class="rounded-section border border-green-200 bg-green-50 p-6 md:p-8">
-              <span class="text-xs font-bold uppercase tracking-wider text-green-800">Atendimento Rápido</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-green-800">
+                Atendimento Rápido
+              </span>
               <h2 class="mt-2 text-2xl font-bold text-green-950">Fale pelo WhatsApp</h2>
               <p class="mt-2 text-sm text-green-900 leading-relaxed">
-                Prefere conversar diretamente pelo celular? Nossa equipe de atendimento e recepção pode tirar suas dúvidas em tempo real.
+                Prefere conversar diretamente pelo celular? Nossa equipe de acolhimento e recepção pode tirar suas dúvidas em tempo real.
               </p>
               <a
-                class="mt-6 inline-flex items-center gap-2 rounded-card bg-green-700 px-6 py-3 font-semibold text-white shadow hover:bg-green-800 transition-colors"
+                class="mt-6 inline-flex items-center gap-2 rounded-card bg-green-700 px-6 py-3.5 font-semibold text-white shadow transition-all hover:bg-green-800 active:scale-[0.98] active:shadow-inner"
                 [href]="whatsAppLink"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -228,13 +341,20 @@ import { SITE_CONFIG } from '../../core/site/site.config';
 
             <!-- Card de Localização / Horários -->
             <div class="rounded-section border border-advent-border bg-advent-neutral p-6 md:p-8">
-              <h2 class="text-xl font-bold text-advent-text">Cultos Presenciais</h2>
-              <p class="mt-2 text-sm text-advent-muted">Venha nos visitar em nossos horários regulares:</p>
+              <span class="text-xs font-bold uppercase tracking-wider text-advent-blue">Visite-nos</span>
+              <h2 class="mt-1 text-xl font-bold text-advent-text">Cultos Presenciais</h2>
+              <p class="mt-2 text-sm text-advent-muted">
+                Venha nos visitar em nossos encontros regulares:
+              </p>
               <ul class="mt-4 space-y-2 text-sm text-advent-text">
                 <li>• <strong>Sábados:</strong> 09:00 (Escola Sabatina) e 10:15 (Culto Divino)</li>
+                <li>• <strong>Sábados:</strong> 17:00 (Culto Jovem / JA)</li>
                 <li>• <strong>Quartas:</strong> 19:30 (Culto de Oração)</li>
               </ul>
-              <a class="mt-4 inline-block text-sm font-semibold text-advent-blue hover:underline" href="/horarios">
+              <a
+                class="mt-5 inline-block text-sm font-semibold text-advent-blue hover:underline"
+                href="/horarios"
+              >
                 Ver endereço e mapa →
               </a>
             </div>
@@ -249,9 +369,10 @@ export class ContatoPage {
   private readonly contatoService = inject(ContatoService);
   private readonly seo = inject(SeoService);
 
-  readonly activeTab = signal<'contato' | 'oracao'>('contato');
+  readonly activeTab = signal<'contato' | 'oracao' | 'estudo'>('contato');
   readonly isSubmitting = signal<boolean>(false);
   readonly successMessage = signal<string | null>(null);
+  readonly errorMessage = signal<string | null>(null);
 
   readonly contatoForm = new FormGroup({
     nome: new FormControl('', [Validators.required, Validators.minLength(2)]),
@@ -267,24 +388,55 @@ export class ContatoPage {
     confidencial: new FormControl(false),
   });
 
-  protected readonly whatsAppLink = this.contatoService.getWhatsAppLink('Olá! Gostaria de falar com a equipe da IASD Mangueiras.');
+  readonly estudoForm = new FormGroup({
+    nome: new FormControl('', [Validators.required, Validators.minLength(2)]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    telefone: new FormControl('', [Validators.required, Validators.minLength(10)]),
+    preferencia: new FormControl('digital'),
+  });
+
+  protected readonly whatsAppLink = this.contatoService.getWhatsAppLink(
+    'Olá! Gostaria de falar com a equipe da IASD Mangueiras.',
+  );
 
   constructor() {
     this.seo.apply({
-      title: 'Contato e Pedido de Oração — IASD Mangueiras',
-      description: 'Fale com a equipe pastoral da IASD Mangueiras em Tatuí-SP, tire dúvidas sobre programações ou envie seu pedido de oração.',
+      title: 'Contato, Oração & Estudos Bíblicos — IASD Mangueiras',
+      description:
+        'Fale com a equipe da IASD Mangueiras em Tatuí-SP, tire dúvidas sobre programações, solicite um estudo bíblico gratuito ou envie seu pedido de oração.',
       path: '/contato',
     });
   }
 
-  setTab(tab: 'contato' | 'oracao'): void {
+  setTab(tab: 'contato' | 'oracao' | 'estudo'): void {
     this.activeTab.set(tab);
     this.successMessage.set(null);
+    this.errorMessage.set(null);
+  }
+
+  formatPhone(event: Event, form: FormGroup, controlName: string): void {
+    const input = event.target as HTMLInputElement;
+    let digits = input.value.replace(/\D/g, '');
+    if (digits.length > 11) digits = digits.slice(0, 11);
+
+    let formatted = '';
+    if (digits.length > 0) {
+      formatted = `(${digits.slice(0, 2)}`;
+      if (digits.length > 2) {
+        if (digits.length > 6) {
+          formatted += `) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+        } else {
+          formatted += `) ${digits.slice(2)}`;
+        }
+      }
+    }
+    form.get(controlName)?.setValue(formatted, { emitEvent: false });
   }
 
   submitContato(): void {
     if (this.contatoForm.invalid) return;
     this.isSubmitting.set(true);
+    this.errorMessage.set(null);
     const formValue = this.contatoForm.value;
     this.contatoService
       .sendContato({
@@ -293,16 +445,25 @@ export class ContatoPage {
         telefone: formValue.telefone || undefined,
         mensagem: formValue.mensagem || '',
       })
-      .subscribe((res) => {
-        this.isSubmitting.set(false);
-        this.successMessage.set(res.message);
-        this.contatoForm.reset();
+      .subscribe({
+        next: (res) => {
+          this.isSubmitting.set(false);
+          this.successMessage.set(res.message);
+          this.contatoForm.reset();
+        },
+        error: () => {
+          this.isSubmitting.set(false);
+          this.errorMessage.set(
+            'Não foi possível enviar a mensagem. Por favor, tente novamente ou fale conosco pelo WhatsApp.',
+          );
+        },
       });
   }
 
   submitOracao(): void {
     if (this.oracaoForm.invalid) return;
     this.isSubmitting.set(true);
+    this.errorMessage.set(null);
     const formValue = this.oracaoForm.value;
     this.contatoService
       .sendOracao({
@@ -311,10 +472,49 @@ export class ContatoPage {
         pedido: formValue.pedido || '',
         confidencial: formValue.confidencial || false,
       })
-      .subscribe((res) => {
-        this.isSubmitting.set(false);
-        this.successMessage.set(res.message);
-        this.oracaoForm.reset();
+      .subscribe({
+        next: (res) => {
+          this.isSubmitting.set(false);
+          this.successMessage.set(res.message);
+          this.oracaoForm.reset();
+        },
+        error: () => {
+          this.isSubmitting.set(false);
+          this.errorMessage.set(
+            'Não foi possível enviar seu pedido. Por favor, tente novamente ou fale conosco pelo WhatsApp.',
+          );
+        },
+      });
+  }
+
+  submitEstudo(): void {
+    if (this.estudoForm.invalid) return;
+    this.isSubmitting.set(true);
+    this.errorMessage.set(null);
+    const formValue = this.estudoForm.value;
+    const msg = `Solicitação de Estudo Bíblico gratuito (${formValue.preferencia || 'digital'}). Telefone: ${formValue.telefone}`;
+
+    this.contatoService
+      .sendContato({
+        nome: formValue.nome || '',
+        email: formValue.email || '',
+        telefone: formValue.telefone || undefined,
+        mensagem: msg,
+      })
+      .subscribe({
+        next: () => {
+          this.isSubmitting.set(false);
+          this.successMessage.set(
+            'Sua solicitação de Estudo Bíblico foi recebida com sucesso! Nossa equipe entrará em contato via WhatsApp/E-mail.',
+          );
+          this.estudoForm.reset({ preferencia: 'digital' });
+        },
+        error: () => {
+          this.isSubmitting.set(false);
+          this.errorMessage.set(
+            'Não foi possível enviar a solicitação. Por favor, tente novamente ou nos envie uma mensagem no WhatsApp.',
+          );
+        },
       });
   }
 }

@@ -1,25 +1,72 @@
-import { Injectable } from '@angular/core';
-import horarios from '../../../content/horarios.json';
-import eventos from '../../../content/eventos.json';
-import comunicados from '../../../content/comunicados.json';
-import ministerios from '../../../content/ministerios.json';
+import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import defaultHorarios from '../../../content/horarios.json';
+import defaultEventos from '../../../content/eventos.json';
+import defaultComunicados from '../../../content/comunicados.json';
+import defaultMinisterios from '../../../content/ministerios.json';
 import { Comunicado, Evento, Horario, Ministerio } from '../models/content.models';
+import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable({ providedIn: 'root' })
 export class ContentService {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly firebase = inject(FirebaseService);
+
+  private readonly _horarios = signal<readonly Horario[]>(defaultHorarios as readonly Horario[]);
+  private readonly _eventos = signal<readonly Evento[]>(defaultEventos as readonly Evento[]);
+  private readonly _comunicados = signal<readonly Comunicado[]>(
+    defaultComunicados as readonly Comunicado[],
+  );
+  private readonly _ministerios = signal<readonly Ministerio[]>(
+    defaultMinisterios as readonly Ministerio[],
+  );
+
+  constructor() {
+    if (isPlatformBrowser(this.platformId) && this.firebase.firestore) {
+      try {
+        // Listener de Eventos em Tempo Real
+        const eventosCol = collection(this.firebase.firestore, 'eventos');
+        const qEventos = query(eventosCol, orderBy('data', 'asc'));
+        onSnapshot(qEventos, (snap) => {
+          if (!snap.empty) {
+            const list = snap.docs.map(
+              (doc) => ({ id: doc.id, ...doc.data() }) as unknown as Evento,
+            );
+            this._eventos.set(list);
+          }
+        });
+
+        // Listener de Comunicados em Tempo Real
+        const comunicadosCol = collection(this.firebase.firestore, 'comunicados');
+        onSnapshot(comunicadosCol, (snap) => {
+          if (!snap.empty) {
+            const list = snap.docs.map(
+              (doc) => ({ id: doc.id, ...doc.data() }) as unknown as Comunicado,
+            );
+            this._comunicados.set(list.filter((c) => c.ativo !== false));
+          }
+        });
+      } catch {
+        // Silencioso se offline ou regras em modo rascunho
+      }
+    }
+  }
+
   horarios(): readonly Horario[] {
-    return horarios as readonly Horario[];
+    return this._horarios();
   }
 
   eventos(): readonly Evento[] {
-    return eventos as readonly Evento[];
+    return this._eventos();
   }
 
   comunicados(): readonly Comunicado[] {
-    return comunicados as readonly Comunicado[];
+    return this._comunicados();
   }
 
   ministerios(): readonly Ministerio[] {
-    return ministerios as readonly Ministerio[];
+    return this._ministerios();
   }
 }
+

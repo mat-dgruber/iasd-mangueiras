@@ -17,8 +17,12 @@ describe('SeoService', () => {
     const robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
 
     expect(document.title).toBe('Horários — IASD Mangueiras');
-    expect(document.querySelector('meta[name="description"]')?.getAttribute('content')).toContain('Conheça os horários');
-    expect(robots?.getAttribute('content')).toBe('index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    expect(document.querySelector('meta[name="description"]')?.getAttribute('content')).toContain(
+      'Conheça os horários',
+    );
+    expect(robots?.getAttribute('content')).toBe(
+      'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+    );
     expect(canonical?.href).toBe('https://iasdmangueiras.org.br/horarios');
   });
 
@@ -35,10 +39,38 @@ describe('SeoService', () => {
 
   it('gera JSON-LD Church com openingHoursSpecification', () => {
     const service = TestBed.inject(SeoService);
-    const json = service.churchJsonLd() as { [key: string]: unknown; openingHoursSpecification: unknown[] };
+    const json = service.churchJsonLd() as {
+      [key: string]: unknown;
+      openingHoursSpecification: unknown[];
+    };
 
     expect(json['@type']).toBe('Church');
     expect(json.openingHoursSpecification.length).toBeGreaterThan(0);
   });
-});
 
+  it('gera JSON-LD FAQPage corretamente', () => {
+    const service = TestBed.inject(SeoService);
+    const json = service.faqJsonLd([{ question: 'Qual o horário?', answer: 'Sábado às 09h' }]) as {
+      [key: string]: unknown;
+      mainEntity: unknown[];
+    };
+
+    expect(json['@type']).toBe('FAQPage');
+    expect(json.mainEntity.length).toBe(1);
+  });
+
+  it('aplica noindex quando configurado', () => {
+    const service = TestBed.inject(SeoService);
+    const document = TestBed.inject(DOCUMENT);
+
+    service.apply({
+      title: 'Página Não Encontrada',
+      description: '404',
+      path: '/404',
+      noIndex: true,
+    });
+
+    const robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    expect(robots?.getAttribute('content')).toBe('noindex, nofollow');
+  });
+});

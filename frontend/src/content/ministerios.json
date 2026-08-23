@@ -1,31 +1,37 @@
 [
   {
     "nome": "Recepção e Acolhimento",
+    "categoria": "Comunicação & Acolhimento",
     "descricao": "Acolhimento caloroso de membros e visitantes na chegada a todos os cultos."
   },
   {
     "nome": "Ministério da Criança",
+    "categoria": "Novas Gerações & Família",
     "descricao": "Espaço educativo, acolhedor e lúdico para ensinar valores cristãos aos pequenos."
   },
   {
     "nome": "Jovens Adventistas (JA)",
+    "categoria": "Novas Gerações & Família",
     "descricao": "Mobilização de juventude em comunhão, relacionamentos saudáveis e missão."
   },
   {
     "nome": "Desbravadores e Aventureiros",
+    "categoria": "Novas Gerações & Família",
     "descricao": "Desenvolvimento físico, mental e espiritual de crianças e adolescentes ao ar livre e em equipe."
   },
   {
     "nome": "Música e Louvor",
+    "categoria": "Louvor & Adoração",
     "descricao": "Condução do louvor congregacional e apresentações musicais com reverência."
   },
   {
     "nome": "Ação Solidária Adventista (ASA)",
+    "categoria": "Ação Social & Comunidade",
     "descricao": "Apoio prático e assistência a famílias em situação de vulnerabilidade em Tatuí."
   },
   {
     "nome": "Comunicação",
+    "categoria": "Comunicação & Acolhimento",
     "descricao": "Gestão das transmissões ao vivo, redes sociais, avisos e canais digitais."
   }
 ]
-
