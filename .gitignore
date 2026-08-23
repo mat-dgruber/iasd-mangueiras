@@ -109,3 +109,4 @@ htmlcov/
 .openclaude/
 .playwright-mcp/
 continue-*.md
+.agents/
