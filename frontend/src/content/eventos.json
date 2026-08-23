@@ -1,0 +1,24 @@
+[
+  {
+    "titulo": "Semana de Oração da Família",
+    "data": "15 a 22 de Março",
+    "horario": "19:30",
+    "descricao": "Encontros especiais todas as noites voltados para o fortalecimento e a comunhão dos lares.",
+    "href": "/contato"
+  },
+  {
+    "titulo": "Culto Jovem Especial de Louvor",
+    "data": "Último Sábado do Mês",
+    "horario": "17:00",
+    "descricao": "Uma tarde de música, testemunhos e confraternização com a juventude da região.",
+    "href": "/ao-vivo"
+  },
+  {
+    "titulo": "Mutirão da Solidariedade (ASA)",
+    "data": "Primeiro Domingo do Mês",
+    "horario": "09:00",
+    "descricao": "Arrecadação e montagem de cestas básicas para apoio às famílias atendidas pela ASA.",
+    "href": "/contato"
+  }
+]
+

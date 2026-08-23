@@ -1,0 +1,27 @@
+[
+  {
+    "titulo": "Escola Sabatina",
+    "dia": "Sábado",
+    "horario": "09:00",
+    "descricao": "Estudo interativo da Bíblia e da Lição em classes para todas as idades."
+  },
+  {
+    "titulo": "Culto Divino / Adoração",
+    "dia": "Sábado",
+    "horario": "10:15",
+    "descricao": "Momento solene de louvor, oração e proclamação da mensagem bíblica."
+  },
+  {
+    "titulo": "Culto de Oração e Estudo",
+    "dia": "Quarta-feira",
+    "horario": "19:30",
+    "descricao": "Encontro no meio da semana para renovação espiritual e momentos de intercessão."
+  },
+  {
+    "titulo": "Culto Jovem (JA)",
+    "dia": "Sábado",
+    "horario": "17:00",
+    "descricao": "Programação dinâmica focada na juventude, louvor e testemunhos."
+  }
+]
+

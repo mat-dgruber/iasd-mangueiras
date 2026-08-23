@@ -1,0 +1,42 @@
+# IASD Mangueiras — mapa completo para agentes
+
+## Identidade
+
+Nome: IASD Mangueiras
+Nome completo: Igreja Adventista do Sétimo Dia das Mangueiras
+Cidade: Tatuí-SP
+Idioma: português do Brasil
+Site canônico: https://iasdmangueiras.org.br
+
+## Finalidade do site
+
+O site é o ponto oficial para visitantes e membros encontrarem horários, localização, programação ao vivo, eventos, ministérios e contato.
+
+## Rotas públicas
+
+- `/` — página inicial com resumo, CTAs e destaques.
+- `/horarios` — horários e localização.
+- `/ao-vivo` — transmissão ao vivo e mensagens recentes.
+- `/eventos` — eventos e comunicados.
+- `/ministerios` — ministérios da igreja.
+- `/sou-novo` — orientação para visitantes.
+- `/contato` — contato e pedido de oração.
+
+## Stack
+
+Frontend: Angular 22 com SSR/prerender, standalone components e TypeScript strict.
+Estilo: Tailwind CSS 3.4.17.
+Backend planejado: Python 3.14+ FastAPI apenas para YouTube e formulários, sem banco de dados no MVP.
+
+## Regras de negócio públicas
+
+- O site não processa pagamentos ou dízimos.
+- Dados sensíveis de membros não são armazenados no MVP.
+- YouTube é integrado pelo backend para proteger a API key.
+- Eventos e comunicados iniciais vêm de JSON no repositório.
+
+## Canais oficiais
+
+- Instagram: https://www.instagram.com/iasdmangueiras/
+- Facebook: https://www.facebook.com/igrejadasmangueiras/?locale=pt_BR
+- YouTube: https://www.youtube.com/c/IASDMangueiras

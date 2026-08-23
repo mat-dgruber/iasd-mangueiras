@@ -9,9 +9,10 @@
 - **TypeScript** (strict mode sempre).
 - **PrimeNG 21+** — apenas para componentes complexos (Carousel de fotos/depoimentos, Galleria). Preferir componentes Angular customizados primeiro.
 
-**Backend (mínimo)**
+**Backend (mínimo, criado só na fase de integração)**
 - **Python 3.14+** com **FastAPI** — API enxuta, com apenas duas responsabilidades: proxy do YouTube e recebimento de formulários. **Sem banco de dados no MVP.**
 - **uv** — gerenciador de pacotes (substitui pip/poetry).
+- O diretório `backend/` não bloqueia o setup inicial: ele nasce quando o `PLAN.md` chegar à integração com YouTube.
 
 **Camada de conteúdo**
 - **MVP:** eventos, comunicados, horários e ministérios ficam em **arquivos JSON no repositório**, servidos via `ContentService` e prerenderizados.
@@ -60,7 +61,7 @@ mangueiras-site/
 │   ├── tailwind.config.js            # Configuração + tokens da marca
 │   └── angular.json
 │
-├── backend/                          # FastAPI mínimo (Python 3.14 + uv)
+├── backend/                          # FastAPI mínimo (criado na Fase 3 do PLAN.md)
 │   ├── app/
 │   │   ├── main.py                   # App FastAPI + CORS
 │   │   ├── api/routes/
@@ -139,7 +140,8 @@ Frontend (Reactive Forms) → `POST /api/contato` ou `/api/oracao` → FastAPI v
 - `analyticsId` — (opcional) ID de analytics.
 
 ## 6. Deployment
-- **Frontend (Angular SSR):** Vercel, Netlify ou Cloudflare Pages com suporte a SSR. Build via `ng build` + adapter de SSR; deploy automático a cada push na `main`.
-- **Backend (FastAPI):** Render ou Fly.io (planos gratuitos), rodando com `uvicorn`. Variáveis de ambiente configuradas no painel do provedor.
-- **CI/CD:** GitHub Actions — lint + build do frontend e checagem do backend a cada PR; deploy automático na `main`.
-- **Alternativa mais enxuta:** se preferir não manter um servidor separado, o proxy do YouTube e os formulários podem virar **serverless functions** no mesmo host do frontend, dispensando o FastAPI. Mantido como opção.
+
+- **Frontend (Angular SSR):** Vercel, Netlify ou Cloudflare Pages com suporte a SSR. O primeiro deploy acontece depois do skeleton navegável validar SSR localmente.
+- **Backend (FastAPI):** Render ou Fly.io (planos gratuitos), rodando com `uvicorn`. Só fazer deploy depois de YouTube ou formulários funcionarem localmente.
+- **CI/CD:** GitHub Actions pode ser adicionado quando houver necessidade explícita de automação. Não é gate do setup inicial.
+- **Alternativa mais enxuta:** serverless functions ficam fora do caminho padrão porque `AI_RULES.md` fixa FastAPI; reabrir essa decisão só com aprovação explícita.

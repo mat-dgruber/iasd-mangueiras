@@ -1,0 +1,19 @@
+# IASD Mangueiras
+
+> Site oficial da IASD Mangueiras, Igreja Adventista do Sétimo Dia das Mangueiras em Tatuí-SP. O site informa horários, localização, transmissão ao vivo, eventos, ministérios e canais de contato.
+
+## Recursos principais
+
+- [Horários e localização](https://iasdmangueiras.org.br/horarios)
+- [Transmissão ao vivo](https://iasdmangueiras.org.br/ao-vivo)
+- [Eventos e comunicados](https://iasdmangueiras.org.br/eventos)
+- [Ministérios](https://iasdmangueiras.org.br/ministerios)
+- [Sou novo](https://iasdmangueiras.org.br/sou-novo)
+- [Contato e oração](https://iasdmangueiras.org.br/contato)
+
+## Optional
+
+- Instagram: https://www.instagram.com/iasdmangueiras/
+- Facebook: https://www.facebook.com/igrejadasmangueiras/?locale=pt_BR
+- YouTube: https://www.youtube.com/c/IASDMangueiras
+- Documento completo para agentes: https://iasdmangueiras.org.br/llms-full.txt
