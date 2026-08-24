@@ -23,6 +23,8 @@ describe('AdminDashboardPage', () => {
     expect(text).toContain('Painel de controle de conteúdos da IASD Mangueiras');
     expect(text).toContain('Eventos na Agenda');
     expect(text).toContain('Comunicados & Banners');
+    expect(text).toContain('Pequenos Grupos');
     expect(text).toContain('Pedidos de Oração');
   });
+
 });

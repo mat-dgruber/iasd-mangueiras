@@ -1,0 +1,80 @@
+[
+  {
+    "id": "pg-1",
+    "nome": "PG Conexão Jovem",
+    "lider": "Lucas e Beatriz Oliveira",
+    "anfitriao": "Família Oliveira",
+    "telefone": "(15) 99811-2233",
+    "bairro": "Centro",
+    "dia": "Terça-feira",
+    "horario": "19:30",
+    "perfil": "Jovens (JA)",
+    "descricao": "Ambiente descontraído com louvor, bate-papo bíblico dinâmico e lanche para jovens e universitários.",
+    "ativo": true
+  },
+  {
+    "id": "pg-2",
+    "nome": "PG Família & Fé",
+    "lider": "Pr. Marcos e Juliana Silva",
+    "anfitriao": "Família Silva",
+    "telefone": "(15) 99722-3344",
+    "bairro": "Jardim Wanderley",
+    "dia": "Quinta-feira",
+    "horario": "19:30",
+    "perfil": "Famílias",
+    "descricao": "Encontro voltado para fortalecimento de casais e famílias com espaço para as crianças participarem.",
+    "ativo": true
+  },
+  {
+    "id": "pg-3",
+    "nome": "PG Renascer",
+    "lider": "Carlos e Miriam Santos",
+    "anfitriao": "Miriam Santos",
+    "telefone": "(15) 99633-4455",
+    "bairro": "Vila Esperança",
+    "dia": "Terça-feira",
+    "horario": "20:00",
+    "perfil": "Geral",
+    "descricao": "Estudo aprofundado da Bíblia, oração intercessória e acolhimento de vizinhos e amigos da comunidade.",
+    "ativo": true
+  },
+  {
+    "id": "pg-4",
+    "nome": "PG Universitários & Profissionais",
+    "lider": "Guilherme Faria",
+    "anfitriao": "Apartamento Universitário",
+    "telefone": "(15) 99144-5566",
+    "bairro": "Alto do Santa Cruz",
+    "dia": "Quarta-feira",
+    "horario": "20:30",
+    "perfil": "Universitários",
+    "descricao": "Diálogo sobre fé e ciência, carreira, desafios acadêmicos e valores cristãos no dia a dia.",
+    "ativo": true
+  },
+  {
+    "id": "pg-5",
+    "nome": "PG Casais Unidos",
+    "lider": "Roberto e Fernanda Costa",
+    "anfitriao": "Família Costa",
+    "telefone": "(15) 99855-6677",
+    "bairro": "Dr. Laurindo",
+    "dia": "Sexta-feira",
+    "horario": "19:30",
+    "perfil": "Casais",
+    "descricao": "Recepção do Sábado com confraternização, princípios de relacionamento bíblico e comunhão.",
+    "ativo": true
+  },
+  {
+    "id": "pg-6",
+    "nome": "PG Esperança Viva",
+    "lider": "Dona Maria e Cecília",
+    "anfitriao": "Dona Maria",
+    "telefone": "(15) 99766-7788",
+    "bairro": "Jardim Santa Rita",
+    "dia": "Terça-feira",
+    "horario": "15:00",
+    "perfil": "Melhor Idade",
+    "descricao": "Tarde acolhedora de hinos tradicionais, estudo da Lição da Escola Sabatina e oração pelos doentes.",
+    "ativo": true
+  }
+]

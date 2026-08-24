@@ -70,6 +70,15 @@ import { SITE_CONFIG } from '../../../core/site/site.config';
             </a>
 
             <a
+              routerLink="/admin/pgs"
+              routerLinkActive="bg-advent-blue text-white shadow-sm font-semibold"
+              class="flex items-center gap-3 rounded-card px-3.5 py-2.5 text-sm font-medium text-advent-text hover:bg-slate-100 transition-colors"
+            >
+              <span>🏠</span>
+              Pequenos Grupos (PGs)
+            </a>
+
+            <a
               routerLink="/admin/oracoes"
               routerLinkActive="bg-advent-blue text-white shadow-sm font-semibold"
               class="flex items-center gap-3 rounded-card px-3.5 py-2.5 text-sm font-medium text-advent-text hover:bg-slate-100 transition-colors"
@@ -77,6 +86,7 @@ import { SITE_CONFIG } from '../../../core/site/site.config';
               <span>🙏</span>
               Pedidos de Oração
             </a>
+
 
             <a
               routerLink="/admin/horarios"

@@ -37,3 +37,26 @@ export interface Ministerio {
   lideres?: string;
 }
 
+export interface PequenoGrupo {
+  id?: string;
+  nome: string;
+  lider: string;
+  anfitriao?: string;
+  telefone: string;
+  bairro: string;
+  dia: string;
+  horario: string;
+  perfil: 'Geral' | 'Jovens (JA)' | 'Famílias' | 'Casais' | 'Universitários' | 'Melhor Idade';
+  descricao: string;
+  ativo?: boolean;
+}
+
+export interface LicaoVideo {
+  id: string;
+  titulo: string;
+  canal: string;
+  autor: string;
+  video_url: string;
+  thumbnail_url: string;
+  trimestre?: string;
+}

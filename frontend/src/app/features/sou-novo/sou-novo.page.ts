@@ -109,7 +109,7 @@ interface FaqItem {
 
           <div class="mt-8 space-y-4">
             @for (faq of faqs; track faq.id) {
-              <div class="overflow-hidden rounded-card border border-advent-border bg-white shadow-sm transition-all">
+              <div class="overflow-hidden rounded-card border border-advent-border bg-white shadow-sm transition-shadow duration-200 hover:shadow-md">
                 <button
                   type="button"
                   class="flex w-full items-center justify-between p-5 text-left font-bold text-advent-text hover:text-advent-blue transition-colors cursor-pointer"
@@ -117,9 +117,9 @@ interface FaqItem {
                   [attr.aria-expanded]="isExpanded(faq.id)"
                   [attr.aria-controls]="'faq-answer-' + faq.id"
                 >
-                  <span class="text-base md:text-lg pr-4">{{ faq.pergunta }}</span>
+                  <span class="text-base md:text-lg pr-4 leading-snug">{{ faq.pergunta }}</span>
                   <span
-                    class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-advent-neutral text-advent-blue transition-transform duration-200"
+                    class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-advent-neutral text-advent-blue transition-transform duration-300 ease-out"
                     [class.rotate-180]="isExpanded(faq.id)"
                     aria-hidden="true"
                   >
@@ -127,11 +127,18 @@ interface FaqItem {
                   </span>
                 </button>
 
-                @if (isExpanded(faq.id)) {
-                  <div [id]="'faq-answer-' + faq.id" class="border-t border-advent-border px-5 pb-5 pt-3 text-sm text-advent-muted leading-relaxed animate-fadeIn">
-                    <p>{{ faq.resposta }}</p>
+                <div
+                  [id]="'faq-answer-' + faq.id"
+                  class="grid transition-[grid-template-rows] duration-300 ease-in-out"
+                  [class.grid-rows-[1fr]]="isExpanded(faq.id)"
+                  [class.grid-rows-[0fr]]="!isExpanded(faq.id)"
+                >
+                  <div class="overflow-hidden">
+                    <div class="border-t border-advent-border px-5 pb-5 pt-3 text-sm text-advent-muted leading-relaxed">
+                      <p>{{ faq.resposta }}</p>
+                    </div>
                   </div>
-                }
+                </div>
               </div>
             }
           </div>

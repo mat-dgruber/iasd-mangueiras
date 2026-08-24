@@ -19,12 +19,12 @@ describe('AdminLoginPage', () => {
     fixture.detectChanges();
   });
 
-  it('exibe o título do painel e os botões de login', () => {
+  it('exibe o título do painel e o botão de acesso', () => {
     const text = fixture.nativeElement.textContent;
     expect(text).toContain('Painel Administrativo');
-    expect(text).toContain('Entrar com conta Google');
     expect(text).toContain('Acessar Painel');
   });
+
 
   it('valida formulário de email e senha', () => {
     expect(component.loginForm.valid).toBe(false);

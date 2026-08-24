@@ -20,16 +20,18 @@ import { SITE_CONFIG } from '../../core/site/site.config';
         </nav>
 
         <header class="max-w-3xl">
-          <span class="inline-block rounded bg-advent-neutral px-3 py-1 text-xs font-bold uppercase tracking-wider text-advent-blue">
+          <span
+            class="inline-block rounded bg-advent-neutral px-3 py-1 text-xs font-bold uppercase tracking-wider text-advent-blue"
+          >
             Estamos com Você
           </span>
           <h1 class="mt-3 text-4xl font-bold tracking-tight text-advent-text md:text-5xl">
             Contato e Pedido de Oração
           </h1>
           <p class="mt-4 text-lg text-advent-muted leading-relaxed">
-            Seja para tirar dúvidas sobre a igreja, pedir uma oração ou solicitar um estudo bíblico gratuito, preencha o formulário abaixo ou fale conosco pelo WhatsApp.
+            Seja para tirar dúvidas sobre a igreja, pedir uma oração ou solicitar um estudo bíblico
+            gratuito, preencha o formulário abaixo ou fale conosco pelo WhatsApp.
           </p>
-
         </header>
 
         <div class="mt-12 grid gap-10 lg:grid-cols-[1.25fr_0.75fr]">
@@ -40,7 +42,9 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               <button
                 type="button"
                 role="tab"
+                id="tab-contato"
                 [attr.aria-selected]="activeTab() === 'contato'"
+                [attr.aria-controls]="'panel-contato'"
                 class="pb-3 px-4 text-sm font-bold transition-colors relative cursor-pointer"
                 [class.text-advent-blue]="activeTab() === 'contato'"
                 [class.text-advent-muted]="activeTab() !== 'contato'"
@@ -54,7 +58,9 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               <button
                 type="button"
                 role="tab"
+                id="tab-oracao"
                 [attr.aria-selected]="activeTab() === 'oracao'"
+                [attr.aria-controls]="'panel-oracao'"
                 class="pb-3 px-4 text-sm font-bold transition-colors relative cursor-pointer"
                 [class.text-advent-blue]="activeTab() === 'oracao'"
                 [class.text-advent-muted]="activeTab() !== 'oracao'"
@@ -68,7 +74,9 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               <button
                 type="button"
                 role="tab"
+                id="tab-estudo"
                 [attr.aria-selected]="activeTab() === 'estudo'"
+                [attr.aria-controls]="'panel-estudo'"
                 class="pb-3 px-4 text-sm font-bold transition-colors relative cursor-pointer"
                 [class.text-advent-blue]="activeTab() === 'estudo'"
                 [class.text-advent-muted]="activeTab() !== 'estudo'"
@@ -83,9 +91,15 @@ import { SITE_CONFIG } from '../../core/site/site.config';
 
             <!-- Feedback de Sucesso -->
             @if (successMessage()) {
-              <div class="mb-6 rounded-card border border-green-200 bg-green-50 p-4 text-green-800 animate-fadeIn" role="status">
+              <div
+                class="mb-6 rounded-card border border-green-200 bg-green-50 p-4 text-green-800 animate-fadeIn"
+                role="status"
+              >
                 <p class="font-bold flex items-center gap-2">
-                  <span class="flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-white text-xs">✓</span>
+                  <span
+                    class="flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-white text-xs"
+                    >✓</span
+                  >
                   Mensagem Enviada com Sucesso!
                 </p>
                 <p class="text-sm mt-1.5">{{ successMessage() }}</p>
@@ -94,9 +108,15 @@ import { SITE_CONFIG } from '../../core/site/site.config';
 
             <!-- Feedback de Erro -->
             @if (errorMessage()) {
-              <div class="mb-6 rounded-card border border-red-200 bg-red-50 p-4 text-red-800 animate-fadeIn" role="alert">
+              <div
+                class="mb-6 rounded-card border border-red-200 bg-red-50 p-4 text-red-800 animate-fadeIn"
+                role="alert"
+              >
                 <p class="font-bold flex items-center gap-2">
-                  <span class="flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-white text-xs">!</span>
+                  <span
+                    class="flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-white text-xs"
+                    >!</span
+                  >
                   Não foi possível enviar
                 </p>
                 <p class="text-sm mt-1.5">{{ errorMessage() }}</p>
@@ -105,9 +125,21 @@ import { SITE_CONFIG } from '../../core/site/site.config';
 
             <!-- Formulário de Contato -->
             @if (activeTab() === 'contato') {
-              <form [formGroup]="contatoForm" (ngSubmit)="submitContato()" class="space-y-5" aria-label="Formulário de contato">
+              <form
+                id="panel-contato"
+                role="tabpanel"
+                aria-labelledby="tab-contato"
+                [formGroup]="contatoForm"
+                (ngSubmit)="submitContato()"
+                class="space-y-5"
+                aria-label="Formulário de contato"
+              >
                 <div>
-                  <label for="contato-nome" class="block text-sm font-semibold text-advent-text mb-1">Nome completo *</label>
+                  <label
+                    for="contato-nome"
+                    class="block text-sm font-semibold text-advent-text mb-1"
+                    >Nome completo *</label
+                  >
                   <input
                     id="contato-nome"
                     type="text"
@@ -122,7 +154,11 @@ import { SITE_CONFIG } from '../../core/site/site.config';
 
                 <div class="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label for="contato-email" class="block text-sm font-semibold text-advent-text mb-1">E-mail *</label>
+                    <label
+                      for="contato-email"
+                      class="block text-sm font-semibold text-advent-text mb-1"
+                      >E-mail *</label
+                    >
                     <input
                       id="contato-email"
                       type="email"
@@ -136,7 +172,11 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                   </div>
 
                   <div>
-                    <label for="contato-telefone" class="block text-sm font-semibold text-advent-text mb-1">Telefone / WhatsApp</label>
+                    <label
+                      for="contato-telefone"
+                      class="block text-sm font-semibold text-advent-text mb-1"
+                      >Telefone / WhatsApp</label
+                    >
                     <input
                       id="contato-telefone"
                       type="tel"
@@ -150,7 +190,11 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 </div>
 
                 <div>
-                  <label for="contato-mensagem" class="block text-sm font-semibold text-advent-text mb-1">Mensagem *</label>
+                  <label
+                    for="contato-mensagem"
+                    class="block text-sm font-semibold text-advent-text mb-1"
+                    >Mensagem *</label
+                  >
                   <textarea
                     id="contato-mensagem"
                     rows="4"
@@ -158,8 +202,12 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                     class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
                     placeholder="Como podemos ajudar você?"
                   ></textarea>
-                  @if (contatoForm.get('mensagem')?.touched && contatoForm.get('mensagem')?.invalid) {
-                    <p class="mt-1 text-xs text-red-600">Por favor, escreva sua mensagem (mínimo 5 caracteres).</p>
+                  @if (
+                    contatoForm.get('mensagem')?.touched && contatoForm.get('mensagem')?.invalid
+                  ) {
+                    <p class="mt-1 text-xs text-red-600">
+                      Por favor, escreva sua mensagem (mínimo 5 caracteres).
+                    </p>
                   }
                 </div>
 
@@ -175,10 +223,22 @@ import { SITE_CONFIG } from '../../core/site/site.config';
 
             <!-- Formulário de Oração -->
             @if (activeTab() === 'oracao') {
-              <form [formGroup]="oracaoForm" (ngSubmit)="submitOracao()" class="space-y-5" aria-label="Formulário de pedido de oração">
+              <form
+                id="panel-oracao"
+                role="tabpanel"
+                aria-labelledby="tab-oracao"
+                [formGroup]="oracaoForm"
+                (ngSubmit)="submitOracao()"
+                class="space-y-5"
+                aria-label="Formulário de pedido de oração"
+              >
                 <div class="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label for="oracao-nome" class="block text-sm font-semibold text-advent-text mb-1">Seu Nome *</label>
+                    <label
+                      for="oracao-nome"
+                      class="block text-sm font-semibold text-advent-text mb-1"
+                      >Seu Nome *</label
+                    >
                     <input
                       id="oracao-nome"
                       type="text"
@@ -192,7 +252,11 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                   </div>
 
                   <div>
-                    <label for="oracao-telefone" class="block text-sm font-semibold text-advent-text mb-1">Telefone (opcional)</label>
+                    <label
+                      for="oracao-telefone"
+                      class="block text-sm font-semibold text-advent-text mb-1"
+                      >Telefone (opcional)</label
+                    >
                     <input
                       id="oracao-telefone"
                       type="tel"
@@ -206,7 +270,11 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 </div>
 
                 <div>
-                  <label for="oracao-pedido" class="block text-sm font-semibold text-advent-text mb-1">Motivo de Oração *</label>
+                  <label
+                    for="oracao-pedido"
+                    class="block text-sm font-semibold text-advent-text mb-1"
+                    >Motivo de Oração *</label
+                  >
                   <textarea
                     id="oracao-pedido"
                     rows="4"
@@ -215,7 +283,9 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                     placeholder="Compartilhe seu pedido (saúde, família, decisões, gratidão...)"
                   ></textarea>
                   @if (oracaoForm.get('pedido')?.touched && oracaoForm.get('pedido')?.invalid) {
-                    <p class="mt-1 text-xs text-red-600">Por favor, descreva seu pedido de oração.</p>
+                    <p class="mt-1 text-xs text-red-600">
+                      Por favor, descreva seu pedido de oração.
+                    </p>
                   }
                 </div>
 
@@ -224,9 +294,9 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                     id="oracao-confidencial"
                     type="checkbox"
                     formControlName="confidencial"
-                    class="h-4 w-4 rounded border-advent-border text-advent-blue focus:ring-advent-blue cursor-pointer"
+                    class="h-4 w-4 rounded border-advent-border text-advent-blue accent-advent-blue focus:ring-2 focus:ring-advent-blue/20 cursor-pointer"
                   />
-                  <label for="oracao-confidencial" class="text-sm text-advent-text cursor-pointer">
+                  <label for="oracao-confidencial" class="text-sm font-medium text-advent-text cursor-pointer select-none">
                     Desejo que este pedido seja confidencial (somente equipe pastoral e liderança).
                   </label>
                 </div>
@@ -243,13 +313,27 @@ import { SITE_CONFIG } from '../../core/site/site.config';
 
             <!-- Formulário de Estudo Bíblico -->
             @if (activeTab() === 'estudo') {
-              <form [formGroup]="estudoForm" (ngSubmit)="submitEstudo()" class="space-y-5" aria-label="Formulário de solicitação de estudo bíblico">
-                <div class="rounded-card border border-blue-100 bg-blue-50/60 p-4 text-xs text-advent-blue leading-relaxed">
-                  📖 <strong>Estudo Bíblico Gratuito:</strong> Você receberá materiais práticos para estudar as profecias e os ensinamentos bíblicos de forma dinâmica e sem custo algum.
+              <form
+                id="panel-estudo"
+                role="tabpanel"
+                aria-labelledby="tab-estudo"
+                [formGroup]="estudoForm"
+                (ngSubmit)="submitEstudo()"
+                class="space-y-5"
+                aria-label="Formulário de solicitação de estudo bíblico"
+              >
+                <div
+                  class="rounded-card border border-blue-100 bg-blue-50/60 p-4 text-xs text-advent-blue leading-relaxed"
+                >
+                  📖 <strong>Estudo Bíblico Gratuito:</strong> Você receberá materiais práticos para
+                  estudar as profecias e os ensinamentos bíblicos de forma dinâmica e sem custo
+                  algum.
                 </div>
 
                 <div>
-                  <label for="estudo-nome" class="block text-sm font-semibold text-advent-text mb-1">Seu Nome *</label>
+                  <label for="estudo-nome" class="block text-sm font-semibold text-advent-text mb-1"
+                    >Seu Nome *</label
+                  >
                   <input
                     id="estudo-nome"
                     type="text"
@@ -264,7 +348,11 @@ import { SITE_CONFIG } from '../../core/site/site.config';
 
                 <div class="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label for="estudo-email" class="block text-sm font-semibold text-advent-text mb-1">E-mail *</label>
+                    <label
+                      for="estudo-email"
+                      class="block text-sm font-semibold text-advent-text mb-1"
+                      >E-mail *</label
+                    >
                     <input
                       id="estudo-email"
                       type="email"
@@ -278,7 +366,11 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                   </div>
 
                   <div>
-                    <label for="estudo-telefone" class="block text-sm font-semibold text-advent-text mb-1">WhatsApp / Telefone *</label>
+                    <label
+                      for="estudo-telefone"
+                      class="block text-sm font-semibold text-advent-text mb-1"
+                      >WhatsApp / Telefone *</label
+                    >
                     <input
                       id="estudo-telefone"
                       type="tel"
@@ -288,14 +380,22 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                       placeholder="(15) 99999-9999"
                       maxlength="15"
                     />
-                    @if (estudoForm.get('telefone')?.touched && estudoForm.get('telefone')?.invalid) {
-                      <p class="mt-1 text-xs text-red-600">Informe seu WhatsApp para envio do material.</p>
+                    @if (
+                      estudoForm.get('telefone')?.touched && estudoForm.get('telefone')?.invalid
+                    ) {
+                      <p class="mt-1 text-xs text-red-600">
+                        Informe seu WhatsApp para envio do material.
+                      </p>
                     }
                   </div>
                 </div>
 
                 <div>
-                  <label for="estudo-preferencia" class="block text-sm font-semibold text-advent-text mb-1">Como prefere estudar?</label>
+                  <label
+                    for="estudo-preferencia"
+                    class="block text-sm font-semibold text-advent-text mb-1"
+                    >Como prefere estudar?</label
+                  >
                   <select
                     id="estudo-preferencia"
                     formControlName="preferencia"
@@ -327,7 +427,8 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               </span>
               <h2 class="mt-2 text-2xl font-bold text-green-950">Fale pelo WhatsApp</h2>
               <p class="mt-2 text-sm text-green-900 leading-relaxed">
-                Prefere conversar diretamente pelo celular? Nossa equipe de acolhimento e recepção pode tirar suas dúvidas em tempo real.
+                Prefere conversar diretamente pelo celular? Nossa equipe de acolhimento e recepção
+                pode tirar suas dúvidas em tempo real.
               </p>
               <a
                 class="mt-6 inline-flex items-center gap-2 rounded-card bg-green-700 px-6 py-3.5 font-semibold text-white shadow transition-all hover:bg-green-800 active:scale-[0.98] active:shadow-inner"
@@ -341,7 +442,9 @@ import { SITE_CONFIG } from '../../core/site/site.config';
 
             <!-- Card de Localização / Horários -->
             <div class="rounded-section border border-advent-border bg-advent-neutral p-6 md:p-8">
-              <span class="text-xs font-bold uppercase tracking-wider text-advent-blue">Visite-nos</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-advent-blue"
+                >Visite-nos</span
+              >
               <h2 class="mt-1 text-xl font-bold text-advent-text">Cultos Presenciais</h2>
               <p class="mt-2 text-sm text-advent-muted">
                 Venha nos visitar em nossos encontros regulares:
@@ -518,4 +621,3 @@ export class ContatoPage {
       });
   }
 }
-

@@ -5,7 +5,8 @@ import defaultHorarios from '../../../content/horarios.json';
 import defaultEventos from '../../../content/eventos.json';
 import defaultComunicados from '../../../content/comunicados.json';
 import defaultMinisterios from '../../../content/ministerios.json';
-import { Comunicado, Evento, Horario, Ministerio } from '../models/content.models';
+import defaultPgs from '../../../content/pgs.json';
+import { Comunicado, Evento, Horario, Ministerio, PequenoGrupo } from '../models/content.models';
 import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable({ providedIn: 'root' })
@@ -21,6 +22,7 @@ export class ContentService {
   private readonly _ministerios = signal<readonly Ministerio[]>(
     defaultMinisterios as readonly Ministerio[],
   );
+  private readonly _pgs = signal<readonly PequenoGrupo[]>(defaultPgs as readonly PequenoGrupo[]);
 
   constructor() {
     if (isPlatformBrowser(this.platformId) && this.firebase.firestore) {
@@ -47,6 +49,17 @@ export class ContentService {
             this._comunicados.set(list.filter((c) => c.ativo !== false));
           }
         });
+
+        // Listener de Pequenos Grupos em Tempo Real
+        const pgsCol = collection(this.firebase.firestore, 'pequenos_grupos');
+        onSnapshot(pgsCol, (snap) => {
+          if (!snap.empty) {
+            const list = snap.docs.map(
+              (doc) => ({ id: doc.id, ...doc.data() }) as unknown as PequenoGrupo,
+            );
+            this._pgs.set(list.filter((p) => p.ativo !== false));
+          }
+        });
       } catch {
         // Silencioso se offline ou regras em modo rascunho
       }
@@ -68,5 +81,8 @@ export class ContentService {
   ministerios(): readonly Ministerio[] {
     return this._ministerios();
   }
-}
 
+  pgs(): readonly PequenoGrupo[] {
+    return this._pgs();
+  }
+}

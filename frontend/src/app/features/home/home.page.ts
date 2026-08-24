@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { SeoService } from '../../core/seo/seo.service';
 import { ContentService } from '../../core/services/content.service';
 import { YoutubeService } from '../../core/services/youtube.service';
@@ -19,24 +26,39 @@ interface NextServiceInfo {
   template: `
     <main id="conteudo">
       <!-- Hero Section com Visual Profundo e Ambient Glow -->
-      <section class="relative overflow-hidden bg-gradient-to-br from-[#062c4a] via-advent-blue to-[#0b3b60] text-white">
+      <section
+        class="relative overflow-hidden bg-gradient-to-br from-[#062c4a] via-advent-blue to-[#0b3b60] text-white"
+      >
         <!-- Elementos de iluminação de fundo (ambient mesh) -->
-        <div class="pointer-events-none absolute -left-20 -top-20 h-96 w-96 rounded-full bg-advent-gold/15 blur-3xl" aria-hidden="true"></div>
-        <div class="pointer-events-none absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-blue-400/10 blur-3xl" aria-hidden="true"></div>
+        <div
+          class="pointer-events-none absolute -left-20 -top-20 h-96 w-96 rounded-full bg-advent-gold/15 blur-3xl"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="pointer-events-none absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-blue-400/10 blur-3xl"
+          aria-hidden="true"
+        ></div>
 
-        <div class="relative mx-auto grid max-w-site gap-10 px-4 py-16 md:grid-cols-[1.25fr_0.75fr] md:items-center md:py-24">
+        <div
+          class="relative mx-auto grid max-w-site gap-10 px-4 py-16 md:grid-cols-[1.25fr_0.75fr] md:items-center md:py-24"
+        >
           <div>
-            <div class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-advent-gold backdrop-blur-md">
+            <div
+              class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-advent-gold backdrop-blur-md"
+            >
               <span class="h-2 w-2 rounded-full bg-advent-gold animate-pulse"></span>
               {{ site.city }}-{{ site.state }}
             </div>
 
-            <h1 class="mt-4 text-4xl font-bold leading-tight md:text-5xl lg:text-6xl tracking-tight">
+            <h1
+              class="mt-4 text-4xl font-bold leading-tight md:text-5xl lg:text-6xl tracking-tight"
+            >
               Igreja Adventista do Sétimo Dia <span class="text-white/90">das Mangueiras</span>
             </h1>
 
             <p class="mt-5 max-w-2xl text-lg text-white/85 leading-relaxed">
-              Um ponto de encontro para adoração, esperança, estudo da Bíblia e serviço acolhedor à comunidade em Tatuí. Venha nos conhecer!
+              Um ponto de encontro para adoração, esperança, estudo da Bíblia e serviço acolhedor à
+              comunidade em Tatuí. Venha nos conhecer!
             </p>
 
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -55,30 +77,45 @@ interface NextServiceInfo {
             </div>
           </div>
 
-
           <!-- Card Dinâmico do Próximo Encontro -->
-          <aside class="rounded-section border border-white/20 bg-white/10 p-6 backdrop-blur-md shadow-2xl">
+          <aside
+            class="rounded-section border border-white/20 bg-white/10 p-6 backdrop-blur-md shadow-2xl"
+          >
             <div class="flex items-center justify-between">
-              <span class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
+              <span
+                class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white"
+              >
                 <span class="h-1.5 w-1.5 rounded-full bg-green-400"></span>
                 {{ nextService().isToday ? 'Hoje' : 'Próximo Encontro' }}
               </span>
-              <span class="text-xs font-medium text-white/75">{{ nextService().timeRemainingText }}</span>
+              <span class="text-xs font-medium text-white/75">{{
+                nextService().timeRemainingText
+              }}</span>
             </div>
 
             <h2 class="mt-4 text-2xl font-bold text-white">{{ nextService().name }}</h2>
-            <p class="mt-1 text-sm font-semibold text-advent-gold">{{ nextService().dayName }} às {{ nextService().timeStr }}</p>
+            <p class="mt-1 text-sm font-semibold text-advent-gold">
+              {{ nextService().dayName }} às {{ nextService().timeStr }}
+            </p>
 
             <div class="mt-5 space-y-3 border-t border-white/15 pt-4 text-white/90">
               <div class="flex items-start gap-3">
-                <div class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/20 text-xs font-bold">✓</div>
+                <div
+                  class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/20 text-xs font-bold"
+                >
+                  ✓
+                </div>
                 <div>
                   <p class="text-sm font-semibold text-white">Culto Presencial & Aberto</p>
                   <p class="text-xs text-white/75">Estacionamento e ambiente climatizado</p>
                 </div>
               </div>
               <div class="flex items-start gap-3">
-                <div class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/20 text-xs font-bold">✓</div>
+                <div
+                  class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/20 text-xs font-bold"
+                >
+                  ✓
+                </div>
                 <div>
                   <p class="text-sm font-semibold text-white">Classes para Crianças</p>
                   <p class="text-xs text-white/75">Professores preparados e dedicados</p>
@@ -100,33 +137,56 @@ interface NextServiceInfo {
       <section class="mx-auto max-w-site px-4 py-16">
         <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-advent-blue">Programação Semanal</span>
-            <h2 class="mt-1 text-3xl font-bold text-advent-text">Horários e localização</h2>
-            <p class="mt-2 text-advent-muted">
+            <span class="text-xs font-bold uppercase tracking-wider text-advent-blue"
+              >Programação Semanal</span
+            >
+            <h2 class="mt-1 text-3xl font-bold leading-tight text-advent-text">Horários e localização</h2>
+            <p class="mt-2 text-advent-muted leading-relaxed">
               Portas abertas para você e sua família participarem dos nossos encontros semanais.
             </p>
           </div>
-          <a class="inline-flex font-semibold text-advent-blue hover:underline text-sm" href="/horarios">
+          <a
+            class="inline-flex font-semibold text-advent-blue hover:underline text-sm"
+            href="/horarios"
+          >
             Ver detalhes e mapa completo →
           </a>
         </div>
 
-        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          @for (item of horarios(); track item.titulo) {
-            <article
-              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
-            >
-              <div>
-                <span class="inline-block rounded bg-advent-blue/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-advent-blue">
-                  {{ item.dia }}
-                </span>
-                <p class="mt-3 text-2xl font-bold text-advent-text">{{ item.horario }}</p>
-                <h3 class="mt-1 text-lg font-semibold text-advent-text">{{ item.titulo }}</h3>
-                <p class="mt-2 text-sm text-advent-muted leading-relaxed">{{ item.descricao }}</p>
+        @if (horarios().length === 0) {
+          <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" aria-label="Carregando horários">
+            @for (i of [1, 2, 3, 4]; track i) {
+              <div class="rounded-section border border-advent-border bg-white p-6 shadow-sm animate-pulse">
+                <div class="h-5 w-20 rounded bg-gray-200"></div>
+                <div class="mt-3 h-8 w-24 rounded bg-gray-200"></div>
+                <div class="mt-2 h-5 w-3/4 rounded bg-gray-200"></div>
+                <div class="mt-2 h-4 w-full rounded bg-gray-100"></div>
               </div>
-            </article>
-          }
-        </div>
+            }
+          </div>
+        } @else {
+          <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            @for (item of horarios(); track item.titulo) {
+              <article
+                class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-md"
+              >
+                <div>
+                  <span
+                    class="inline-flex items-center gap-1.5 rounded bg-advent-blue/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-advent-blue"
+                  >
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {{ item.dia }}
+                  </span>
+                  <p class="mt-3 text-2xl font-bold text-advent-text">{{ item.horario }}</p>
+                  <h3 class="mt-1 text-lg font-semibold leading-snug text-advent-text">{{ item.titulo }}</h3>
+                  <p class="mt-2 text-sm text-advent-muted leading-relaxed">{{ item.descricao }}</p>
+                </div>
+              </article>
+            }
+          </div>
+        }
       </section>
 
       <!-- Ao Vivo e Vídeos -->
@@ -134,10 +194,13 @@ interface NextServiceInfo {
         <div class="mx-auto max-w-site px-4">
           <div class="grid gap-8 lg:grid-cols-2 lg:items-center">
             <div>
-              <span class="text-xs font-bold uppercase tracking-wider text-advent-blue">Transmissões Oficiais</span>
-              <h2 class="mt-1 text-3xl font-bold text-advent-text">Ao vivo e mensagens</h2>
+              <span class="text-xs font-bold uppercase tracking-wider text-advent-blue"
+                >Transmissões Oficiais</span
+              >
+              <h2 class="mt-1 text-3xl font-bold leading-tight text-advent-text">Ao vivo e mensagens</h2>
               <p class="mt-3 text-advent-muted leading-relaxed">
-                Acompanhe as transmissões dos nossos cultos ao vivo ou reveja as mensagens bíblicas e séries de estudos pelo nosso canal oficial no YouTube.
+                Acompanhe as transmissões dos nossos cultos ao vivo ou reveja as mensagens bíblicas
+                e séries de estudos pelo nosso canal oficial no YouTube.
               </p>
               <div class="mt-6 flex flex-col gap-3 sm:flex-row">
                 <a
@@ -157,29 +220,48 @@ interface NextServiceInfo {
               </div>
             </div>
 
-            <div class="overflow-hidden rounded-section border border-advent-border bg-white p-6 shadow-sm">
-              <div class="aspect-video w-full rounded-lg bg-gray-900 flex flex-col items-center justify-center text-center p-6 text-white relative">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-lg"></div>
-                <div class="relative z-10 flex flex-col items-center">
-                  <div class="flex h-14 w-14 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105">
-                    <svg class="h-6 w-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M8 5v14l11-7z"/>
-                    </svg>
-                  </div>
-                  <p class="mt-4 font-bold text-lg text-white">
-                    {{ featuredVideo()?.title || 'IASD Mangueiras Online' }}
-                  </p>
-                  <p class="text-xs text-gray-300 mt-1">
-                    Transmissões ao vivo aos sábados às 10:15 e quartas às 19:30
-                  </p>
-                  <a
-                    class="mt-4 inline-block rounded bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 text-xs font-bold uppercase tracking-wider text-white transition-colors"
-                    href="/ao-vivo"
-                  >
-                    Ver Gravações & Transmissão
-                  </a>
+            <div
+              class="overflow-hidden rounded-section border border-advent-border bg-white p-6 shadow-sm"
+            >
+              @if (isYoutubeLoading()) {
+                <div class="aspect-video w-full rounded-lg bg-gray-200 animate-pulse flex items-center justify-center">
+                  <div class="h-12 w-12 rounded-full bg-gray-300"></div>
                 </div>
-              </div>
+              } @else {
+                <div
+                  class="aspect-video w-full rounded-lg bg-gray-900 flex flex-col items-center justify-center text-center p-6 text-white relative"
+                >
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-lg"
+                  ></div>
+                  <div class="relative z-10 flex flex-col items-center">
+                    <div
+                      class="flex h-14 w-14 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform hover:scale-105"
+                    >
+                      <svg
+                        class="h-6 w-6 ml-0.5"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                    <p class="mt-4 font-bold text-lg text-white leading-snug">
+                      {{ featuredVideo()?.title || 'IASD Mangueiras Online' }}
+                    </p>
+                    <p class="text-xs text-gray-300 mt-1">
+                      Transmissões ao vivo aos sábados às 10:15 e quartas às 19:30
+                    </p>
+                    <a
+                      class="mt-4 inline-block rounded bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 text-xs font-bold uppercase tracking-wider text-white transition-colors"
+                      href="/ao-vivo"
+                    >
+                      Ver Gravações & Transmissão
+                    </a>
+                  </div>
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -190,36 +272,61 @@ interface NextServiceInfo {
         <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-advent-blue">Agenda</span>
-            <h2 class="mt-1 text-3xl font-bold text-advent-text">Eventos e destaques</h2>
-            <p class="mt-2 text-advent-muted">
+            <h2 class="mt-1 text-3xl font-bold leading-tight text-advent-text">Eventos e destaques</h2>
+            <p class="mt-2 text-advent-muted leading-relaxed">
               Fique por dentro das programações especiais e atividades da nossa igreja.
             </p>
           </div>
-          <a class="inline-flex font-semibold text-advent-blue hover:underline text-sm" href="/eventos">
+          <a
+            class="inline-flex font-semibold text-advent-blue hover:underline text-sm"
+            href="/eventos"
+          >
             Ver todos os eventos →
           </a>
         </div>
 
-        <div class="mt-8 grid gap-6 md:grid-cols-3">
-          @for (evento of eventos(); track evento.titulo) {
-            <article
-              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
-            >
-              <div>
-                <span class="inline-block rounded bg-advent-blue/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-advent-blue">
-                  {{ evento.data }} • {{ evento.horario }}
-                </span>
-                <h3 class="mt-3 text-xl font-bold text-advent-text">{{ evento.titulo }}</h3>
-                <p class="mt-2 text-sm text-advent-muted leading-relaxed">{{ evento.descricao }}</p>
-              </div>
-              <div class="mt-6 pt-4 border-t border-advent-border">
-                <a class="text-sm font-semibold text-advent-blue hover:underline" [href]="evento.href || '/eventos'">
-                  Mais informações →
-                </a>
-              </div>
-            </article>
-          }
-        </div>
+        @if (eventos().length === 0) {
+          <div class="mt-8 rounded-section border border-advent-border bg-white p-8 text-center shadow-sm">
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-advent-neutral text-advent-blue">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 class="mt-3 text-lg font-bold text-advent-text">Nenhum evento especial no momento</h3>
+            <p class="mt-1 text-sm text-advent-muted">
+              Novas programações serão divulgadas em breve. Participe dos nossos cultos regulares!
+            </p>
+          </div>
+        } @else {
+          <div class="mt-8 grid gap-6 md:grid-cols-3">
+            @for (evento of eventos(); track evento.titulo) {
+              <article
+                class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-md"
+              >
+                <div>
+                  <span
+                    class="inline-flex items-center gap-1.5 rounded bg-advent-blue/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-advent-blue"
+                  >
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    {{ evento.data }} • {{ evento.horario }}
+                  </span>
+                  <h3 class="mt-3 text-xl font-bold leading-snug text-advent-text">{{ evento.titulo }}</h3>
+                  <p class="mt-2 text-sm text-advent-muted leading-relaxed">{{ evento.descricao }}</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-advent-border">
+                  <a
+                    class="text-sm font-semibold text-advent-blue hover:underline"
+                    [href]="evento.href || '/eventos'"
+                  >
+                    Mais informações →
+                  </a>
+                </div>
+              </article>
+            }
+          </div>
+        }
       </section>
 
       <!-- Ministérios em Destaque -->
@@ -227,20 +334,27 @@ interface NextServiceInfo {
         <div class="mx-auto max-w-site px-4">
           <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
-              <span class="text-xs font-bold uppercase tracking-wider text-advent-blue">Comunidade & Serviço</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-advent-blue"
+                >Comunidade & Serviço</span
+              >
               <h2 class="mt-1 text-3xl font-bold text-advent-text">Nossos ministérios</h2>
               <p class="mt-2 text-advent-muted">
                 Diversas frentes de acolhimento, serviço e crescimento para todas as idades.
               </p>
             </div>
-            <a class="inline-flex font-semibold text-advent-blue hover:underline text-sm" href="/ministerios">
+            <a
+              class="inline-flex font-semibold text-advent-blue hover:underline text-sm"
+              href="/ministerios"
+            >
               Conhecer todos os ministérios →
             </a>
           </div>
 
           <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             @for (min of ministerios().slice(0, 6); track min.nome) {
-              <div class="rounded-section border border-advent-border bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+              <div
+                class="rounded-section border border-advent-border bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-md"
+              >
                 <h3 class="text-lg font-bold text-advent-text">{{ min.nome }}</h3>
                 <p class="mt-2 text-sm text-advent-muted leading-relaxed">{{ min.descricao }}</p>
               </div>
@@ -253,29 +367,44 @@ interface NextServiceInfo {
       <section class="border-t border-advent-border bg-white py-16">
         <div class="mx-auto max-w-site px-4">
           <div class="text-center max-w-2xl mx-auto">
-            <span class="text-xs font-bold uppercase tracking-wider text-advent-blue">Conecte-se Conosco</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-advent-blue"
+              >Conecte-se Conosco</span
+            >
             <h2 class="mt-1 text-3xl font-bold text-advent-text">Próximos passos</h2>
             <p class="mt-2 text-advent-muted">
               Escolha uma das opções abaixo para se aproximar, tirar dúvidas ou orar conosco.
             </p>
           </div>
 
-
-          <div class="mt-10 grid gap-6 md:grid-cols-3">
+          <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <!-- Sou Novo -->
             <a
-              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
+              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
               href="/sou-novo"
             >
               <div>
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-advent-blue/10 text-advent-blue">
-                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-xl bg-advent-blue/10 text-advent-blue"
+                >
+                  <svg
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
                 <h3 class="mt-5 text-xl font-bold text-advent-text">Sou novo por aqui</h3>
                 <p class="mt-2 text-sm text-advent-muted leading-relaxed">
-                  Descubra o que esperar em sua primeira visita, como chegar e tire suas principais dúvidas.
+                  Descubra o que esperar em sua primeira visita, como chegar e tire suas principais
+                  dúvidas.
                 </p>
               </div>
               <span class="mt-6 inline-flex items-center text-sm font-semibold text-advent-blue">
@@ -283,20 +412,69 @@ interface NextServiceInfo {
               </span>
             </a>
 
+            <!-- Pequenos Grupos -->
+            <a
+              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
+              href="/estudos"
+            >
+              <div>
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-xl bg-advent-blue/10 text-advent-blue"
+                >
+                  <svg
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                    />
+                  </svg>
+                </div>
+                <h3 class="mt-5 text-xl font-bold text-advent-text">Pequenos Grupos (PGs)</h3>
+                <p class="mt-2 text-sm text-advent-muted leading-relaxed">
+                  Encontre um grupo acolhedor no seu bairro em Tatuí para orar, estudar e fazer
+                  amigos.
+                </p>
+              </div>
+              <span class="mt-6 inline-flex items-center text-sm font-semibold text-advent-blue">
+                Encontrar meu PG <span class="ml-1">→</span>
+              </span>
+            </a>
+
             <!-- Pedido de Oração -->
             <a
-              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
+              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
               href="/contato"
             >
               <div>
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-advent-blue/10 text-advent-blue">
-                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-xl bg-advent-blue/10 text-advent-blue"
+                >
+                  <svg
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
                   </svg>
                 </div>
                 <h3 class="mt-5 text-xl font-bold text-advent-text">Pedido de oração</h3>
                 <p class="mt-2 text-sm text-advent-muted leading-relaxed">
-                  Nossa equipe pastoral e de oração terá alegria em interceder por você e por sua família com discrição.
+                  Nossa equipe pastoral e de oração terá alegria em interceder por você e por sua
+                  família com discrição.
                 </p>
               </div>
               <span class="mt-6 inline-flex items-center text-sm font-semibold text-advent-blue">
@@ -306,18 +484,32 @@ interface NextServiceInfo {
 
             <!-- Estudo Bíblico -->
             <a
-              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
+              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
               href="/contato"
             >
               <div>
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-advent-blue/10 text-advent-blue">
-                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                <div
+                  class="flex h-12 w-12 items-center justify-center rounded-xl bg-advent-blue/10 text-advent-blue"
+                >
+                  <svg
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                    />
                   </svg>
                 </div>
                 <h3 class="mt-5 text-xl font-bold text-advent-text">Estudo Bíblico Gratuito</h3>
                 <p class="mt-2 text-sm text-advent-muted leading-relaxed">
-                  Deseja entender melhor as profecias e os ensinamentos de Jesus? Solicite um instrutor bíblico ou guia digital.
+                  Deseja entender melhor as profecias e os ensinamentos de Jesus? Solicite um
+                  instrutor bíblico ou guia digital.
                 </p>
               </div>
               <span class="mt-6 inline-flex items-center text-sm font-semibold text-advent-blue">
@@ -340,6 +532,7 @@ export class HomePage implements OnInit {
   protected readonly eventos = () => this.contentService.eventos();
   protected readonly ministerios = () => this.contentService.ministerios();
   protected readonly featuredVideo = computed(() => this.youtubeService.videos()[0]);
+  protected readonly isYoutubeLoading = () => this.youtubeService.loading();
 
   protected readonly nextService = signal<NextServiceInfo>(this.calculateNextService());
 
@@ -430,4 +623,3 @@ export class HomePage implements OnInit {
     };
   }
 }
-

@@ -66,11 +66,17 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               </a>
             </li>
             <li>
+              <a class="hover:text-white hover:underline transition-colors" href="/estudos">
+                Pequenos Grupos & Estudos →
+              </a>
+            </li>
+            <li>
               <a class="hover:text-white hover:underline transition-colors" href="/contato">
                 Fale Conosco / Oração →
               </a>
             </li>
           </ul>
+
         </section>
       </div>
     </footer>

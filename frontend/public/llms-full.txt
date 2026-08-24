@@ -19,7 +19,9 @@ O site é o ponto oficial para visitantes e membros encontrarem horários, local
 - `/ao-vivo` — transmissão ao vivo e mensagens recentes.
 - `/eventos` — eventos e comunicados.
 - `/ministerios` — ministérios da igreja.
+- `/estudos` — estudos bíblicos, pequenos grupos (PGs), lição da escola sabatina e versículo diário.
 - `/sou-novo` — orientação para visitantes.
+
 - `/contato` — contato e pedido de oração.
 
 ## Stack

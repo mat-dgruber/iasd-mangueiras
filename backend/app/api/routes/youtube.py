@@ -1,15 +1,41 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request, status
+from app.core.rate_limiter import youtube_rate_limiter
 from app.models.youtube import YouTubeLatestResponse, YouTubeLiveResponse
 from app.services.youtube_service import youtube_service
 
-router = APIRouter(prefix="/youtube", tags=["youtube"])
+router = APIRouter(prefix="/youtube", tags=["Transmissões & Vídeos"])
 
 
-@router.get("/latest", response_model=YouTubeLatestResponse)
-async def get_latest_videos() -> YouTubeLatestResponse:
+@router.get(
+    "/latest",
+    response_model=YouTubeLatestResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Listar vídeos recentes do canal",
+    description="Retorna os últimos cultos, sermões e transmissões gravadas no canal oficial da IASD Mangueiras no YouTube.",
+    responses={
+        200: {"description": "Lista de vídeos recentes", "model": YouTubeLatestResponse},
+        429: {"description": "Limite de requisições excedido"},
+        500: {"description": "Erro ao consultar a API do YouTube ou chave não configurada"},
+    },
+)
+async def get_latest_videos(request: Request) -> YouTubeLatestResponse:
+    youtube_rate_limiter.check(request)
     return await youtube_service.get_latest_videos()
 
 
-@router.get("/live", response_model=YouTubeLiveResponse)
-async def get_live_status() -> YouTubeLiveResponse:
+@router.get(
+    "/live",
+    response_model=YouTubeLiveResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Verificar status de transmissão ao vivo",
+    description="Informa se a IASD Mangueiras está com um culto ou programação sendo transmitida ao vivo neste momento.",
+    responses={
+        200: {"description": "Status de transmissão ao vivo", "model": YouTubeLiveResponse},
+        429: {"description": "Limite de requisições excedido"},
+        500: {"description": "Erro ao consultar status da transmissão"},
+    },
+)
+async def get_live_status(request: Request) -> YouTubeLiveResponse:
+    youtube_rate_limiter.check(request)
     return await youtube_service.get_live_status()
+

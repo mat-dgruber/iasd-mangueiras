@@ -5,6 +5,8 @@
   <url><loc>https://iasdmangueiras.org.br/ao-vivo</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://iasdmangueiras.org.br/eventos</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://iasdmangueiras.org.br/ministerios</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://iasdmangueiras.org.br/estudos</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://iasdmangueiras.org.br/sou-novo</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
   <url><loc>https://iasdmangueiras.org.br/contato</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>

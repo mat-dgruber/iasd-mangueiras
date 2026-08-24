@@ -1,110 +1,80 @@
-# Backend API — IASD Mangueiras ⛪
+# Backend — IASD Mangueiras API 🚀
 
-API REST construída em **Python 3.14+ com FastAPI** e gerenciada com **uv**, responsável por prover integração segura com a YouTube Data API v3 (com cache TTL para economia de cota) e processamento dos formulários de contato e pedidos de oração.
+Serviço de backend construído em **Python 3.14+** com **FastAPI**, integração com **Scalar OpenAPI DX**, **Rate Limiting**, **Security Headers** e proxy seguro para **YouTube API** e formulários de atendimento.
 
 ---
 
 ## 🛠️ Stack Tecnológica
 
-- **Linguagem:** Python 3.14+
-- **Framework:** [FastAPI](https://fastapi.tiangolo.com/) (assíncrono, OpenAPI nativo)
-- **Gerenciador de Pacotes:** [uv](https://docs.astral.sh/uv/) (Astral)
-- **Validação e Tipagem:** [Pydantic v2](https://docs.pydantic.dev/) e [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)
-- **Cliente HTTP:** [HTTPX](https://www.python-httpx.org/) (AsyncClient)
-- **Testes Automatizados:** [Pytest](https://docs.pytest.org/) com suporte AnyIO
+- **Framework:** [FastAPI](https://fastapi.tiangolo.com/) (Async, Pydantic v2, OpenAPI 3.1)
+- **Documentação Interativa:** [Scalar FastAPI](https://github.com/scalar/scalar) (`scalar-fastapi`) com padrão DX auto-hospedado em `/scalar`
+- **Segurança & Resiliência:**
+  - Middleware de Cabeçalhos HTTP de Segurança (`X-Content-Type-Options`, `X-Frame-Options`, `HSTS`, `Permissions-Policy`, `Referrer-Policy`)
+  - Rate Limiting em memória thread-safe (5 req/min por IP) para formulários
+  - Sanitização rigorosa de texto contra injeção de scripts (XSS) e normalização Unicode NFC
+- **Integração Externa:** YouTube Data API v3 com cache em memória (TTL 30m)
+- **Gerenciador de Dependências:** [uv](https://github.com/astral-sh/uv)
+- **Testes:** [Pytest](https://docs.pytest.org/) com `anyio` e `httpx`
 
 ---
 
-## 📂 Estrutura de Pastas
+## 📖 Documentação Interativa da API (Scalar DX)
 
-```text
-backend/
-├── app/
-│   ├── api/
-│   │   └── routes/
-│   │       ├── contato.py         # Endpoint POST /api/contato
-│   │       ├── oracao.py          # Endpoint POST /api/oracao
-│   │       └── youtube.py         # Endpoints GET /api/youtube/latest e /live
-│   ├── core/
-│   │   ├── cache.py               # Cache em memória thread-safe com TTL
-│   │   └── config.py              # Configurações com pydantic-settings (.env)
-│   ├── models/
-│   │   ├── contato.py             # Modelos Pydantic de contato e oração
-│   │   └── youtube.py             # Modelos Pydantic de vídeo e live
-│   ├── services/
-│   │   ├── email_service.py       # Despacho de notificações de contato/oração
-│   │   └── youtube_service.py     # Integração YouTube Data API v3 + fallbacks
-│   └── main.py                    # App FastAPI, middlewares de CORS e routers
-├── tests/
-│   ├── test_forms.py              # Testes unitários para contato e oração
-│   └── test_youtube.py            # Testes unitários para rotas do YouTube
-├── .env                           # Credenciais locais (chaves e IDs)
-├── pyproject.toml                 # Dependências e configurações do projeto
-└── uv.lock                        # Lockfile determinístico do uv
-```
+O backend implementa a especificação OpenAPI 3.1 com interface moderna e rica renderizada via **Scalar**:
+
+- **Interface Interativa Scalar:** `http://localhost:8000/scalar`
+- **Especificação OpenAPI JSON:** `http://localhost:8000/openapi.json`
+- **Swagger UI Clássico:** `http://localhost:8000/docs`
 
 ---
 
-## ⚙️ Variáveis de Ambiente (.env)
+## 🧭 Endpoints Disponíveis
 
-Crie ou edite o arquivo `backend/.env`:
-
-```env
-# Configurações do App
-APP_ENV=development
-DEBUG=true
-
-# YouTube Data API v3
-YOUTUBE_API_KEY=AIzaSy...
-YOUTUBE_CHANNEL_ID=UC4x7BBBm6Ds1JZYit0yMhuQ
-YOUTUBE_CACHE_TTL_SECONDS=1800
-```
-
-> **Nota:** Se a `YOUTUBE_API_KEY` não for informada, o serviço utiliza dados estruturados de fallback institucional (incluindo a série _Presente 7_ e últimos cultos), garantindo que o frontend nunca fique quebrado ou vazio durante o desenvolvimento.
+| Método | Rota | Descrição | Tag |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/health` | Verificação de disponibilidade da API | Monitoramento & Saúde |
+| `GET` | `/api/youtube/latest` | Lista os últimos vídeos publicados no canal oficial | Transmissões & Vídeos |
+| `GET` | `/api/youtube/live` | Verifica se há culto/transmissão ao vivo ativa | Transmissões & Vídeos |
+| `POST` | `/api/contato` | Envia mensagem de contato com validação e rate limit | Contato & Atendimento |
+| `POST` | `/api/oracao` | Envia pedido de oração com opção de sigilo pastoral | Oração & Intercessão |
 
 ---
 
 ## 🚀 Como Executar Localmente
 
-### 1. Pré-requisitos
-
-- Ter o gerenciador [uv](https://docs.astral.sh/uv/) instalado (`curl -LsSf https://astral.sh/uv/install.sh | sh` ou via Homebrew).
-
-### 2. Instalar dependências
+### 1. Instalar dependências com `uv`
 
 ```bash
 cd backend
 uv sync
 ```
 
-### 3. Iniciar o servidor de desenvolvimento
+### 2. Configurar variáveis de ambiente (`.env`)
+
+Crie o arquivo `.env` baseado no exemplo:
+
+```env
+APP_NAME="IASD Mangueiras API"
+APP_ENV=development
+DEBUG=true
+YOUTUBE_API_KEY=sua_chave_opcional
+YOUTUBE_CHANNEL_ID=UC4x7BBBm6Ds1JZYit0yMhuQ
+```
+
+### 3. Iniciar o servidor Uvicorn
 
 ```bash
 uv run uvicorn app.main:app --reload --port 8000
 ```
 
-- **API Base:** `http://localhost:8000`
-- **Documentação Swagger (OpenAPI):** `http://localhost:8000/docs`
-- **Documentação Redoc:** `http://localhost:8000/redoc`
+Acesse a API em `http://localhost:8000/health` e a documentação em `http://localhost:8000/scalar`.
 
 ---
 
-## 🧪 Como Rodar os Testes
+## 🧪 Testes Automatizados
 
-Para executar toda a suíte de testes com Pytest:
+Para rodar todos os testes de segurança, rotas e documentação:
 
 ```bash
 uv run pytest
 ```
-
----
-
-## 📌 Endpoints da API
-
-| Método | Rota                  | Descrição                                                             |
-| ------ | --------------------- | --------------------------------------------------------------------- |
-| `GET`  | `/health`             | Verificação de saúde da API                                           |
-| `GET`  | `/api/youtube/latest` | Lista os últimos vídeos/cultos gravados do canal (cache de 30 min)    |
-| `GET`  | `/api/youtube/live`   | Verifica se há culto/transmissão ao vivo acontecendo (cache de 5 min) |
-| `POST` | `/api/contato`        | Processa mensagem de contato institucional                            |
-| `POST` | `/api/oracao`         | Processa pedido de oração (com suporte a confidencialidade)           |

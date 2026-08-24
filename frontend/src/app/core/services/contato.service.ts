@@ -2,12 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 import { ContatoPayload, FormResponse, OracaoPayload } from '../models/contato.models';
 
 @Injectable({ providedIn: 'root' })
 export class ContatoService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8000/api';
+  private readonly apiUrl = environment.apiUrl;
+
 
   sendContato(data: ContatoPayload): Observable<FormResponse> {
     return this.http.post<FormResponse>(`${this.apiUrl}/contato`, data).pipe(

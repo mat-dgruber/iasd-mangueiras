@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 import { VideoItem, YouTubeLatestResponse, YouTubeLiveResponse } from '../models/youtube.models';
 
 export const DEFAULT_VIDEOS: readonly VideoItem[] = [
@@ -34,7 +35,8 @@ export const DEFAULT_VIDEOS: readonly VideoItem[] = [
 @Injectable({ providedIn: 'root' })
 export class YoutubeService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8000/api/youtube';
+  private readonly apiUrl = `${environment.apiUrl}/youtube`;
+
 
   readonly videos = signal<readonly VideoItem[]>(DEFAULT_VIDEOS);
   readonly isLive = signal<boolean>(false);

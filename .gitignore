@@ -110,3 +110,6 @@ htmlcov/
 .playwright-mcp/
 continue-*.md
 .agents/
+.firebase/
+graphify-out/
+

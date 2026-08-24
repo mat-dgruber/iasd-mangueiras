@@ -1,11 +1,9 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import {
-  GoogleAuthProvider,
   User,
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  signInWithPopup,
   signOut,
 } from 'firebase/auth';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -16,6 +14,7 @@ export class AuthService {
 
   readonly currentUser = signal<User | null>(null);
   readonly isAuthenticated = computed(() => this.currentUser() !== null);
+  readonly isInitialized = signal<boolean>(false);
   readonly isLoading = signal<boolean>(false);
   readonly errorMessage = signal<string | null>(null);
 
@@ -23,30 +22,27 @@ export class AuthService {
     if (this.firebase.auth) {
       onAuthStateChanged(this.firebase.auth, (user) => {
         this.currentUser.set(user);
+        this.isInitialized.set(true);
       });
+    } else {
+      this.isInitialized.set(true);
     }
   }
 
-
-  async loginWithGoogle(): Promise<User | null> {
-    if (!this.firebase.auth) {
-      this.errorMessage.set('Firebase Auth indisponível.');
-      return null;
-    }
-    this.isLoading.set(true);
-    this.errorMessage.set(null);
-    try {
-      const provider = new GoogleAuthProvider();
-      const credential = await signInWithPopup(this.firebase.auth, provider);
-      this.currentUser.set(credential.user);
-      this.isLoading.set(false);
-      return credential.user;
-    } catch (err: unknown) {
-      this.isLoading.set(false);
-      const msg = (err as Error)?.message || 'Erro ao autenticar com o Google.';
-      this.errorMessage.set(msg);
-      throw err;
-    }
+  async waitForAuthInit(): Promise<void> {
+    if (this.isInitialized()) return;
+    return new Promise<void>((resolve) => {
+      const interval = setInterval(() => {
+        if (this.isInitialized()) {
+          clearInterval(interval);
+          resolve();
+        }
+      }, 25);
+      setTimeout(() => {
+        clearInterval(interval);
+        resolve();
+      }, 2500);
+    });
   }
 
   async loginWithEmail(email: string, pass: string): Promise<User | null> {
@@ -91,3 +87,4 @@ export class AuthService {
     await sendPasswordResetEmail(this.firebase.auth, email);
   }
 }
+

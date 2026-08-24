@@ -32,55 +32,100 @@ import { AdminCmsService } from '../../../core/services/admin-cms.service';
       </header>
 
       <!-- Cards de Métricas e Resumos -->
-      <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <!-- Eventos -->
-        <div class="rounded-2xl border border-advent-border bg-white p-6 shadow-sm">
+        <div class="rounded-2xl border border-advent-border bg-white p-5 shadow-sm">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-advent-muted">Eventos na Agenda</span>
-            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-advent-blue text-lg">
+            <span class="text-xs font-bold uppercase tracking-wider text-advent-muted"
+              >Eventos na Agenda</span
+            >
+            <span
+              class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-advent-blue text-base"
+            >
               📅
             </span>
           </div>
-          <div class="mt-4 flex items-baseline gap-2">
-            <span class="text-3xl font-bold text-advent-text">{{ totalEventos() }}</span>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-2xl font-bold text-advent-text">{{ totalEventos() }}</span>
             <span class="text-xs text-advent-muted">programações</span>
           </div>
-          <a routerLink="/admin/eventos" class="mt-4 inline-block text-xs font-semibold text-advent-blue hover:underline">
+          <a
+            routerLink="/admin/eventos"
+            class="mt-3 inline-block text-xs font-semibold text-advent-blue hover:underline"
+          >
             Gerenciar eventos →
           </a>
         </div>
 
         <!-- Comunicados -->
-        <div class="rounded-2xl border border-advent-border bg-white p-6 shadow-sm">
+        <div class="rounded-2xl border border-advent-border bg-white p-5 shadow-sm">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-advent-muted">Comunicados & Banners</span>
-            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 text-lg">
+            <span class="text-xs font-bold uppercase tracking-wider text-advent-muted"
+              >Comunicados & Banners</span
+            >
+            <span
+              class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 text-base"
+            >
               📢
             </span>
           </div>
-          <div class="mt-4 flex items-baseline gap-2">
-            <span class="text-3xl font-bold text-advent-text">{{ totalComunicados() }}</span>
-            <span class="text-xs text-advent-muted">avisos ativos</span>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-2xl font-bold text-advent-text">{{ totalComunicados() }}</span>
+            <span class="text-xs text-advent-muted">avisos</span>
           </div>
-          <a routerLink="/admin/comunicados" class="mt-4 inline-block text-xs font-semibold text-advent-blue hover:underline">
-            Gerenciar comunicados →
+          <a
+            routerLink="/admin/comunicados"
+            class="mt-3 inline-block text-xs font-semibold text-advent-blue hover:underline"
+          >
+            Gerenciar avisos →
+          </a>
+        </div>
+
+        <!-- Pequenos Grupos -->
+        <div class="rounded-2xl border border-advent-border bg-white p-5 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-advent-muted"
+              >Pequenos Grupos</span
+            >
+            <span
+              class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 text-base"
+            >
+              🏠
+            </span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-2xl font-bold text-advent-text">{{ totalPgs() }}</span>
+            <span class="text-xs text-indigo-700 font-semibold">em Tatuí</span>
+          </div>
+          <a
+            routerLink="/admin/pgs"
+            class="mt-3 inline-block text-xs font-semibold text-advent-blue hover:underline"
+          >
+            Gerenciar PGs →
           </a>
         </div>
 
         <!-- Pedidos de Oração -->
-        <div class="rounded-2xl border border-advent-border bg-white p-6 shadow-sm">
+        <div class="rounded-2xl border border-advent-border bg-white p-5 shadow-sm">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-advent-muted">Pedidos de Oração</span>
-            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 text-lg">
+            <span class="text-xs font-bold uppercase tracking-wider text-advent-muted"
+              >Pedidos de Oração</span
+            >
+            <span
+              class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 text-base"
+            >
               🙏
             </span>
           </div>
-          <div class="mt-4 flex items-baseline gap-2">
-            <span class="text-3xl font-bold text-advent-text">{{ totalOracoes() }}</span>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-2xl font-bold text-advent-text">{{ totalOracoes() }}</span>
             <span class="text-xs text-emerald-700 font-semibold">recebidos</span>
           </div>
-          <a routerLink="/admin/oracoes" class="mt-4 inline-block text-xs font-semibold text-advent-blue hover:underline">
-            Ver caixa de entrada →
+          <a
+            routerLink="/admin/oracoes"
+            class="mt-3 inline-block text-xs font-semibold text-advent-blue hover:underline"
+          >
+            Ver orações →
           </a>
         </div>
       </div>
@@ -93,15 +138,20 @@ import { AdminCmsService } from '../../../core/services/admin-cms.service';
         <div class="mt-4 grid gap-4 md:grid-cols-3 text-xs text-advent-text leading-relaxed">
           <div class="bg-white p-4 rounded-xl border border-blue-100/80 shadow-2xs">
             <strong class="block text-sm text-advent-blue mb-1">1. Alterações em Tempo Real</strong>
-            Tudo o que você publicar, editar ou excluir aqui no painel aparecerá imediatamente para os visitantes do site.
+            Tudo o que você publicar, editar ou excluir aqui no painel aparecerá imediatamente para
+            os visitantes do site.
           </div>
           <div class="bg-white p-4 rounded-xl border border-blue-100/80 shadow-2xs">
-            <strong class="block text-sm text-advent-blue mb-1">2. Fotos & Cartazes</strong>
-            Ao cadastrar um evento, você pode enviar o cartaz da programação diretamente pelo computador ou celular.
+            <strong class="block text-sm text-advent-blue mb-1"
+              >2. Pequenos Grupos & Banners</strong
+            >
+            Cadastre os Pequenos Grupos nos bairros de Tatuí e atualize os contatos de líderes no
+            WhatsApp.
           </div>
           <div class="bg-white p-4 rounded-xl border border-blue-100/80 shadow-2xs">
             <strong class="block text-sm text-advent-blue mb-1">3. Pedidos Confidenciais</strong>
-            Pedidos marcados como confidenciais pelo visitante só podem ser vistos pela liderança autenticada neste painel.
+            Pedidos marcados como confidenciais pelo visitante só podem ser vistos pela liderança
+            autenticada neste painel.
           </div>
         </div>
       </section>
@@ -116,6 +166,7 @@ export class AdminDashboardPage implements OnInit {
 
   readonly totalEventos = signal<number>(0);
   readonly totalComunicados = signal<number>(0);
+  readonly totalPgs = signal<number>(0);
   readonly totalOracoes = signal<number>(0);
 
   async ngOnInit(): Promise<void> {
@@ -124,6 +175,9 @@ export class AdminDashboardPage implements OnInit {
 
     const comunicados = await this.cmsService.getComunicados();
     this.totalComunicados.set(comunicados.length);
+
+    const pgs = await this.cmsService.getPgs();
+    this.totalPgs.set(pgs.length > 0 ? pgs.length : 6);
 
     const oracoes = await this.cmsService.getOracoes();
     this.totalOracoes.set(oracoes.length);

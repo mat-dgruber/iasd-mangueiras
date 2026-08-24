@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { FirebaseService } from '../firebase/firebase.service';
-import { Evento, Comunicado } from '../models/content.models';
+import { Evento, Comunicado, PequenoGrupo } from '../models/content.models';
 
 export interface PedidoOracaoAdmin {
   id?: string;
@@ -177,6 +177,43 @@ export class AdminCmsService {
   async deleteAvisoHorario(id: string): Promise<void> {
     if (!this.firebase.firestore) throw new Error('Firestore indisponível');
     const docRef = doc(this.firebase.firestore, 'avisos_horarios', id);
+    await deleteDoc(docRef);
+  }
+
+  // ----------------------------------------------------
+  // PEQUENOS GRUPOS (PGs)
+  // ----------------------------------------------------
+  async getPgs(): Promise<PequenoGrupo[]> {
+    if (!this.firebase.firestore) return [];
+    try {
+      const colRef = collection(this.firebase.firestore, 'pequenos_grupos');
+      const snap = await getDocs(colRef);
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as unknown as PequenoGrupo);
+    } catch {
+      return [];
+    }
+  }
+
+  async savePg(pg: Partial<PequenoGrupo>, id?: string): Promise<string> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    if (id) {
+      const docRef = doc(this.firebase.firestore, 'pequenos_grupos', id);
+      await updateDoc(docRef, { ...pg, updated_at: serverTimestamp() });
+      return id;
+    } else {
+      const colRef = collection(this.firebase.firestore, 'pequenos_grupos');
+      const res = await addDoc(colRef, {
+        ...pg,
+        ativo: pg.ativo ?? true,
+        created_at: serverTimestamp(),
+      });
+      return res.id;
+    }
+  }
+
+  async deletePg(id: string): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'pequenos_grupos', id);
     await deleteDoc(docRef);
   }
 }

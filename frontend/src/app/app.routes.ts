@@ -28,6 +28,11 @@ export const routes: Routes = [
     title: 'Ministérios — IASD Mangueiras',
   },
   {
+    path: 'estudos',
+    loadComponent: () => import('./features/estudos/estudos.page').then((m) => m.EstudosPage),
+    title: 'Estudos Bíblicos & PGs — IASD Mangueiras',
+  },
+  {
     path: 'sou-novo',
     loadComponent: () => import('./features/sou-novo/sou-novo.page').then((m) => m.SouNovoPage),
     title: 'Sou novo — IASD Mangueiras',
@@ -72,6 +77,12 @@ export const routes: Routes = [
         title: 'Gestão de Comunicados — IASD Mangueiras',
       },
       {
+        path: 'pgs',
+        loadComponent: () =>
+          import('./features/admin/pgs/admin-pgs.page').then((m) => m.AdminPgsPage),
+        title: 'Gestão de Pequenos Grupos — IASD Mangueiras',
+      },
+      {
         path: 'oracoes',
         loadComponent: () =>
           import('./features/admin/oracoes/admin-oracoes.page').then((m) => m.AdminOracoesPage),
@@ -85,6 +96,7 @@ export const routes: Routes = [
       },
     ],
   },
+
   {
     path: '**',
     loadComponent: () => import('./features/not-found/not-found.page').then((m) => m.NotFoundPage),

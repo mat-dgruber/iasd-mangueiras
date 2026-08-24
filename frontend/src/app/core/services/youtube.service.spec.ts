@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { environment } from '../../../environments/environment';
 import { YoutubeService, DEFAULT_VIDEOS } from './youtube.service';
 
 describe('YoutubeService', () => {
@@ -30,7 +31,7 @@ describe('YoutubeService', () => {
       expect(vids[0].id).toBe('test-vid');
     });
 
-    const req = httpMock.expectOne('http://localhost:8000/api/youtube/latest');
+    const req = httpMock.expectOne(`${environment.apiUrl}/youtube/latest`);
     expect(req.request.method).toBe('GET');
     req.flush({
       channel_id: 'test-chan',
@@ -54,9 +55,10 @@ describe('YoutubeService', () => {
       expect(vids).toEqual(DEFAULT_VIDEOS);
     });
 
-    const req = httpMock.expectOne('http://localhost:8000/api/youtube/latest');
+    const req = httpMock.expectOne(`${environment.apiUrl}/youtube/latest`);
     req.error(new ProgressEvent('Network error'));
 
     expect(service.videos()).toEqual(DEFAULT_VIDEOS);
   });
 });
+

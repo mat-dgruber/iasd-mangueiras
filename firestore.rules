@@ -3,42 +3,88 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Regras para Conteúdos Públicos (Eventos, Comunicados, Ministérios, Avisos)
+    // Funções de verificação e controle de acesso baseado em papéis (RBAC)
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.admin == true ||
+        request.auth.token.role == 'admin' ||
+        exists(/databases/$(database)/documents/usuarios_admin/$(request.auth.uid)) ||
+        (request.auth.token.email != null && request.auth.token.email.matches('(?i).*@iasdmangueiras\\.org\\.br$'))
+      );
+    }
+
+    // Regras para Conteúdos Públicos (Eventos, Comunicados, Ministérios, PGs, Avisos, Configurações, Lições)
+    // Leitura irrestrita para visitantes; gravação restrita estritamente a administradores.
     match /eventos/{document} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
     match /comunicados/{document} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
     match /ministerios/{document} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
     match /avisos_horarios/{document} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
     match /configuracoes/{document} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
-    // Pedidos de Oração e Estudos Bíblicos
-    // Qualquer visitante pode enviar; somente líderes autenticados podem ler, atualizar ou excluir.
+    match /pequenos_grupos/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /licoes/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Pedidos de Oração
+    // Criação pública com validação rigorosa de tipos e limites de payload (Anti-DoS).
+    // Leitura, atualização e exclusão restritas exclusivamente à liderança autorizada (RBAC).
     match /pedidos_oracao/{document} {
-      allow create: if true;
-      allow read, update, delete: if request.auth != null;
+      allow create: if request.resource.data.nome is string
+                    && request.resource.data.nome.size() >= 2
+                    && request.resource.data.nome.size() <= 120
+                    && request.resource.data.pedido is string
+                    && request.resource.data.pedido.size() <= 3000
+                    && (!('telefone' in request.resource.data) || (request.resource.data.telefone is string && request.resource.data.telefone.size() <= 30))
+                    && (!('confidencial' in request.resource.data) || request.resource.data.confidencial is bool);
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Solicitações de Estudo Bíblico
+    // Criação pública protegida com validação de campos.
+    // Leitura e gestão restritas estritamente a administradores.
+    match /pedidos_estudo/{document} {
+      allow create: if request.resource.data.nome is string
+                    && request.resource.data.nome.size() >= 2
+                    && request.resource.data.nome.size() <= 120
+                    && (!('telefone' in request.resource.data) || (request.resource.data.telefone is string && request.resource.data.telefone.size() <= 30))
+                    && (!('email' in request.resource.data) || (request.resource.data.email is string && request.resource.data.email.size() <= 120));
+      allow read, update, delete: if isAdmin();
     }
 
     // Coleção de Usuários Administrativos
+    // Apenas administradores podem gerenciar a lista de usuários admin.
     match /usuarios_admin/{userId} {
-      allow read, write: if request.auth != null;
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow write: if isAdmin();
     }
   }
 }
