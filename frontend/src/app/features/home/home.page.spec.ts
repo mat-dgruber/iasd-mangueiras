@@ -4,7 +4,18 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideRouter } from '@angular/router';
 import { HomePage } from './home.page';
 import { environment } from '../../../environments/environment';
-import { DEFAULT_VIDEOS } from '../../core/services/youtube.service';
+import { VideoItem } from '../../core/models/youtube.models';
+
+const MOCK_FEATURED_VIDEOS: VideoItem[] = [
+  {
+    id: 'test-feat-1',
+    title: 'Culto de Sábado — Transmissão Oficial',
+    description: 'Culto de adoração da IASD Mangueiras',
+    thumbnail_url: 'https://i.ytimg.com/vi/test-feat-1/hqdefault.jpg',
+    published_at: '2026-08-22T10:15:00Z',
+    video_url: 'https://www.youtube.com/watch?v=test-feat-1',
+  },
+];
 
 describe('HomePage', () => {
   let fixture: ComponentFixture<HomePage>;
@@ -22,7 +33,7 @@ describe('HomePage', () => {
 
     // Responde à requisição inicial de vídeos
     const req = httpMock.expectOne(`${environment.apiUrl}/youtube/latest`);
-    req.flush({ videos: DEFAULT_VIDEOS });
+    req.flush({ videos: MOCK_FEATURED_VIDEOS });
     fixture.detectChanges();
   });
 

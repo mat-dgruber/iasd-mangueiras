@@ -489,6 +489,10 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                     </div>
                   </div>
                 </article>
+              } @empty {
+                <div class="w-full py-8 text-center text-sm text-advent-muted">
+                  Nenhum episódio carregado no momento.
+                </div>
               }
             </div>
           </div>
@@ -896,7 +900,7 @@ export class AoVivoPage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.youtubeService.fetchLiveStatus().subscribe();
-    this.youtubeService.fetchLatestVideos().subscribe();
+    this.youtubeService.fetchCatalogVideos().subscribe();
     this.youtubeService.fetchPresente7Videos().subscribe();
     this.updateCountdown();
 

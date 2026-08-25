@@ -8,11 +8,54 @@ import {
   OFFICIAL_LIVE_SERVICES,
 } from './ao-vivo.page';
 import { environment } from '../../../environments/environment';
-import {
-  DEFAULT_VIDEOS,
-  DEFAULT_PRESENTE7_VIDEOS,
-  YoutubeService,
-} from '../../core/services/youtube.service';
+import { YoutubeService } from '../../core/services/youtube.service';
+import { VideoItem } from '../../core/models/youtube.models';
+
+const MOCK_TEST_VIDEOS: VideoItem[] = [
+  {
+    id: 'sab-1',
+    title: 'Saudade! - Parte 1 | Culto de Sábado',
+    description: 'Culto de adoração e mensagem bíblica na IASD Mangueiras em Tatuí-SP.',
+    thumbnail_url: 'https://i.ytimg.com/vi/QpQF6hCmAw8/hqdefault.jpg',
+    published_at: '2026-08-22T10:15:00Z',
+    video_url: 'https://www.youtube.com/watch?v=QpQF6hCmAw8',
+  },
+  {
+    id: 'dom-1',
+    title: 'A Imortalidade da Alma — Ademir Mendes | Culto de Domingo',
+    description: 'Culto evangelístico e estudo das verdades bíblicas na IASD Mangueiras.',
+    thumbnail_url: 'https://i.ytimg.com/vi/Gk7BusYGpVg/hqdefault.jpg',
+    published_at: '2026-08-23T19:30:00Z',
+    video_url: 'https://www.youtube.com/watch?v=Gk7BusYGpVg',
+  },
+  {
+    id: 'qua-1',
+    title: 'Servir — Josy Monteiro Cesar | Culto de Quarta',
+    description: 'Culto de oração e testemunho no meio de semana na IASD Mangueiras.',
+    thumbnail_url: 'https://i.ytimg.com/vi/v5On3uvpMe0/hqdefault.jpg',
+    published_at: '2026-08-19T19:30:00Z',
+    video_url: 'https://www.youtube.com/watch?v=v5On3uvpMe0',
+  },
+];
+
+const MOCK_TEST_PRESENTE7_VIDEOS: VideoItem[] = [
+  {
+    id: 'p7-1',
+    title: 'Lição 9 — Ministério Movido pelo Amor | Presente 7',
+    description: 'Estudo bíblico aprofundado e reflexão temática da série especial Presente 7.',
+    thumbnail_url: 'https://i.ytimg.com/vi/g_Xv8zP_Y1U/hqdefault.jpg',
+    published_at: '2026-08-22T11:00:00Z',
+    video_url: 'https://www.youtube.com/watch?v=g_Xv8zP_Y1U',
+  },
+  {
+    id: 'p7-2',
+    title: 'Lição 8 — O Poder da Ressurreição de Cristo | Presente 7',
+    description: 'Comentários inspiradores e aplicação prática da lição da Escola Sabatina.',
+    thumbnail_url: 'https://i.ytimg.com/vi/GYHNPDQTQcY/hqdefault.jpg',
+    published_at: '2026-08-15T11:00:00Z',
+    video_url: 'https://www.youtube.com/watch?v=GYHNPDQTQcY',
+  },
+];
 
 describe('AoVivoPage', () => {
   let fixture: ComponentFixture<AoVivoPage>;
@@ -36,11 +79,14 @@ describe('AoVivoPage', () => {
     const reqLive = httpMock.match(`${environment.apiUrl}/youtube/live`);
     reqLive.forEach((r) => r.flush({ is_live: false, live_video: null }));
 
+    const reqCatalog = httpMock.match(`${environment.apiUrl}/youtube/catalog`);
+    reqCatalog.forEach((r) => r.flush({ videos: MOCK_TEST_VIDEOS }));
+
     const reqLatest = httpMock.match(`${environment.apiUrl}/youtube/latest`);
-    reqLatest.forEach((r) => r.flush({ videos: DEFAULT_VIDEOS }));
+    reqLatest.forEach((r) => r.flush({ videos: MOCK_TEST_VIDEOS }));
 
     const reqPresente7 = httpMock.match(`${environment.apiUrl}/youtube/presente7`);
-    reqPresente7.forEach((r) => r.flush({ videos: DEFAULT_PRESENTE7_VIDEOS }));
+    reqPresente7.forEach((r) => r.flush({ videos: MOCK_TEST_PRESENTE7_VIDEOS }));
 
     fixture.detectChanges();
   });
@@ -87,7 +133,7 @@ describe('AoVivoPage', () => {
     expect(fixture.nativeElement.querySelector('iframe')).toBeNull();
 
     // Reabertura e fechamento direto
-    component.openModal(DEFAULT_VIDEOS[0]);
+    component.openModal(MOCK_TEST_VIDEOS[0]);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('iframe')).not.toBeNull();
 

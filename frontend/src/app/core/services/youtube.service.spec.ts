@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { environment } from '../../../environments/environment';
-import { YoutubeService, DEFAULT_VIDEOS, DEFAULT_PRESENTE7_VIDEOS } from './youtube.service';
+import { YoutubeService } from './youtube.service';
 
 describe('YoutubeService', () => {
   let service: YoutubeService;
@@ -20,10 +20,9 @@ describe('YoutubeService', () => {
     httpMock.verify();
   });
 
-  it('inicia com lista de vídeos padrão', () => {
-    expect(service.videos().length).toBeGreaterThan(0);
-    expect(service.videos()[0].title).toBe(DEFAULT_VIDEOS[0].title);
-    expect(service.presente7Videos().length).toBe(6);
+  it('inicia com listas de vídeos vazias', () => {
+    expect(service.videos()).toEqual([]);
+    expect(service.presente7Videos()).toEqual([]);
   });
 
   it('faz fetch dos vídeos e atualiza signal em sucesso', () => {
@@ -93,26 +92,26 @@ describe('YoutubeService', () => {
     expect(service.presente7Videos()[0].id).toBe('p7-1');
   });
 
-  it('faz fallback para DEFAULT_VIDEOS quando a API falha', () => {
+  it('define lista vazia quando a API falha', () => {
     service.fetchLatestVideos().subscribe((vids) => {
-      expect(vids).toEqual(DEFAULT_VIDEOS);
+      expect(vids).toEqual([]);
     });
 
     const req = httpMock.expectOne(`${environment.apiUrl}/youtube/latest`);
     req.error(new ProgressEvent('Network error'));
 
-    expect(service.videos()).toEqual(DEFAULT_VIDEOS);
+    expect(service.videos()).toEqual([]);
   });
 
-  it('faz fallback para DEFAULT_PRESENTE7_VIDEOS quando a API de presente7 falha', () => {
+  it('define lista vazia quando a API de presente7 falha', () => {
     service.fetchPresente7Videos().subscribe((vids) => {
-      expect(vids).toEqual(DEFAULT_PRESENTE7_VIDEOS);
+      expect(vids).toEqual([]);
     });
 
     const req = httpMock.expectOne(`${environment.apiUrl}/youtube/presente7`);
     req.error(new ProgressEvent('Network error'));
 
-    expect(service.presente7Videos()).toEqual(DEFAULT_PRESENTE7_VIDEOS);
+    expect(service.presente7Videos()).toEqual([]);
   });
 
   it('faz fetch do status de live e atualiza signals isLive e liveVideo', () => {
