@@ -59,8 +59,8 @@ describe('AoVivoPage', () => {
 
   it('inclui episódios recentes da série Presente 7', () => {
     const text = fixture.nativeElement.textContent;
-    expect(text).toContain('Série Presente 7 — Lição da Semana');
-    expect(text).toContain('Série Presente 7 — Princípios e Fundamentos da Fé');
+    expect(text).toContain('Lição 9 — Ministério Movido pelo Amor');
+    expect(text).toContain('Lição 8 — O Poder da Ressurreição de Cristo');
   });
 
   it('abre e fecha o player modal de vídeo inline seguro', () => {
@@ -180,7 +180,8 @@ describe('AoVivoPage', () => {
           t.includes('adoração') ||
           t.includes('adoracao') ||
           t.includes('identidade') ||
-          t.includes('divino')
+          t.includes('divino') ||
+          t.includes('escola sabatina')
         );
       }),
     ).toBe(true);
@@ -192,15 +193,15 @@ describe('AoVivoPage', () => {
   });
 
   it('filtra vídeos instantaneamente pelo campo de busca', () => {
-    component.onSearchInput({ target: { value: 'Identidade' } } as unknown as Event);
+    component.onSearchInput({ target: { value: 'Saudade' } } as unknown as Event);
     fixture.detectChanges();
 
-    expect(component.searchQuery()).toBe('Identidade');
+    expect(component.searchQuery()).toBe('Saudade');
     expect(component.filteredVideos().length).toBeGreaterThan(0);
     expect(
       component.filteredVideos().every((v) =>
-        v.title.toLowerCase().includes('identidade') ||
-        v.description.toLowerCase().includes('identidade')
+        v.title.toLowerCase().includes('saudade') ||
+        v.description.toLowerCase().includes('saudade')
       )
     ).toBe(true);
 

@@ -23,7 +23,7 @@ describe('YoutubeService', () => {
   it('inicia com lista de vídeos padrão', () => {
     expect(service.videos().length).toBeGreaterThan(0);
     expect(service.videos()[0].title).toBe(DEFAULT_VIDEOS[0].title);
-    expect(service.presente7Videos().length).toBe(4);
+    expect(service.presente7Videos().length).toBe(6);
   });
 
   it('faz fetch dos vídeos e atualiza signal em sucesso', () => {
