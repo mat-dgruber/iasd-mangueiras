@@ -5,14 +5,17 @@ export interface Horario {
   horario: string;
   descricao: string;
   ativo?: boolean;
+  ordem?: number;
 }
 
 export interface AvisoHorarioEspecial {
   id?: string;
   titulo: string;
-  mensagem: string;
-  ativo: boolean;
   data_evento?: string;
+  mensagem: string;
+  ativo?: boolean;
+  expira_em?: string; // Formato YYYY-MM-DD
+  createdAt?: string;
 }
 
 export interface Evento {

@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { FirebaseService } from '../firebase/firebase.service';
-import { Evento, Comunicado, PequenoGrupo, AvisoHorarioEspecial, EscalaItem, Ministerio } from '../models/content.models';
+import { Evento, Comunicado, PequenoGrupo, AvisoHorarioEspecial, EscalaItem, Ministerio, Horario } from '../models/content.models';
 
 export interface PedidoOracaoAdmin {
   id?: string;
@@ -136,6 +136,55 @@ export class AdminCmsService {
   }
 
   // ----------------------------------------------------
+  // HORÁRIOS REGULARES
+  // ----------------------------------------------------
+  async getHorariosRegulares(): Promise<Horario[]> {
+    if (!this.firebase.firestore) return [];
+    try {
+      const colRef = collection(this.firebase.firestore, 'horarios_regulares');
+      const q = query(colRef, orderBy('ordem', 'asc'));
+      const snap = await getDocs(q);
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as unknown as Horario);
+    } catch {
+      return [];
+    }
+  }
+
+  async saveHorarioRegular(horario: Partial<Horario>, id?: string): Promise<string> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docId = id || horario.id;
+    if (docId) {
+      const docRef = doc(this.firebase.firestore, 'horarios_regulares', docId);
+      const dataToUpdate = { ...horario };
+      delete dataToUpdate.id;
+      await updateDoc(docRef, { ...dataToUpdate, updated_at: serverTimestamp() });
+      return docId;
+    } else {
+      const colRef = collection(this.firebase.firestore, 'horarios_regulares');
+      const dataToSave = { ...horario };
+      delete dataToSave.id;
+      const res = await addDoc(colRef, {
+        ...dataToSave,
+        ativo: horario.ativo ?? true,
+        created_at: serverTimestamp(),
+      });
+      return res.id;
+    }
+  }
+
+  async deleteHorarioRegular(id: string): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'horarios_regulares', id);
+    await deleteDoc(docRef);
+  }
+
+  async toggleHorarioAtivo(id: string, ativo: boolean): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'horarios_regulares', id);
+    await updateDoc(docRef, { ativo, updated_at: serverTimestamp() });
+  }
+
+  // ----------------------------------------------------
   // AVISOS DE HORÁRIOS ESPECIAIS
   // ----------------------------------------------------
   async getAvisosHorarios(): Promise<AvisoHorarioEspecial[]> {
@@ -151,14 +200,19 @@ export class AdminCmsService {
 
   async saveAvisoHorario(aviso: Partial<AvisoHorarioEspecial>, id?: string): Promise<string> {
     if (!this.firebase.firestore) throw new Error('Firestore indisponível');
-    if (id) {
-      const docRef = doc(this.firebase.firestore, 'avisos_horarios', id);
-      await updateDoc(docRef, { ...aviso, updated_at: serverTimestamp() });
-      return id;
+    const docId = id || aviso.id;
+    if (docId) {
+      const docRef = doc(this.firebase.firestore, 'avisos_horarios', docId);
+      const dataToUpdate = { ...aviso };
+      delete dataToUpdate.id;
+      await updateDoc(docRef, { ...dataToUpdate, updated_at: serverTimestamp() });
+      return docId;
     } else {
       const colRef = collection(this.firebase.firestore, 'avisos_horarios');
+      const dataToSave = { ...aviso };
+      delete dataToSave.id;
       const res = await addDoc(colRef, {
-        ...aviso,
+        ...dataToSave,
         ativo: aviso.ativo ?? true,
         created_at: serverTimestamp(),
       });

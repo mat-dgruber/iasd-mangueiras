@@ -38,16 +38,38 @@ export class ContentService {
   constructor() {
     if (isPlatformBrowser(this.platformId) && this.firebase.firestore) {
       try {
+        // Listener de Horários Regulares em Tempo Real
+        const horariosCol = collection(this.firebase.firestore, 'horarios_regulares');
+        const qHorarios = query(horariosCol, orderBy('ordem', 'asc'));
+        onSnapshot(
+          qHorarios,
+          (snap) => {
+            if (!snap.empty) {
+              const list = snap.docs.map(
+                (doc) => ({ id: doc.id, ...doc.data() }) as unknown as Horario,
+              );
+              const active = list.filter((h) => h.ativo !== false);
+              this._horarios.set(active.length > 0 ? active : (defaultHorarios as readonly Horario[]));
+            } else {
+              this._horarios.set(defaultHorarios as readonly Horario[]);
+            }
+          },
+          () => {},
+        );
+
         // Listener de Avisos de Horários Especiais em Tempo Real
         const avisosCol = collection(this.firebase.firestore, 'avisos_horarios');
         onSnapshot(
           avisosCol,
           (snap) => {
             if (!snap.empty) {
+              const today = new Date().toISOString().split('T')[0];
               const list = snap.docs.map(
                 (doc) => ({ id: doc.id, ...doc.data() }) as unknown as AvisoHorarioEspecial,
               );
-              this._avisosHorarios.set(list.filter((a) => a.ativo !== false));
+              this._avisosHorarios.set(
+                list.filter((a) => a.ativo !== false && (!a.expira_em || a.expira_em >= today)),
+              );
             } else {
               this._avisosHorarios.set([]);
             }
