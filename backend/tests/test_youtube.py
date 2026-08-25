@@ -19,7 +19,12 @@ async def test_get_latest_videos() -> None:
         data = response.json()
         assert "videos" in data
         assert len(data["videos"]) > 0
-        assert "title" in data["videos"][0]
+        for video in data["videos"]:
+            assert "id" in video and bool(video["id"])
+            assert "title" in video and bool(video["title"])
+            assert "thumbnail_url" in video and bool(video["thumbnail_url"])
+            assert "published_at" in video and bool(video["published_at"])
+            assert "video_url" in video and bool(video["video_url"])
 
 
 @pytest.mark.anyio
@@ -29,7 +34,13 @@ async def test_get_presente7_videos() -> None:
         assert response.status_code == 200
         data = response.json()
         assert "videos" in data
-        assert len(data["videos"]) == 2
+        assert len(data["videos"]) >= 2
+        for video in data["videos"]:
+            assert "id" in video and bool(video["id"])
+            assert "title" in video and bool(video["title"])
+            assert "thumbnail_url" in video and bool(video["thumbnail_url"])
+            assert "published_at" in video and bool(video["published_at"])
+            assert "video_url" in video and bool(video["video_url"])
         assert "Presente 7" in data["videos"][0]["title"]
 
 
