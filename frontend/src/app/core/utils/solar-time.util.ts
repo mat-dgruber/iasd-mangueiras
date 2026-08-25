@@ -70,8 +70,9 @@ export function getSunsetTime(
   while (localMinutes < 0) localMinutes += 1440;
   while (localMinutes >= 1440) localMinutes -= 1440;
 
-  const hours = Math.floor(localMinutes / 60);
-  const minutes = Math.round(localMinutes % 60);
+  const totalMinutes = Math.round(localMinutes);
+  const hours = Math.floor(totalMinutes / 60) % 24;
+  const minutes = totalMinutes % 60;
 
   const formatted = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
   return { hours, minutes, formatted };

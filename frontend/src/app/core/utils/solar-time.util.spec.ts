@@ -42,4 +42,23 @@ describe('solar-time.util', () => {
     const nonSabbathCheck = getSabbathSunsets(sundayMorning);
     expect(nonSabbathCheck.isSabbathNow).toBe(false);
   });
+
+  it('deve arredondar minutos no limite de virada de hora sem gerar minutos inválidos (ex: 60)', () => {
+    // Datas com frações de minutos próximas a 59.5+ (ex: 2026-08-29, 2026-08-30, 2026-01-31)
+    const boundaryDates = [
+      new Date(2026, 0, 31, 12, 0, 0), // 31/01/2026
+      new Date(2026, 3, 14, 12, 0, 0), // 14/04/2026
+      new Date(2026, 7, 29, 12, 0, 0), // 29/08/2026
+      new Date(2026, 7, 30, 12, 0, 0), // 30/08/2026
+      new Date(2026, 11, 29, 12, 0, 0), // 29/12/2026
+    ];
+
+    for (const d of boundaryDates) {
+      const sunset = getSunsetTime(d);
+      expect(sunset.minutes).toBeGreaterThanOrEqual(0);
+      expect(sunset.minutes).toBeLessThan(60);
+      expect(sunset.formatted).not.toContain(':60');
+      expect(sunset.formatted).toMatch(/^\d{2}:[0-5]\d$/);
+    }
+  });
 });
