@@ -2012,6 +2012,8 @@ export class EstudosPage {
 
   readonly verses = signal<DailyVerse[]>(this.bibleService.getCuratedVerses());
   readonly selectedBackground = signal<StoryBackground>(STORY_BACKGROUND_PRESETS[0]);
+  // ponytail: alias de compatibilidade para caches e hot-reload anteriores
+  readonly selectedTheme = computed(() => this.selectedBackground().id);
   readonly selectedFormat = signal<StoryFormat>('story');
   readonly overlayOpacity = signal<number>(STORY_BACKGROUND_PRESETS[0].defaultOverlayOpacity);
   readonly overlayOpacityPercent = computed(() => Math.round(this.overlayOpacity() * 100));
@@ -2185,6 +2187,12 @@ export class EstudosPage {
   selectBackground(bg: StoryBackground): void {
     this.selectedBackground.set(bg);
     this.overlayOpacity.set(bg.defaultOverlayOpacity ?? 0.5);
+  }
+
+  // ponytail: alias de compatibilidade para hot-reload
+  selectTheme(id: string): void {
+    const bg = this.backgroundPresets.find((p) => p.id === id);
+    if (bg) this.selectBackground(bg);
   }
 
   setBackgroundTab(tab: 'photo' | 'gradient' | 'custom'): void {
