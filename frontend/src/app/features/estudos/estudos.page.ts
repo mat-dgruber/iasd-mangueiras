@@ -1646,9 +1646,21 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       max="85"
                       [value]="overlayOpacityPercent()"
                       (input)="onOpacityChange($event)"
-                      class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-advent-blue min-h-[44px]"
+                      class="w-full h-2.5 rounded-lg appearance-none cursor-pointer accent-[#003767] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-advent-blue transition-all"
+                      [style.background]="
+                        'linear-gradient(to right, #003767 0%, #003767 ' +
+                        dimmingSliderFillPercent() +
+                        '%, #E2E8F0 ' +
+                        dimmingSliderFillPercent() +
+                        '%, #E2E8F0 100%)'
+                      "
                       aria-label="Controle de opacidade do escurecimento do fundo"
                     />
+                    <div class="flex items-center justify-between text-[10px] font-medium text-advent-muted px-0.5">
+                      <span>35% (Sutil)</span>
+                      <span>60% (Recomendado)</span>
+                      <span>85% (Forte)</span>
+                    </div>
                     <p class="text-[10px] text-advent-muted">
                       Ajuste o contraste escuro sobre a foto para garantir máxima legibilidade do
                       texto sagrado.
@@ -2343,6 +2355,13 @@ export class EstudosPage {
   readonly selectedFormat = signal<StoryFormat>('story');
   readonly overlayOpacity = signal<number>(STORY_BACKGROUND_PRESETS[0].defaultOverlayOpacity);
   readonly overlayOpacityPercent = computed(() => Math.round(this.overlayOpacity() * 100));
+  readonly dimmingSliderFillPercent = computed(() => {
+    const min = 35;
+    const max = 85;
+    const val = this.overlayOpacityPercent();
+    const clamped = Math.max(min, Math.min(max, val));
+    return Math.round(((clamped - min) / (max - min)) * 100);
+  });
   readonly aiQuery = signal<string>('');
   readonly aiMatches = signal<SemanticVerseMatch[]>([]);
   readonly isSearchingAi = signal<boolean>(false);

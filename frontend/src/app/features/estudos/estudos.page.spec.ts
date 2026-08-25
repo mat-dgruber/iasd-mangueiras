@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 import { EstudosPage } from './estudos.page';
 import { ContentService } from '../../core/services/content.service';
 import { FirebaseService } from '../../core/firebase/firebase.service';
@@ -135,12 +136,20 @@ describe('EstudosPage', () => {
   });
 
   it('sorteia uma passagem bíblica online aleatória', () => {
-    const spy = vi.spyOn(bibleService, 'fetchPassage');
+    const mockVerse = {
+      id: 'random-1',
+      referencia: '1 Pedro 5:7',
+      texto: 'Lançando sobre ele toda a vossa ansiedade...',
+      tema: 'Palavra Inspiradora',
+      categoria: 'geral' as const,
+    };
+    const spy = vi.spyOn(bibleService, 'fetchPassage').mockReturnValue(of(mockVerse));
     component.drawRandomOnlineVerse();
 
     expect(component.popularOnlineReferences.length).toBeGreaterThan(0);
     expect(component.popularOnlineReferences).toContain(component.bibleQuery());
     expect(spy).toHaveBeenCalled();
+    expect(component.currentVerse().id).toBe('random-1');
   });
 
   it('copia o texto do versículo e aciona feedback', () => {
@@ -176,10 +185,12 @@ describe('EstudosPage', () => {
   it('permite ajustar a opacidade do escurecimento do fundo', () => {
     component.setOverlayOpacity(0.75);
     expect(component.overlayOpacity()).toBe(0.75);
+    expect(component.dimmingSliderFillPercent()).toBe(80); // (75 - 35) / 50 * 100 = 80
 
     const event = { target: { value: '65' } } as unknown as Event;
     component.onOpacityChange(event);
     expect(component.overlayOpacity()).toBe(0.65);
+    expect(component.dimmingSliderFillPercent()).toBe(60); // (65 - 35) / 50 * 100 = 60
   });
 
   it('permite carregar imagem personalizada do usuário', () => {
