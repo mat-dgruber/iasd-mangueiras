@@ -17,6 +17,7 @@ describe('EstudosPage', () => {
   let httpTesting: HttpTestingController;
   let storyCanvas: StoryCanvasService;
   let verseAi: VerseAiService;
+  let bibleService: BibleService;
 
   beforeAll(() => {
     // Polyfill do Canvas em ambiente JSDOM
@@ -63,6 +64,7 @@ describe('EstudosPage', () => {
     httpTesting = TestBed.inject(HttpTestingController);
     storyCanvas = TestBed.inject(StoryCanvasService);
     verseAi = TestBed.inject(VerseAiService);
+    bibleService = TestBed.inject(BibleService);
     fixture = TestBed.createComponent(EstudosPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -130,6 +132,15 @@ describe('EstudosPage', () => {
     expect(component.isSearchingBible()).toBe(false);
     expect(component.currentVerse().referencia).toBe('João 14:1');
     expect(component.currentVerse().texto).toContain('Não se turbe o vosso coração');
+  });
+
+  it('sorteia uma passagem bíblica online aleatória', () => {
+    const spy = vi.spyOn(bibleService, 'fetchPassage');
+    component.drawRandomOnlineVerse();
+
+    expect(component.popularOnlineReferences.length).toBeGreaterThan(0);
+    expect(component.popularOnlineReferences).toContain(component.bibleQuery());
+    expect(spy).toHaveBeenCalled();
   });
 
   it('copia o texto do versículo e aciona feedback', () => {

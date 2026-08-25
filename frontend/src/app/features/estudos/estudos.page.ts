@@ -20,7 +20,6 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
 import { VerseAiService } from '../../core/services/verse-ai.service';
 import { StoryCanvasService } from '../../core/services/story-canvas.service';
 
-
 @Component({
   selector: 'app-estudos-page',
   standalone: true,
@@ -44,7 +43,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
           >
             Crescimento Espiritual & Comunhão
           </span>
-          <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-advent-text sm:text-4xl md:text-5xl">
+          <h1
+            class="mt-3 text-3xl font-extrabold tracking-tight text-advent-text sm:text-4xl md:text-5xl"
+          >
             Estudos Bíblicos & Pequenos Grupos
           </h1>
           <p class="mt-3 text-base sm:text-lg text-advent-muted leading-relaxed">
@@ -55,7 +56,11 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
 
         <!-- Alternador de Abas Principais (Sem quebras desordenadas e sem scroll lateral) -->
         <div class="mt-8 border-b border-advent-border w-full min-w-0">
-          <nav class="flex gap-2 sm:gap-6 overflow-x-auto no-scrollbar scroll-smooth -mb-px w-full min-w-0" role="tablist" aria-label="Abas de Conteúdo">
+          <nav
+            class="flex gap-2 sm:gap-6 overflow-x-auto no-scrollbar scroll-smooth -mb-px w-full min-w-0"
+            role="tablist"
+            aria-label="Abas de Conteúdo"
+          >
             <button
               type="button"
               role="tab"
@@ -551,7 +556,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                 <div
                   class="group relative overflow-hidden flex flex-col justify-between rounded-3xl border border-orange-200/90 bg-gradient-to-b from-orange-50/90 via-orange-50/30 to-white p-6 md:p-7 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-orange-400"
                 >
-                  <div class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-orange-400/15 blur-2xl pointer-events-none"></div>
+                  <div
+                    class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-orange-400/15 blur-2xl pointer-events-none"
+                  ></div>
 
                   <div class="relative z-10">
                     <!-- Eyebrow Badge Row: Sem colisão e sem corte -->
@@ -561,7 +568,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       >
                         Juventude & Reflexão
                       </span>
-                      <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-orange-700">
+                      <span
+                        class="inline-flex items-center gap-1.5 text-[11px] font-bold text-orange-700"
+                      >
                         <span class="h-2 w-2 rounded-full bg-orange-500"></span>
                         YouTube
                       </span>
@@ -580,17 +589,23 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                         />
                       </div>
                       <div class="min-w-0 flex-1">
-                        <h3 class="text-xl font-black text-advent-text tracking-tight truncate leading-tight">
+                        <h3
+                          class="text-xl font-black text-advent-text tracking-tight truncate leading-tight"
+                        >
                           Canal Lamed
                         </h3>
-                        <p class="mt-0.5 text-xs font-bold text-orange-700 flex items-center gap-0.5">
+                        <p
+                          class="mt-0.5 text-xs font-bold text-orange-700 flex items-center gap-0.5"
+                        >
                           <span class="opacity-75">@</span>Lamed148
                         </p>
                       </div>
                     </div>
 
                     <p class="mt-3.5 text-xs text-advent-muted leading-relaxed min-h-[58px]">
-                      Estudos semanais das Sagradas Escrituras voltados para adolescentes e jovens, articulando princípios bíblicos atemporais com reflexões contemporâneas e práticas para o cotidiano.
+                      Estudos semanais das Sagradas Escrituras voltados para adolescentes e jovens,
+                      articulando princípios bíblicos atemporais com reflexões contemporâneas e
+                      práticas para o cotidiano.
                     </p>
 
                     <div class="mt-4 flex flex-wrap gap-1.5">
@@ -633,7 +648,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                 <div
                   class="group relative overflow-hidden flex flex-col justify-between rounded-3xl border border-emerald-200/90 bg-gradient-to-b from-emerald-50/90 via-emerald-50/30 to-white p-6 md:p-7 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-emerald-400"
                 >
-                  <div class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-emerald-400/15 blur-2xl pointer-events-none"></div>
+                  <div
+                    class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-emerald-400/15 blur-2xl pointer-events-none"
+                  ></div>
 
                   <div class="relative z-10">
                     <!-- Eyebrow Badge Row -->
@@ -643,7 +660,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       >
                         Comentários & Dicas
                       </span>
-                      <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700">
+                      <span
+                        class="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700"
+                      >
                         <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
                         Semanal
                       </span>
@@ -654,20 +673,28 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       <div
                         class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-emerald-700 via-teal-800 to-emerald-950 border-2 border-emerald-500/40 text-white shadow-md shadow-emerald-950/20 p-2 transition-transform duration-300 group-hover:scale-105 overflow-hidden"
                       >
-                        <span class="font-sans text-2xl font-black tracking-tight text-white drop-shadow-xs">MB</span>
+                        <span
+                          class="font-sans text-2xl font-black tracking-tight text-white drop-shadow-xs"
+                          >MB</span
+                        >
                       </div>
                       <div class="min-w-0 flex-1">
-                        <h3 class="text-xl font-black text-advent-text tracking-tight truncate leading-tight">
+                        <h3
+                          class="text-xl font-black text-advent-text tracking-tight truncate leading-tight"
+                        >
                           Michelson Borges
                         </h3>
-                        <p class="mt-0.5 text-xs font-bold text-emerald-700 flex items-center gap-0.5">
+                        <p
+                          class="mt-0.5 text-xs font-bold text-emerald-700 flex items-center gap-0.5"
+                        >
                           <span class="opacity-75">@</span>MichelsonBorges
                         </p>
                       </div>
                     </div>
 
                     <p class="mt-3.5 text-xs text-advent-muted leading-relaxed min-h-[58px]">
-                      Comentários dinâmicos da Lição da Escola Sabatina, fidelidade ao texto bíblico e orientações pedagógicas para professores e estudantes da Bíblia.
+                      Comentários dinâmicos da Lição da Escola Sabatina, fidelidade ao texto bíblico
+                      e orientações pedagógicas para professores e estudantes da Bíblia.
                     </p>
 
                     <div class="mt-4 flex flex-wrap gap-1.5">
@@ -710,7 +737,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                 <div
                   class="group relative overflow-hidden flex flex-col justify-between rounded-3xl border border-rose-200/90 bg-gradient-to-b from-rose-50/90 via-rose-50/30 to-white p-6 md:p-7 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-rose-400"
                 >
-                  <div class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-rose-400/15 blur-2xl pointer-events-none"></div>
+                  <div
+                    class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-rose-400/15 blur-2xl pointer-events-none"
+                  ></div>
 
                   <div class="relative z-10">
                     <!-- Eyebrow Badge Row -->
@@ -720,7 +749,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       >
                         IASD Mangueiras
                       </span>
-                      <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-rose-800">
+                      <span
+                        class="inline-flex items-center gap-1.5 text-[11px] font-bold text-rose-800"
+                      >
                         <span class="h-2 w-2 rounded-full bg-rose-600"></span>
                         Canal Local
                       </span>
@@ -731,10 +762,15 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       <div
                         class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-rose-800 via-rose-900 to-pink-950 border-2 border-rose-600/40 text-white shadow-md shadow-rose-950/25 p-2 transition-transform duration-300 group-hover:scale-105 overflow-hidden"
                       >
-                        <span class="font-sans text-3xl font-black tracking-tight text-white drop-shadow-sm">7</span>
+                        <span
+                          class="font-sans text-3xl font-black tracking-tight text-white drop-shadow-sm"
+                          >7</span
+                        >
                       </div>
                       <div class="min-w-0 flex-1">
-                        <h3 class="text-xl font-black text-advent-text tracking-tight truncate leading-tight">
+                        <h3
+                          class="text-xl font-black text-advent-text tracking-tight truncate leading-tight"
+                        >
                           Presente 7
                         </h3>
                         <p class="mt-0.5 text-xs font-bold text-rose-800 flex items-center gap-0.5">
@@ -788,7 +824,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                 <div
                   class="group relative overflow-hidden flex flex-col justify-between rounded-3xl border border-blue-200/90 bg-gradient-to-b from-blue-50/90 via-blue-50/30 to-white p-6 md:p-7 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-blue-400"
                 >
-                  <div class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-blue-400/15 blur-2xl pointer-events-none"></div>
+                  <div
+                    class="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-blue-400/15 blur-2xl pointer-events-none"
+                  ></div>
 
                   <div class="relative z-10">
                     <!-- Eyebrow Badge Row -->
@@ -798,7 +836,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       >
                         Oficial CPB
                       </span>
-                      <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-advent-blue">
+                      <span
+                        class="inline-flex items-center gap-1.5 text-[11px] font-bold text-advent-blue"
+                      >
                         <span class="h-2 w-2 rounded-full bg-advent-blue"></span>
                         Lições
                       </span>
@@ -817,10 +857,14 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                         />
                       </div>
                       <div class="min-w-0 flex-1">
-                        <h3 class="text-xl font-black text-advent-text tracking-tight truncate leading-tight">
+                        <h3
+                          class="text-xl font-black text-advent-text tracking-tight truncate leading-tight"
+                        >
                           Lições da Bíblia
                         </h3>
-                        <p class="mt-0.5 text-xs font-bold text-advent-blue flex items-center gap-0.5">
+                        <p
+                          class="mt-0.5 text-xs font-bold text-advent-blue flex items-center gap-0.5"
+                        >
                           <span class="opacity-75">@</span>LicoesdaBiblia
                         </p>
                       </div>
@@ -1103,7 +1147,10 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
         <!-- ABA 3: VERSÍCULO DO DIA & ESTÚDIO DE STORIES -->
         <!-- ============================================================ -->
         @if (activeTab() === 'versiculo') {
-          <section class="mt-8 animate-fadeIn w-full min-w-0" aria-label="Versículo do Dia e Estúdio de Stories">
+          <section
+            class="mt-8 animate-fadeIn w-full min-w-0"
+            aria-label="Versículo do Dia e Estúdio de Stories"
+          >
             <div class="grid gap-8 lg:grid-cols-12 items-start w-full min-w-0">
               <!-- PAINEL ESQUERDO: CONTROLES & PERSONALIZAÇÃO (7 Colunas) -->
               <div class="lg:col-span-7 space-y-6 w-full min-w-0">
@@ -1115,16 +1162,31 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                     Versículo & Gerador de Stories
                   </h2>
                   <p class="mt-1 text-sm text-advent-muted leading-relaxed">
-                    Crie belos cards e stories com passagens bíblicas para compartilhar no Instagram, WhatsApp e redes sociais.
+                    Crie belos cards e stories com passagens bíblicas para compartilhar no
+                    Instagram, WhatsApp e redes sociais.
                   </p>
                 </div>
 
                 <!-- 1. SELETOR DE FORMATO (9:16 Story vs 1:1 Feed) -->
-                <div class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-3 w-full min-w-0">
+                <div
+                  class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-3 w-full min-w-0"
+                >
                   <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold uppercase tracking-wider text-advent-blue flex items-center gap-1.5">
-                      <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <span
+                      class="text-xs font-bold uppercase tracking-wider text-advent-blue flex items-center gap-1.5"
+                    >
+                      <svg
+                        class="h-4 w-4 shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
                       </svg>
                       Formato da Imagem
                     </span>
@@ -1145,9 +1207,22 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       "
                       aria-label="Selecionar formato Story 9 para 16"
                     >
-                      <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <svg
+                        class="h-5 w-5 shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
                         <rect x="5" y="2" width="14" height="20" rx="3" />
-                        <line x1="12" y1="18" x2="12" y2="18.01" stroke-width="2.5" stroke-linecap="round" />
+                        <line
+                          x1="12"
+                          y1="18"
+                          x2="12"
+                          y2="18.01"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                        />
                       </svg>
                       <div class="text-left">
                         <div class="text-xs font-bold leading-tight">Story (9:16)</div>
@@ -1166,7 +1241,13 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       "
                       aria-label="Selecionar formato Feed 1 para 1"
                     >
-                      <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <svg
+                        class="h-5 w-5 shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
                         <rect x="3" y="3" width="18" height="18" rx="2" />
                       </svg>
                       <div class="text-left">
@@ -1178,21 +1259,38 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                 </div>
 
                 <!-- 2. BUSCA INTELIGENTE POR SENTIMENTO (IA TENSORFLOW/SEMÂNTICA) -->
-                <div class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-4 w-full min-w-0">
+                <div
+                  class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-4 w-full min-w-0"
+                >
                   <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold uppercase tracking-wider text-advent-blue flex items-center gap-1.5">
-                      <svg class="h-4 w-4 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                    <span
+                      class="text-xs font-bold uppercase tracking-wider text-advent-blue flex items-center gap-1.5"
+                    >
+                      <svg
+                        class="h-4 w-4 shrink-0 text-amber-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
+                        />
                       </svg>
                       Sentimento & Inspiração com IA
                     </span>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    <span
+                      class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200"
+                    >
                       Busca Semântica
                     </span>
                   </div>
 
                   <p class="text-xs text-advent-muted">
-                    Como você está se sentindo hoje? Digite sua emoção ou necessidade e a IA encontrará a promessa bíblica ideal:
+                    Como você está se sentindo hoje? Digite sua emoção ou necessidade e a IA
+                    encontrará a promessa bíblica ideal:
                   </p>
 
                   <div class="flex flex-col sm:flex-row gap-2 w-full min-w-0">
@@ -1211,14 +1309,39 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       class="rounded-xl bg-advent-blue px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-advent-blue-dark active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-1.5 cursor-pointer shrink-0 min-h-[44px]"
                     >
                       @if (isSearchingAi()) {
-                        <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          class="animate-spin h-4 w-4 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                          ></circle>
+                          <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         <span>Buscando...</span>
                       } @else {
-                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        <svg
+                          class="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                          />
                         </svg>
                         <span>Buscar com IA</span>
                       }
@@ -1259,16 +1382,24 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                           >
                             <div class="truncate pr-2 min-w-0 flex-1">
                               <div class="flex items-center gap-2">
-                                <strong class="text-advent-text truncate">{{ match.verse.referencia }}</strong>
-                                <span class="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-[10px] font-bold">
+                                <strong class="text-advent-text truncate">{{
+                                  match.verse.referencia
+                                }}</strong>
+                                <span
+                                  class="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-[10px] font-bold"
+                                >
                                   {{ match.matchPercentage }}% Afinidade
                                 </span>
                               </div>
-                              <span class="text-[11px] font-normal text-advent-muted truncate block mt-0.5">
+                              <span
+                                class="text-[11px] font-normal text-advent-muted truncate block mt-0.5"
+                              >
                                 “{{ match.verse.texto }}”
                               </span>
                             </div>
-                            <span class="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-advent-muted ml-2">
+                            <span
+                              class="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-advent-muted ml-2"
+                            >
                               {{ match.verse.tema }}
                             </span>
                           </button>
@@ -1279,11 +1410,25 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                 </div>
 
                 <!-- 3. ESTÚDIO DE FUNDOS (FOTOS REAIS, GRADIENTES & FOTO DO USUÁRIO) -->
-                <div class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-4 w-full min-w-0">
+                <div
+                  class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-4 w-full min-w-0"
+                >
                   <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold uppercase tracking-wider text-advent-blue flex items-center gap-1.5">
-                      <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                    <span
+                      class="text-xs font-bold uppercase tracking-wider text-advent-blue flex items-center gap-1.5"
+                    >
+                      <svg
+                        class="h-4 w-4 shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
+                        />
                       </svg>
                       Estúdio de Fundos & Cores
                     </span>
@@ -1349,15 +1494,29 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                             loading="lazy"
                             class="h-20 w-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
-                          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-2">
+                          <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-2"
+                          >
                             <span class="text-[11px] font-bold text-white leading-tight truncate">
                               {{ preset.nome }}
                             </span>
                           </div>
                           @if (selectedBackground().id === preset.id) {
-                            <div class="absolute top-1.5 right-1.5 bg-advent-blue text-white rounded-full p-1 shadow-sm">
-                              <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            <div
+                              class="absolute top-1.5 right-1.5 bg-advent-blue text-white rounded-full p-1 shadow-sm"
+                            >
+                              <svg
+                                class="h-3 w-3"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="3"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M5 13l4 4L19 7"
+                                />
                               </svg>
                             </div>
                           }
@@ -1384,7 +1543,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                             class="h-10 w-full rounded-xl shadow-inner border border-white/20"
                             [style.background]="preset.bgGradientCss"
                           ></div>
-                          <span class="text-[11px] font-bold text-advent-text truncate w-full">{{ preset.nome }}</span>
+                          <span class="text-[11px] font-bold text-advent-text truncate w-full">{{
+                            preset.nome
+                          }}</span>
                         </button>
                       }
                     </div>
@@ -1402,15 +1563,21 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       />
 
                       @if (customImagePreview()) {
-                        <div class="flex items-center gap-4 p-3 rounded-2xl border border-advent-border bg-slate-50">
+                        <div
+                          class="flex items-center gap-4 p-3 rounded-2xl border border-advent-border bg-slate-50"
+                        >
                           <img
                             [src]="customImagePreview()"
                             alt="Prévia da foto personalizada"
                             class="h-16 w-16 rounded-xl object-cover border border-slate-300 shadow-xs"
                           />
                           <div class="flex-1 min-w-0">
-                            <div class="text-xs font-bold text-advent-text">Sua Foto Personalizada</div>
-                            <div class="text-[11px] text-advent-muted">Carregada e pronta para o story</div>
+                            <div class="text-xs font-bold text-advent-text">
+                              Sua Foto Personalizada
+                            </div>
+                            <div class="text-[11px] text-advent-muted">
+                              Carregada e pronta para o story
+                            </div>
                             <div class="flex gap-2 mt-2">
                               <button
                                 type="button"
@@ -1436,11 +1603,25 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                           (click)="customFileInput.click()"
                           class="w-full flex flex-col items-center justify-center p-6 border-2 border-dashed border-advent-blue/40 rounded-2xl bg-blue-50/30 hover:bg-blue-50/70 transition-all cursor-pointer min-h-[110px] focus-visible:ring-2 focus-visible:ring-advent-blue"
                         >
-                          <svg class="h-8 w-8 text-advent-blue mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          <svg
+                            class="h-8 w-8 text-advent-blue mb-2"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
                           </svg>
-                          <span class="text-xs font-bold text-advent-blue">Carregar Foto do Celular / Computador</span>
-                          <span class="text-[11px] text-advent-muted mt-0.5">JPG, PNG ou WebP em alta resolução</span>
+                          <span class="text-xs font-bold text-advent-blue"
+                            >Carregar Foto do Celular / Computador</span
+                          >
+                          <span class="text-[11px] text-advent-muted mt-0.5"
+                            >JPG, PNG ou WebP em alta resolução</span
+                          >
                         </button>
                       }
                     </div>
@@ -1453,7 +1634,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                         Escurecimento do Fundo: {{ overlayOpacityPercent() }}%
                       </label>
                       <span class="text-[10px] font-semibold text-advent-muted">
-                        {{ overlayOpacityPercent() < 50 ? 'Mais claro' : 'Alto contraste (WCAG AAA)' }}
+                        {{
+                          overlayOpacityPercent() < 50 ? 'Mais claro' : 'Alto contraste (WCAG AAA)'
+                        }}
                       </span>
                     </div>
                     <input
@@ -1467,21 +1650,38 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       aria-label="Controle de opacidade do escurecimento do fundo"
                     />
                     <p class="text-[10px] text-advent-muted">
-                      Ajuste o contraste escuro sobre a foto para garantir máxima legibilidade do texto sagrado.
+                      Ajuste o contraste escuro sobre a foto para garantir máxima legibilidade do
+                      texto sagrado.
                     </p>
                   </div>
                 </div>
 
                 <!-- 4. BUSCA BÍBLICA NA API & PROMESSAS POR CATEGORIA -->
-                <div class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-4 w-full min-w-0">
+                <div
+                  class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-4 w-full min-w-0"
+                >
                   <div class="flex items-center justify-between gap-2">
-                    <span class="text-xs font-bold uppercase tracking-wider text-advent-blue flex items-center gap-1.5 truncate">
-                      <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                    <span
+                      class="text-xs font-bold uppercase tracking-wider text-advent-blue flex items-center gap-1.5 truncate"
+                    >
+                      <svg
+                        class="h-4 w-4 shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+                        />
                       </svg>
-                      Buscar Passagem na Bíblia (API Online)
+                      Buscar Passagem na Bíblia
                     </span>
-                    <span class="text-[11px] font-semibold text-advent-muted shrink-0">Tradução Almeida</span>
+                    <span class="text-[11px] font-semibold text-advent-muted shrink-0"
+                      >Tradução Almeida</span
+                    >
                   </div>
 
                   <div class="flex flex-col sm:flex-row gap-2 w-full min-w-0">
@@ -1500,17 +1700,54 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       class="rounded-xl bg-advent-blue px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-advent-blue-dark active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-1.5 cursor-pointer shrink-0 min-h-[44px]"
                     >
                       @if (isSearchingBible()) {
-                        <svg class="animate-spin h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">
-                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          class="animate-spin h-3.5 w-3.5 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                          ></circle>
+                          <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         <span>Carregando...</span>
                       } @else {
-                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        <svg
+                          class="h-3.5 w-3.5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M12 4.5v15m7.5-7.5h-15"
+                          />
                         </svg>
                         <span>Carregar Passagem</span>
                       }
+                    </button>
+                    <button
+                      type="button"
+                      (click)="drawRandomOnlineVerse()"
+                      [disabled]="isSearchingBible()"
+                      class="rounded-xl border border-blue-200 bg-blue-50/80 px-4 py-2.5 text-xs font-bold text-advent-blue shadow-xs hover:bg-blue-100 hover:border-blue-300 active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-1.5 cursor-pointer shrink-0 min-h-[44px]"
+                      title="Sortear uma passagem bíblica online aleatória"
+                    >
+                      <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" />
+                      </svg>
+                      <span>🎲 Sortear</span>
                     </button>
                   </div>
 
@@ -1529,7 +1766,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                   </div>
 
                   @if (searchError()) {
-                    <p class="text-xs font-semibold text-rose-600 bg-rose-50 rounded-xl p-2.5 border border-rose-200 animate-fadeIn">
+                    <p
+                      class="text-xs font-semibold text-rose-600 bg-rose-50 rounded-xl p-2.5 border border-rose-200 animate-fadeIn"
+                    >
                       {{ searchError() }}
                     </p>
                   }
@@ -1639,10 +1878,16 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                           "
                         >
                           <div class="truncate pr-2 min-w-0 flex-1">
-                            <strong class="text-advent-text block truncate">{{ v.referencia }}</strong>
-                            <span class="text-[11px] font-normal text-advent-muted truncate block">“{{ v.texto }}”</span>
+                            <strong class="text-advent-text block truncate">{{
+                              v.referencia
+                            }}</strong>
+                            <span class="text-[11px] font-normal text-advent-muted truncate block"
+                              >“{{ v.texto }}”</span
+                            >
                           </div>
-                          <span class="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-advent-muted ml-2">
+                          <span
+                            class="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-advent-muted ml-2"
+                          >
                             {{ v.tema }}
                           </span>
                         </button>
@@ -1652,7 +1897,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                 </div>
 
                 <!-- 5. AÇÕES RÁPIDAS DE COMPARTILHAMENTO DE TEXTO -->
-                <div class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-3 w-full min-w-0">
+                <div
+                  class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-3 w-full min-w-0"
+                >
                   <span class="text-xs font-bold uppercase tracking-wider text-advent-blue block">
                     Citação & Compartilhamento Direto:
                   </span>
@@ -1663,8 +1910,18 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       (click)="copyVerseText()"
                       class="inline-flex items-center justify-center gap-2 rounded-xl border border-advent-border px-3.5 py-3 text-xs font-bold text-advent-text hover:bg-slate-50 transition-colors cursor-pointer min-h-[44px]"
                     >
-                      <svg class="h-4 w-4 shrink-0 text-advent-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                      <svg
+                        class="h-4 w-4 shrink-0 text-advent-muted"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"
+                        />
                       </svg>
                       <span class="truncate">{{ copyFeedback() || 'Copiar Citação Bíblica' }}</span>
                     </button>
@@ -1676,7 +1933,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       class="inline-flex items-center justify-center gap-2 rounded-xl bg-green-700 px-3.5 py-3 text-xs font-bold text-white shadow-xs hover:bg-green-800 transition-colors text-center min-h-[44px]"
                     >
                       <svg class="h-4 w-4 fill-current shrink-0" viewBox="0 0 24 24">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                        <path
+                          d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"
+                        />
                       </svg>
                       <span class="truncate">Enviar no WhatsApp</span>
                     </a>
@@ -1685,14 +1944,18 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
               </div>
 
               <!-- PAINEL DIREITO: LIVE PREVIEW RESPONSIVO & EXPORTAÇÃO (5 Colunas) -->
-              <div class="lg:col-span-5 w-full min-w-0 lg:sticky lg:top-24 flex flex-col items-center">
+              <div
+                class="lg:col-span-5 w-full min-w-0 lg:sticky lg:top-24 flex flex-col items-center"
+              >
                 <div class="w-full max-w-[360px] sm:max-w-[390px] mx-auto min-w-0">
                   <div class="flex items-center justify-between pb-3 px-1">
                     <span class="text-xs font-bold uppercase tracking-wider text-advent-blue">
                       Pré-Visualização em Tempo Real:
                     </span>
                     <span class="text-[11px] font-semibold text-advent-muted">
-                      {{ selectedFormat() === 'story' ? 'Formato 9:16 (Story)' : 'Formato 1:1 (Feed)' }}
+                      {{
+                        selectedFormat() === 'story' ? 'Formato 9:16 (Story)' : 'Formato 1:1 (Feed)'
+                      }}
                     </span>
                   </div>
 
@@ -1707,7 +1970,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                   >
                     <!-- Ilha Dinâmica do Celular (visível apenas em 9:16) -->
                     @if (selectedFormat() === 'story') {
-                      <div class="absolute top-3 left-1/2 -translate-x-1/2 h-3.5 w-24 rounded-full bg-slate-900 z-20 flex items-center justify-center pointer-events-none">
+                      <div
+                        class="absolute top-3 left-1/2 -translate-x-1/2 h-3.5 w-24 rounded-full bg-slate-900 z-20 flex items-center justify-center pointer-events-none"
+                      >
                         <div class="h-1.5 w-1.5 rounded-full bg-slate-950/80 mr-2.5"></div>
                         <div class="h-1.5 w-1.5 rounded-full bg-blue-950/80"></div>
                       </div>
@@ -1718,7 +1983,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       class="relative w-full h-full overflow-hidden p-5 sm:p-6 flex flex-col justify-between text-white transition-all duration-500 shadow-inner"
                       [class]="selectedFormat() === 'story' ? 'rounded-[28px]' : 'rounded-[20px]'"
                       [style.background]="
-                        selectedBackground().tipo === 'gradient' ? selectedBackground().bgGradientCss : 'transparent'
+                        selectedBackground().tipo === 'gradient'
+                          ? selectedBackground().bgGradientCss
+                          : 'transparent'
                       "
                     >
                       <!-- Imagem de Fundo (Foto real ou Foto do Usuário) -->
@@ -1728,7 +1995,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                           alt="Fundo personalizado do usuário"
                           class="absolute inset-0 w-full h-full object-cover pointer-events-none"
                         />
-                      } @else if (selectedBackground().tipo === 'photo' && selectedBackground().imageUrl) {
+                      } @else if (
+                        selectedBackground().tipo === 'photo' && selectedBackground().imageUrl
+                      ) {
                         <img
                           [src]="selectedBackground().imageUrl"
                           [alt]="selectedBackground().nome"
@@ -1743,7 +2012,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       ></div>
 
                       <!-- Vinheta Suave Superior e Inferior -->
-                      <div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/40 via-transparent to-black/50"></div>
+                      <div
+                        class="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/40 via-transparent to-black/50"
+                      ></div>
 
                       <!-- Borda Decorativa Acentuada -->
                       <div
@@ -1759,7 +2030,9 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                         >
                           IASD MANGUEIRAS • TATUÍ
                         </span>
-                        <span class="text-[11px] font-bold text-white/90 uppercase tracking-wider block">
+                        <span
+                          class="text-[11px] font-bold text-white/90 uppercase tracking-wider block"
+                        >
                           Versículo do Dia
                         </span>
                       </div>
@@ -1824,14 +2097,38 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       class="w-full rounded-2xl bg-advent-blue px-5 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-md hover:bg-advent-blue-dark active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 min-h-[44px]"
                     >
                       @if (isDownloading()) {
-                        <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          class="animate-spin h-4 w-4 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                          ></circle>
+                          <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         <span>Gerando em Alta Resolução...</span>
                       } @else {
-                        <svg class="h-4 w-4 fill-none shrink-0" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        <svg
+                          class="h-4 w-4 fill-none shrink-0"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+                          />
                         </svg>
                         <span>Baixar Imagem em Alta Resolução (PNG)</span>
                       }
@@ -1844,14 +2141,39 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                       class="w-full rounded-xl bg-slate-900 px-4 py-3 text-xs font-bold text-white shadow-xs hover:bg-slate-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 min-h-[44px]"
                     >
                       @if (isSharing()) {
-                        <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          class="animate-spin h-4 w-4 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                          ></circle>
+                          <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         <span>Preparando...</span>
                       } @else {
-                        <svg class="h-4 w-4 shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+                        <svg
+                          class="h-4 w-4 shrink-0 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"
+                          />
                         </svg>
                         <span>Compartilhar no Instagram / WhatsApp</span>
                       }
@@ -1867,13 +2189,17 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
                     </button>
 
                     @if (downloadSuccess()) {
-                      <div class="rounded-xl bg-emerald-50 border border-emerald-200 p-2.5 text-center text-xs font-bold text-emerald-700 animate-fadeIn">
+                      <div
+                        class="rounded-xl bg-emerald-50 border border-emerald-200 p-2.5 text-center text-xs font-bold text-emerald-700 animate-fadeIn"
+                      >
                         ✓ {{ downloadSuccess() }}
                       </div>
                     }
 
                     <p class="text-[11px] text-center text-advent-muted">
-                      Renderização direta no navegador em resolução 1080p ({{ selectedFormat() === 'story' ? '1080×1920' : '1080×1080' }}).
+                      Renderização direta no navegador em resolução 1080p ({{
+                        selectedFormat() === 'story' ? '1080×1920' : '1080×1080'
+                      }}).
                     </p>
                   </div>
                 </div>
@@ -2165,7 +2491,9 @@ export class EstudosPage {
 
         // Adiciona à lista caso não exista
         const currentList = this.verses();
-        if (!currentList.some((v) => v.referencia.toLowerCase() === verse.referencia.toLowerCase())) {
+        if (
+          !currentList.some((v) => v.referencia.toLowerCase() === verse.referencia.toLowerCase())
+        ) {
           this.verses.set([verse, ...currentList]);
         }
 
@@ -2173,11 +2501,43 @@ export class EstudosPage {
       },
       error: (err) => {
         this.searchError.set(
-          err.message || 'Passagem não encontrada. Tente outra referência como "João 14:1" ou "Salmos 23:1".',
+          err.message ||
+            'Passagem não encontrada. Tente outra referência como "João 14:1" ou "Salmos 23:1".',
         );
         this.isSearchingBible.set(false);
       },
     });
+  }
+
+  readonly popularOnlineReferences: string[] = [
+    'João 14:1-3',
+    'Salmos 23:1-3',
+    'Filipenses 4:13',
+    'Isaías 40:31',
+    'Jeremias 29:11',
+    'Romanos 8:28',
+    'Provérbios 3:5-6',
+    'Salmos 91:1-2',
+    'Josué 1:9',
+    'Mateus 11:28-30',
+    'Salmos 46:1',
+    '2 Coríntios 12:9',
+    '1 Pedro 5:7',
+    'Sofonias 3:17',
+    'Salmos 121:1-3',
+    'Apocalipse 21:4',
+    'João 3:16',
+    'Salmos 37:5',
+    'Isaías 41:10',
+    'Lamentações 3:22-23',
+  ];
+
+  drawRandomOnlineVerse(): void {
+    const list = this.popularOnlineReferences;
+    const randomIndex = Math.floor(Math.random() * list.length);
+    const selectedRef = list[randomIndex];
+    this.bibleQuery.set(selectedRef);
+    this.searchBiblePassage();
   }
 
   setFormat(format: StoryFormat): void {
