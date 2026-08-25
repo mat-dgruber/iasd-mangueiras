@@ -30,7 +30,7 @@ export class SeoService {
     this.meta.updateTag({ name: 'twitter:title', content: page.title });
     this.meta.updateTag({ name: 'twitter:description', content: page.description });
 
-    const imageUrl = page.image || `${SITE_CONFIG.siteUrl}/favicon.ico`;
+    const imageUrl = page.image || `${SITE_CONFIG.siteUrl}/og-image.png`;
     this.meta.updateTag({ property: 'og:image', content: imageUrl });
     this.meta.updateTag({ name: 'twitter:image', content: imageUrl });
 

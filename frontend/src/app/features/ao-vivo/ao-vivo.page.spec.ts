@@ -1,20 +1,42 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { AoVivoPage } from './ao-vivo.page';
+import { environment } from '../../../environments/environment';
+import { DEFAULT_VIDEOS, DEFAULT_PRESENTE7_VIDEOS } from '../../core/services/youtube.service';
 
 describe('AoVivoPage', () => {
   let fixture: ComponentFixture<AoVivoPage>;
   let component: AoVivoPage;
+  let httpMock: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AoVivoPage],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
     }).compileComponents();
+
+    httpMock = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(AoVivoPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    // Responde às requisições do YouTube se houverem
+    const reqLive = httpMock.match(`${environment.apiUrl}/youtube/live`);
+    reqLive.forEach((r) => r.flush({ is_live: false, live_video: null }));
+
+    const reqLatest = httpMock.match(`${environment.apiUrl}/youtube/latest`);
+    reqLatest.forEach((r) => r.flush({ videos: DEFAULT_VIDEOS }));
+
+    const reqPresente7 = httpMock.match(`${environment.apiUrl}/youtube/presente7`);
+    reqPresente7.forEach((r) => r.flush({ videos: DEFAULT_PRESENTE7_VIDEOS }));
+
+    fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    httpMock.verify();
   });
 
   it('exibe título principal, séries e mensagens recentes', () => {
@@ -25,10 +47,10 @@ describe('AoVivoPage', () => {
     expect(text).toContain('Mensagens Recentes');
   });
 
-  it('inclui episódios da série Presente 7', () => {
+  it('inclui episódios recentes da série Presente 7', () => {
     const text = fixture.nativeElement.textContent;
-    expect(text).toContain('O Princípio da Criação');
-    expect(text).toContain('Um Dia de Descanso e Cura');
+    expect(text).toContain('Série Presente 7 — Lição da Semana');
+    expect(text).toContain('Série Presente 7 — Princípios e Fundamentos da Fé');
   });
 
   it('abre e fecha o player modal de vídeo inline', () => {

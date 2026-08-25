@@ -5,30 +5,16 @@ version: 1.3.0
 date: 2026-08-24
 ---
 
-# <!--
+<!--
+LOG DE MANUTENÇÃO E ALTERAÇÕES DO DOCUMENTO
 
-# LOG DE MANUTENÇÃO E ALTERAÇÕES DO DOCUMENTO
-
-| Data          | Autor                                                | Descrição da Alteração                             |
-| ------------- | ---------------------------------------------------- | -------------------------------------------------- |
-| 2026-08-14    | Matheus Diniz                                        | Criação do Guia de Segurança Máxima unificado,     |
-| (OpenClaude)  | consolidando as ADRs 0010, 0014, 0016, 0019, 0021,   |
-|               | e 0022 do ecossistema meuCPB.                        |
-| 2026-08-14    | Matheus Diniz                                        | Expansão drástica do guia cobrindo padrões para    |
-| (OpenClaude)  | futuros projetos, boas práticas e correção de        |
-|               | inconformidades de markdownlint.                     |
-| 2026-08-14    | Matheus Diniz                                        | Integração síncrona completa das 16 ADRs ativas    |
-| (OpenClaude)  | de segurança do portal meuCPB e correção do MD030.   |
-| 2026-08-20    | Matheus Diniz                                        | Inclusão das diretrizes de segurança com Redis 8   |
-| (OpenClaude)  | (RedisBloom, ACLs v2, TLS 1.3), Scalar DX Security,  |
-|               | prevenção de Timing Attacks e Anti-SVG XSS.          |
-| 2026-08-24    | Matheus Diniz                                        | Atualização pós-implementação da Portaria 671/2021 |
-| (Antigravity) | e ADR 0040: antifraude não-bloqueante (Art. 74),     |
-|               | geofencing com persistência de auditoria, Zero-Trust |
-|               | de timestamp, leiaute AFD Anexo V, RBAC fiscal e     |
-|               | extração autônoma de comprovantes (Art. 80).         |
-
-=================================================================================
+| Data | Autor | Descrição da Alteração |
+| --- | --- | --- |
+| 2026-08-14 | Matheus Diniz (OpenClaude) | Criação do Guia de Segurança Máxima unificado, consolidando as ADRs 0010, 0014, 0016, 0019, 0021 e 0022 do ecossistema meuCPB. |
+| 2026-08-14 | Matheus Diniz (OpenClaude) | Expansão drástica do guia cobrindo padrões para futuros projetos, boas práticas e correção de inconformidades de markdownlint. |
+| 2026-08-14 | Matheus Diniz (OpenClaude) | Integração síncrona completa das 16 ADRs ativas de segurança do portal meuCPB e correção do MD030. |
+| 2026-08-20 | Matheus Diniz (OpenClaude) | Inclusão das diretrizes de segurança com Redis 8 (RedisBloom, ACLs v2, TLS 1.3), Scalar DX Security, prevenção de Timing Attacks e Anti-SVG XSS. |
+| 2026-08-24 | Matheus Diniz (Antigravity) | Atualização pós-implementação da Portaria 671/2021 e ADR 0040: antifraude não-bloqueante (Art. 74), geofencing com persistência de auditoria, Zero-Trust de timestamp, leiaute AFD Anexo V, RBAC fiscal e extração autônoma de comprovantes (Art. 80). |
 -->
 
 # 🛡️ Guia de Segurança Máxima, Conformidade e Governança Zero-Trust

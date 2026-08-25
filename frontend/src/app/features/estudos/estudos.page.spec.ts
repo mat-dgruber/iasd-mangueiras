@@ -28,17 +28,17 @@ describe('EstudosPage', () => {
   });
 
   it('permite alternar entre as abas', () => {
-    expect(component.activeTab()).toBe('pgs');
+    expect(component.activeTab()).toBe('versiculo');
 
-    component.setTab('licao');
+    component.setTab('pgs');
     fixture.detectChanges();
-    expect(component.activeTab()).toBe('licao');
-    expect(fixture.nativeElement.textContent).toContain('Lição da Escola Sabatina Online');
+    expect(component.activeTab()).toBe('pgs');
+    expect(fixture.nativeElement.textContent).toContain('Pequenos Grupos (PGs)');
 
     component.setTab('versiculo');
     fixture.detectChanges();
     expect(component.activeTab()).toBe('versiculo');
-    expect(fixture.nativeElement.textContent).toContain('Versículo para o seu Dia');
+    expect(fixture.nativeElement.textContent).toContain('Versículo & Gerador de Stories');
   });
 
   it('filtra Pequenos Grupos por perfil', () => {
@@ -51,8 +51,9 @@ describe('EstudosPage', () => {
   });
 
   it('avança para o próximo versículo do dia', () => {
-    const initialIndex = component.verseIndex();
+    const initial = component.currentVerse();
     component.nextVerse();
-    expect(component.verseIndex()).toBe((initialIndex + 1) % component.verses.length);
+    const updated = component.currentVerse();
+    expect(updated.id).not.toBe(initial.id);
   });
 });

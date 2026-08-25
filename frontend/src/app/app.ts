@@ -3,9 +3,10 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { FooterComponent } from './layout/footer/footer.component';
 import { HeaderComponent } from './layout/header/header.component';
+import { ToastContainerComponent } from './shared/ui/toast/toast-container.component';
 
 @Component({
-  imports: [RouterOutlet, HeaderComponent, FooterComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, ToastContainerComponent],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',

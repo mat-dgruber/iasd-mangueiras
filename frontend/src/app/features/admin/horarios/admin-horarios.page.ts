@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnInit, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AdminCmsService, AvisoHorarioEspecial } from '../../../core/services/admin-cms.service';
+import { AdminCmsService } from '../../../core/services/admin-cms.service';
+import { AvisoHorarioEspecial } from '../../../core/models/content.models';
 import defaultHorarios from '../../../../content/horarios.json';
 
 @Component({
@@ -13,7 +14,7 @@ import defaultHorarios from '../../../../content/horarios.json';
       <header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 class="text-2xl font-bold tracking-tight text-advent-text md:text-3xl">
-            ⏰ Horários & Avisos Especiais
+            Horários & Avisos Especiais
           </h1>
           <p class="text-sm text-advent-muted mt-1">
             Consulte a grade regular e publique alterações de cultos em datas comemorativas.
@@ -23,15 +24,18 @@ import defaultHorarios from '../../../../content/horarios.json';
         <button
           type="button"
           (click)="openModal()"
-          class="rounded-card bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner cursor-pointer"
+          class="rounded-card bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner cursor-pointer min-h-[40px] flex items-center justify-center"
         >
           + Aviso de Horário Especial
         </button>
       </header>
 
       @if (feedbackMsg()) {
-        <div class="mt-4 rounded-card border border-green-200 bg-green-50 p-3.5 text-xs font-semibold text-green-800 animate-fadeIn" role="status">
-          ✓ {{ feedbackMsg() }}
+        <div class="mt-4 rounded-card border border-green-200 bg-green-50 p-3.5 text-xs font-semibold text-green-800 animate-fadeIn flex items-center gap-2" role="status" aria-live="polite">
+          <svg class="h-4 w-4 shrink-0 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+          <span>{{ feedbackMsg() }}</span>
         </div>
       }
 
@@ -77,7 +81,8 @@ import defaultHorarios from '../../../../content/horarios.json';
                 <button
                   type="button"
                   (click)="deleteAviso(aviso)"
-                  class="rounded px-3 py-1.5 text-xs font-semibold text-red-600 bg-white border border-red-200 hover:bg-red-50 cursor-pointer"
+                  class="rounded-lg px-3.5 py-2 text-xs font-semibold text-red-600 bg-white border border-red-200 hover:bg-red-50 cursor-pointer min-h-[36px] flex items-center"
+                  aria-label="Remover aviso {{ aviso.titulo }}"
                 >
                   Remover
                 </button>
@@ -89,11 +94,25 @@ import defaultHorarios from '../../../../content/horarios.json';
 
       <!-- Modal Novo Aviso -->
       @if (isModalOpen()) {
-        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
+        <div
+          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-aviso-title"
+        >
           <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
             <div class="flex items-center justify-between pb-4 border-b border-advent-border">
-              <h3 class="text-lg font-bold text-advent-text">Novo Aviso de Horário Especial</h3>
-              <button type="button" (click)="closeModal()" class="text-advent-muted hover:text-advent-text text-lg cursor-pointer">✕</button>
+              <h3 id="modal-aviso-title" class="text-lg font-bold text-advent-text">Novo Aviso de Horário Especial</h3>
+              <button
+                type="button"
+                (click)="closeModal()"
+                class="text-advent-muted hover:text-advent-text cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg"
+                aria-label="Fechar modal"
+              >
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
 
             <form [formGroup]="avisoForm" (ngSubmit)="saveAviso()" class="mt-5 space-y-4">
@@ -180,6 +199,13 @@ export class AdminHorariosPage implements OnInit {
   openModal(): void {
     this.avisoForm.reset();
     this.isModalOpen.set(true);
+  }
+
+  @HostListener('window:keydown.escape')
+  onEscape(): void {
+    if (this.isModalOpen()) {
+      this.closeModal();
+    }
   }
 
   closeModal(): void {

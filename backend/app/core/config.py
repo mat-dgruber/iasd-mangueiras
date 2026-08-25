@@ -26,6 +26,11 @@ class Settings(BaseSettings):
     youtube_channel_id: str = "UC4x7BBBm6Ds1JZYit0yMhuQ"
     youtube_cache_ttl_seconds: int = 1800  # 30 minutos
 
+    # Notificações e Webhooks (Telegram / Discord / WhatsApp)
+    telegram_bot_token: str = ""
+    telegram_chat_id: str = ""
+    notification_webhook_url: str = ""
+    notifications_enabled: bool = True
 
 
 settings = Settings()

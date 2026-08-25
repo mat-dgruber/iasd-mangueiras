@@ -1,0 +1,21 @@
+{
+  "name": "iasd-mangueiras-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo da Plataforma IASD Mangueiras (Angular 22 SSR + FastAPI Python 3.14)",
+  "scripts": {
+    "dev": "concurrently -n \"FRONT,BACK\" -c \"cyan,green\" \"npm --prefix frontend start\" \"cd backend && uv run uvicorn app.main:app --reload --port 8000\"",
+    "start:front": "npm --prefix frontend start",
+    "start:back": "cd backend && uv run uvicorn app.main:app --reload --port 8000",
+    "test": "npm --prefix frontend run test:ci && cd backend && uv run pytest",
+    "test:front": "npm --prefix frontend run test:ci",
+    "test:back": "cd backend && uv run pytest",
+    "build": "npm --prefix frontend run build",
+    "check": "npm run test && npm run build",
+    "api:types": "npx openapi-typescript http://localhost:8000/openapi.json -o frontend/src/app/core/models/api-generated.d.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "openapi-typescript": "^7.6.1"
+  }
+}

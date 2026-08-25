@@ -25,6 +25,7 @@ describe('AdminDashboardPage', () => {
     expect(text).toContain('Comunicados & Banners');
     expect(text).toContain('Pequenos Grupos');
     expect(text).toContain('Pedidos de Oração');
+    expect(text).toContain('Escalas Semanais');
   });
 
 });

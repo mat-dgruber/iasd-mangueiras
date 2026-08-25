@@ -1,11 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { SouNovoPage } from './sou-novo.page';
 
 describe('SouNovoPage', () => {
   let fixture: ComponentFixture<SouNovoPage>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [SouNovoPage] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [SouNovoPage],
+      providers: [provideRouter([])],
+    }).compileComponents();
     fixture = TestBed.createComponent(SouNovoPage);
     fixture.detectChanges();
   });

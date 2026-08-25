@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'AdventSansLogo';
-  src: url('/assets/fonts/AdventSans-Logo.otf') format('opentype');
-  font-display: swap;
-}
-
 :root {
   color-scheme: light;
 }

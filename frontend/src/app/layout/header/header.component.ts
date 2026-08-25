@@ -6,11 +6,13 @@ import {
   ViewChild,
   signal,
 } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SITE_CONFIG } from '../../core/site/site.config';
 
 @Component({
   selector: 'app-header',
   standalone: true,
+  imports: [RouterLink, RouterLinkActive],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <a
@@ -27,7 +29,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
         <!-- Logo -->
         <a
           class="font-brand text-xl text-advent-blue transition-opacity hover:opacity-90 tracking-tight"
-          href="/"
+          routerLink="/"
           aria-label="IASD Mangueiras — início"
         >
           {{ site.name }}
@@ -37,30 +39,52 @@ import { SITE_CONFIG } from '../../core/site/site.config';
         <nav class="hidden md:block" aria-label="Navegação principal">
           <ul class="flex items-center gap-6 text-sm font-medium text-advent-text">
             <li>
-              <a class="transition-colors hover:text-advent-blue" href="/horarios">Horários</a>
+              <a
+                class="transition-colors hover:text-advent-blue pb-1"
+                routerLink="/horarios"
+                routerLinkActive="text-advent-blue font-bold border-b-2 border-advent-blue"
+              >Horários</a>
             </li>
             <li>
-              <a class="transition-colors hover:text-advent-blue" href="/ao-vivo">Ao vivo</a>
+              <a
+                class="transition-colors hover:text-advent-blue pb-1"
+                routerLink="/ao-vivo"
+                routerLinkActive="text-advent-blue font-bold border-b-2 border-advent-blue"
+              >Ao vivo</a>
             </li>
             <li>
-              <a class="transition-colors hover:text-advent-blue" href="/eventos">Eventos</a>
+              <a
+                class="transition-colors hover:text-advent-blue pb-1"
+                routerLink="/eventos"
+                routerLinkActive="text-advent-blue font-bold border-b-2 border-advent-blue"
+              >Eventos</a>
             </li>
             <li>
-              <a class="transition-colors hover:text-advent-blue" href="/ministerios"
-                >Ministérios</a
-              >
+              <a
+                class="transition-colors hover:text-advent-blue pb-1"
+                routerLink="/ministerios"
+                routerLinkActive="text-advent-blue font-bold border-b-2 border-advent-blue"
+              >Ministérios</a>
             </li>
             <li>
-              <a class="transition-colors hover:text-advent-blue" href="/estudos">Estudos & PGs</a>
+              <a
+                class="transition-colors hover:text-advent-blue pb-1"
+                routerLink="/estudos"
+                routerLinkActive="text-advent-blue font-bold border-b-2 border-advent-blue"
+              >Estudos & PGs</a>
             </li>
             <li>
-              <a class="transition-colors hover:text-advent-blue" href="/sou-novo">Sou novo</a>
+              <a
+                class="transition-colors hover:text-advent-blue pb-1"
+                routerLink="/sou-novo"
+                routerLinkActive="text-advent-blue font-bold border-b-2 border-advent-blue"
+              >Sou novo</a>
             </li>
 
             <li>
               <a
                 class="rounded-card bg-advent-blue px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner"
-                href="/contato"
+                routerLink="/contato"
               >
                 Contato
               </a>
@@ -151,7 +175,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 <li>
                   <a
                     class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
-                    href="/horarios"
+                    routerLink="/horarios"
                     (click)="closeMenu()"
                   >
                     <span class="flex items-center gap-3">
@@ -166,7 +190,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 <li>
                   <a
                     class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
-                    href="/ao-vivo"
+                    routerLink="/ao-vivo"
                     (click)="closeMenu()"
                   >
                     <span class="flex items-center gap-3">
@@ -181,7 +205,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 <li>
                   <a
                     class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
-                    href="/eventos"
+                    routerLink="/eventos"
                     (click)="closeMenu()"
                   >
                     <span class="flex items-center gap-3">
@@ -196,7 +220,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 <li>
                   <a
                     class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
-                    href="/ministerios"
+                    routerLink="/ministerios"
                     (click)="closeMenu()"
                   >
                     <span class="flex items-center gap-3">
@@ -211,7 +235,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 <li>
                   <a
                     class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
-                    href="/estudos"
+                    routerLink="/estudos"
                     (click)="closeMenu()"
                   >
                     <span class="flex items-center gap-3">
@@ -226,7 +250,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 <li>
                   <a
                     class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
-                    href="/sou-novo"
+                    routerLink="/sou-novo"
                     (click)="closeMenu()"
                   >
                     <span class="flex items-center gap-3">
@@ -246,7 +270,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
           <div class="mt-6 border-t border-advent-border pt-6 space-y-3">
             <a
               class="flex items-center justify-center gap-2 w-full rounded-card bg-advent-blue py-3 text-center text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98]"
-              href="/contato"
+              routerLink="/contato"
               (click)="closeMenu()"
             >
               <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">

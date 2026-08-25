@@ -58,4 +58,3 @@ Este documento consolida as diretrizes operacionais, arquiteturais e de governan
 - **SemVer (MAJOR.MINOR.PATCH)**: Conforme `docs/guides/semver-versioning-guide.md`.
 - **Documentação de Domínio**: Módulos de negócio documentados em `docs/domains/{modulo}/` com `overview.md`, `business-rules.md` e `tech-design.md`.
 - **Relatórios de Sessão**: Registre marcos e relatórios de desenvolvimento em `docs/reports/` ou `docs/commits/`.
-

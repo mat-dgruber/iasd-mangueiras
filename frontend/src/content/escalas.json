@@ -1,0 +1,47 @@
+[
+  {
+    "id": "escala-1",
+    "data": "2026-08-29",
+    "dia_semana": "Sábado",
+    "departamento": "Sonorização & Transmissão",
+    "oficiais": ["Matheus Diniz", "Lucas Oliveira"],
+    "horario": "08:45 às 12:00",
+    "observacoes": "Chegar 15 min antes para teste dos microfones e link do YouTube."
+  },
+  {
+    "id": "escala-2",
+    "data": "2026-08-29",
+    "dia_semana": "Sábado",
+    "departamento": "Diaconato",
+    "oficiais": ["Paulo Roberto", "Gabriel Souza", "José Silva"],
+    "horario": "08:40 às 12:30",
+    "observacoes": "Apoio no estacionamento, recolhimento dos dízimos e climatização."
+  },
+  {
+    "id": "escala-3",
+    "data": "2026-08-29",
+    "dia_semana": "Sábado",
+    "departamento": "Recepção",
+    "oficiais": ["Ana Paula Diniz", "Carla Rodrigues"],
+    "horario": "08:45 às 10:30",
+    "observacoes": "Acolhimento aos visitantes na porta principal e entrega de boletins."
+  },
+  {
+    "id": "escala-4",
+    "data": "2026-08-29",
+    "dia_semana": "Sábado",
+    "departamento": "Escola Sabatina",
+    "oficiais": ["Prof. Marcos Vinicius", "Mariana Santos"],
+    "horario": "09:00 às 10:15",
+    "observacoes": "Abertura, carta missionária e dinâmica de estudo nas classes."
+  },
+  {
+    "id": "escala-5",
+    "data": "2026-08-29",
+    "dia_semana": "Sábado",
+    "departamento": "Música & Louvor",
+    "oficiais": ["Grupo Vocal Louvor & Fé", "Pianista: Juliana M."],
+    "horario": "10:15 às 11:45",
+    "observacoes": "Hino inicial, oração cantada e cânticos congregacionais."
+  }
+]

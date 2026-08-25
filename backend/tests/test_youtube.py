@@ -23,6 +23,17 @@ async def test_get_latest_videos() -> None:
 
 
 @pytest.mark.anyio
+async def test_get_presente7_videos() -> None:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        response = await client.get("/api/youtube/presente7")
+        assert response.status_code == 200
+        data = response.json()
+        assert "videos" in data
+        assert len(data["videos"]) == 2
+        assert "Presente 7" in data["videos"][0]["title"]
+
+
+@pytest.mark.anyio
 async def test_get_live_status() -> None:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get("/api/youtube/live")

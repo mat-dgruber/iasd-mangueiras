@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Request, status
+from fastapi import APIRouter, BackgroundTasks, Request, status
 from app.core.rate_limiter import form_rate_limiter
 from app.models.contato import FormResponse, OracaoIn
 from app.services.email_service import email_service
+from app.services.notification_service import notification_service
 
 router = APIRouter(prefix="/oracao", tags=["Oração & Intercessão"])
 
@@ -18,14 +19,20 @@ router = APIRouter(prefix="/oracao", tags=["Oração & Intercessão"])
         429: {"description": "Limite de envios excedido (Rate Limit)"},
     },
 )
-async def submit_oracao(data: OracaoIn, request: Request) -> FormResponse:
+async def submit_oracao(
+    data: OracaoIn, request: Request, background_tasks: BackgroundTasks
+) -> FormResponse:
     # 1. Proteção de Rate Limit por IP
     form_rate_limiter.check(request)
 
     # 2. Envio seguro por e-mail
     await email_service.send_oracao_email(data)
 
+    # 3. Notificação em background (Telegram/Webhook)
+    background_tasks.add_task(notification_service.notify_new_oracao, data)
+
     return FormResponse(
         success=True,
         message="Pedido de oração recebido! Nossa equipe e congregação estarão em oração por você.",
     )
+

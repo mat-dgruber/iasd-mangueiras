@@ -1,12 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { HorariosPage } from './horarios.page';
 
 describe('HorariosPage', () => {
   let fixture: ComponentFixture<HorariosPage>;
+  let component: HorariosPage;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [HorariosPage] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [HorariosPage],
+      providers: [provideRouter([])],
+    }).compileComponents();
     fixture = TestBed.createComponent(HorariosPage);
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
@@ -24,5 +30,16 @@ describe('HorariosPage', () => {
     const mapsLink = fixture.nativeElement.querySelector('a[href*="google.com/maps"]');
     expect(mapsLink).toBeTruthy();
     expect(mapsLink.getAttribute('target')).toBe('_blank');
+  });
+
+  it('permite alternar perguntas frequentes no acordeão', () => {
+    const firstFaq = component['faqs'][0].question;
+    expect(component.isExpanded(firstFaq)).toBe(true);
+
+    component.toggleFaq(firstFaq);
+    expect(component.isExpanded(firstFaq)).toBe(false);
+
+    component.toggleFaq(firstFaq);
+    expect(component.isExpanded(firstFaq)).toBe(true);
   });
 });

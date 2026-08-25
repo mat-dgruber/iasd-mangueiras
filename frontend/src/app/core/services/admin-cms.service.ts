@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { FirebaseService } from '../firebase/firebase.service';
-import { Evento, Comunicado, PequenoGrupo } from '../models/content.models';
+import { Evento, Comunicado, PequenoGrupo, AvisoHorarioEspecial, EscalaItem, Ministerio } from '../models/content.models';
 
 export interface PedidoOracaoAdmin {
   id?: string;
@@ -22,14 +22,6 @@ export interface PedidoOracaoAdmin {
   confidencial: boolean;
   status: 'pendente' | 'orado' | 'arquivado';
   created_at?: unknown;
-}
-
-export interface AvisoHorarioEspecial {
-  id?: string;
-  titulo: string;
-  mensagem: string;
-  ativo: boolean;
-  data_evento?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -215,5 +207,84 @@ export class AdminCmsService {
     if (!this.firebase.firestore) throw new Error('Firestore indisponível');
     const docRef = doc(this.firebase.firestore, 'pequenos_grupos', id);
     await deleteDoc(docRef);
+  }
+
+  // ----------------------------------------------------
+  // ESCALAS DOS DEPARTAMENTOS
+  // ----------------------------------------------------
+  async getEscalas(): Promise<EscalaItem[]> {
+    if (!this.firebase.firestore) return [];
+    try {
+      const colRef = collection(this.firebase.firestore, 'escalas');
+      const snap = await getDocs(colRef);
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as unknown as EscalaItem);
+    } catch {
+      return [];
+    }
+  }
+
+  async saveEscala(escala: Partial<EscalaItem>, id?: string): Promise<string> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    if (id) {
+      const docRef = doc(this.firebase.firestore, 'escalas', id);
+      await updateDoc(docRef, { ...escala, updated_at: serverTimestamp() });
+      return id;
+    } else {
+      const colRef = collection(this.firebase.firestore, 'escalas');
+      const res = await addDoc(colRef, {
+        ...escala,
+        created_at: serverTimestamp(),
+      });
+      return res.id;
+    }
+  }
+
+  async deleteEscala(id: string): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'escalas', id);
+    await deleteDoc(docRef);
+  }
+
+  // ----------------------------------------------------
+  // MINISTÉRIOS
+  // ----------------------------------------------------
+  async getMinisterios(): Promise<Ministerio[]> {
+    if (!this.firebase.firestore) return [];
+    try {
+      const colRef = collection(this.firebase.firestore, 'ministerios');
+      const snap = await getDocs(colRef);
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as unknown as Ministerio);
+    } catch {
+      return [];
+    }
+  }
+
+  async saveMinisterio(ministerio: Partial<Ministerio>, id?: string): Promise<string> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    if (id) {
+      const docRef = doc(this.firebase.firestore, 'ministerios', id);
+      await updateDoc(docRef, { ...ministerio, updated_at: serverTimestamp() });
+      return id;
+    } else {
+      const colRef = collection(this.firebase.firestore, 'ministerios');
+      const res = await addDoc(colRef, {
+        ...ministerio,
+        created_at: serverTimestamp(),
+      });
+      return res.id;
+    }
+  }
+
+  async deleteMinisterio(id: string): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'ministerios', id);
+    await deleteDoc(docRef);
+  }
+
+  async uploadMinisterioImage(file: File): Promise<string> {
+    if (!this.firebase.storage) throw new Error('Firebase Storage indisponível');
+    const storageRef = ref(this.firebase.storage, `ministerios/${Date.now()}_${file.name}`);
+    const snapshot = await uploadBytes(storageRef, file);
+    return await getDownloadURL(snapshot.ref);
   }
 }

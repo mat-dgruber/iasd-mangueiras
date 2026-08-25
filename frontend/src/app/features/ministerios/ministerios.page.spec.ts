@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { MinisteriosPage } from './ministerios.page';
 
 describe('MinisteriosPage', () => {
@@ -6,7 +7,10 @@ describe('MinisteriosPage', () => {
   let component: MinisteriosPage;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [MinisteriosPage] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [MinisteriosPage],
+      providers: [provideRouter([])],
+    }).compileComponents();
     fixture = TestBed.createComponent(MinisteriosPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -23,7 +27,7 @@ describe('MinisteriosPage', () => {
     const text = fixture.nativeElement.textContent;
     expect(text).toContain('Recepção e Acolhimento');
     expect(text).toContain('Ministério da Criança');
-    expect(text).toContain('Desbravadores e Aventureiros');
+    expect(text).toContain('Clube de Desbravadores & Aventureiros');
   });
 
   it('filtra ministérios por categoria', () => {
@@ -43,7 +47,6 @@ describe('MinisteriosPage', () => {
     expect(filtered.length).toBe(1);
     expect(filtered[0].nome).toContain('Ação Solidária Adventista');
   });
-
 
   it('exibe mensagem amigável quando nenhum ministério é encontrado', () => {
     component.onSearchInput({ target: { value: 'termo-inexistente-xyz' } } as unknown as Event);

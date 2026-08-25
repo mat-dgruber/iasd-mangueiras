@@ -24,6 +24,23 @@ async def get_latest_videos(request: Request) -> YouTubeLatestResponse:
 
 
 @router.get(
+    "/presente7",
+    response_model=YouTubeLatestResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Listar episódios recentes da Série Presente 7",
+    description="Retorna os últimos episódios publicados da série especial Presente 7 gravada na IASD Mangueiras.",
+    responses={
+        200: {"description": "Lista de episódios da Série Presente 7", "model": YouTubeLatestResponse},
+        429: {"description": "Limite de requisições excedido"},
+        500: {"description": "Erro ao consultar a API do YouTube"},
+    },
+)
+async def get_presente7_videos(request: Request) -> YouTubeLatestResponse:
+    youtube_rate_limiter.check(request)
+    return await youtube_service.get_presente7_videos()
+
+
+@router.get(
     "/live",
     response_model=YouTubeLiveResponse,
     status_code=status.HTTP_200_OK,

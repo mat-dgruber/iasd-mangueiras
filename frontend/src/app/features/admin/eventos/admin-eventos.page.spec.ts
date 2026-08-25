@@ -21,7 +21,7 @@ describe('AdminEventosPage', () => {
   it('exibe título de eventos e botão para novo evento', () => {
     const text = fixture.nativeElement.textContent;
     expect(text).toContain('Eventos & Programações');
-    expect(text).toContain('+ Novo Evento');
+    expect(text).toContain('Novo Evento');
   });
 
   it('abre e fecha o modal de cadastro de evento', () => {

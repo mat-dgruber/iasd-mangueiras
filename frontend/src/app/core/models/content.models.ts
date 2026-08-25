@@ -7,6 +7,14 @@ export interface Horario {
   ativo?: boolean;
 }
 
+export interface AvisoHorarioEspecial {
+  id?: string;
+  titulo: string;
+  mensagem: string;
+  ativo: boolean;
+  data_evento?: string;
+}
+
 export interface Evento {
   id?: string;
   titulo: string;
@@ -15,7 +23,14 @@ export interface Evento {
   descricao: string;
   local?: string;
   imagem_url?: string;
+  banner_url?: string;
   href?: string;
+  destaque?: boolean;
+  palestrante?: string;
+  departamento?: string;
+  valor_entrada?: string;
+  link_inscricao?: string;
+  publico_alvo?: string;
   status?: 'publicado' | 'rascunho' | 'encerrado';
 }
 
@@ -35,6 +50,13 @@ export interface Ministerio {
   descricao: string;
   categoria?: string;
   lideres?: string;
+  imagem_url?: string;
+  banner_url?: string;
+  reunioes_horario?: string;
+  contato_whatsapp?: string;
+  publico_alvo?: string;
+  atividades?: string[];
+  destaque?: boolean;
 }
 
 export interface PequenoGrupo {
@@ -59,4 +81,17 @@ export interface LicaoVideo {
   video_url: string;
   thumbnail_url: string;
   trimestre?: string;
+  categoria?: 'lamed' | 'presente7' | 'cpb' | 'geral';
+  descricao?: string;
+  duracao?: string;
+}
+
+export interface EscalaItem {
+  id?: string;
+  data: string; // Ex: '2026-08-29'
+  dia_semana: string; // Ex: 'Sábado'
+  departamento: 'Sonorização & Transmissão' | 'Diaconato' | 'Recepção' | 'Escola Sabatina' | 'Música & Louvor' | 'Ministério Infantil';
+  oficiais: string[]; // Ex: ['Carlos Silva', 'Lucas Oliveira']
+  observacoes?: string;
+  horario?: string; // Ex: '09:00 e 10:15'
 }

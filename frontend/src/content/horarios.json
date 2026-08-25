@@ -12,16 +12,15 @@
     "descricao": "Momento solene de louvor, oração e proclamação da mensagem bíblica."
   },
   {
+    "titulo": "Culto de Domingo",
+    "dia": "Domingo",
+    "horario": "19:30",
+    "descricao": "Mensagem especial de esperança, acolhimento da comunidade e louvor congregacional."
+  },
+  {
     "titulo": "Culto de Oração e Estudo",
     "dia": "Quarta-feira",
     "horario": "19:30",
     "descricao": "Encontro no meio da semana para renovação espiritual e momentos de intercessão."
-  },
-  {
-    "titulo": "Culto Jovem (JA)",
-    "dia": "Sábado",
-    "horario": "17:00",
-    "descricao": "Programação dinâmica focada na juventude, louvor e testemunhos."
   }
 ]
-

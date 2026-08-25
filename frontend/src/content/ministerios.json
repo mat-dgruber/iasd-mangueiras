@@ -2,36 +2,118 @@
   {
     "nome": "Recepção e Acolhimento",
     "categoria": "Comunicação & Acolhimento",
-    "descricao": "Acolhimento caloroso de membros e visitantes na chegada a todos os cultos."
+    "descricao": "Acolhimento caloroso de membros e visitantes na chegada a todos os cultos e eventos da igreja.",
+    "lideres": "Equipe de Recepção",
+    "publico_alvo": "Visitantes e Membros",
+    "reunioes_horario": "Antes de cada culto (Sábados 08:30 e 10:00, Domingos e Quartas 19:00)",
+    "atividades": [
+      "Boas-vindas na entrada do templo",
+      "Orientação e acomodação de visitantes",
+      "Distribuição de materiais e boletins informativos",
+      "Identificação e acompanhamento de novos amigos"
+    ],
+    "destaque": true
   },
   {
-    "nome": "Ministério da Criança",
+    "nome": "Ministério da Criança & Adolescentes",
     "categoria": "Novas Gerações & Família",
-    "descricao": "Espaço educativo, acolhedor e lúdico para ensinar valores cristãos aos pequenos."
+    "descricao": "Espaço educativo, acolhedor e lúdico para ensinar valores cristãos e a Palavra de Deus aos pequenos.",
+    "lideres": "Coordenação Infantil",
+    "publico_alvo": "Crianças de 0 a 12 anos e suas famílias",
+    "reunioes_horario": "Sábados às 09:00 (Escola Sabatina) e Culto Divino",
+    "atividades": [
+      "Salas por faixa etária (Rol do Berço, Jardim, Primários, Juvenis)",
+      "Escola Cristã de Férias anual",
+      "Projetos missionários infantis e corais",
+      "Apoio e oficinas para pais e educadores"
+    ],
+    "destaque": true
   },
   {
     "nome": "Jovens Adventistas (JA)",
     "categoria": "Novas Gerações & Família",
-    "descricao": "Mobilização de juventude em comunhão, relacionamentos saudáveis e missão."
+    "descricao": "Mobilização da juventude em comunhão bíblica, amizades edificantes, projetos sociais e missão urbana.",
+    "lideres": "Diretoria Jovem",
+    "publico_alvo": "Jovens e Universitários (16 a 35 anos)",
+    "reunioes_horario": "Sábados às 17:00 (Culto JA e Dinâmicas)",
+    "atividades": [
+      "Cultos temáticos com louvor contemporâneo",
+      "Ações sociais e comunitárias em Tatuí",
+      "Retiros espirituais e acampamentos anuais",
+      "Grupos de discipulado e estudos bíblicos"
+    ],
+    "destaque": true
   },
   {
-    "nome": "Desbravadores e Aventureiros",
+    "nome": "Clube de Desbravadores & Aventureiros",
     "categoria": "Novas Gerações & Família",
-    "descricao": "Desenvolvimento físico, mental e espiritual de crianças e adolescentes ao ar livre e em equipe."
+    "descricao": "Desenvolvimento integral (físico, mental e espiritual) de crianças e adolescentes através de atividades ao ar livre, civismo, liderança e serviço à pátria e a Deus.",
+    "lideres": "Diretoria do Clube",
+    "publico_alvo": "Aventureiros (6 a 9 anos) e Desbravadores (10 a 15 anos)",
+    "reunioes_horario": "Domingos das 09:00 às 11:30",
+    "atividades": [
+      "Especialidades da natureza, ciências e artes manuais",
+      "Acampamentos, caminhadas ecológicas e técnicas pioneiras",
+      "Ordem unida, primeiros socorros e civismo",
+      "Projetos de voluntariado e assistência comunitária"
+    ],
+    "destaque": true
   },
   {
     "nome": "Música e Louvor",
     "categoria": "Louvor & Adoração",
-    "descricao": "Condução do louvor congregacional e apresentações musicais com reverência."
+    "descricao": "Condução do louvor congregacional, grupos vocais, instrumentistas e corais com reverência, excelência e devoção.",
+    "lideres": "Ministério da Música",
+    "publico_alvo": "Músicos, cantores e instrumentistas",
+    "reunioes_horario": "Ensaios às sextas às 19:30 e sábados às 14:00",
+    "atividades": [
+      "Escalas e preparação de equipes de louvor para os cultos",
+      "Coral da igreja e grupos musicais",
+      "Cantatas de Páscoa e Natal",
+      "Oficinas de técnica vocal e sonorização"
+    ]
   },
   {
     "nome": "Ação Solidária Adventista (ASA)",
     "categoria": "Ação Social & Comunidade",
-    "descricao": "Apoio prático e assistência a famílias em situação de vulnerabilidade em Tatuí."
+    "descricao": "Braço beneficente e assistencial da igreja, prestando apoio a famílias e indivíduos em situação de vulnerabilidade em Tatuí.",
+    "lideres": "Diretoria da ASA",
+    "publico_alvo": "Famílias e comunidade local",
+    "reunioes_horario": "Atendimentos quinzenais e campanhas contínuas",
+    "atividades": [
+      "Distribuição de cestas básicas e alimentos não-perecíveis",
+      "Bazar beneficente e arrecadação de roupas e calçados",
+      "Cursos de capacitação e geração de renda",
+      "Visitas assistenciais e apoio emocional/espiritual"
+    ],
+    "destaque": true
   },
   {
-    "nome": "Comunicação",
+    "nome": "Comunicação & Mídia",
     "categoria": "Comunicação & Acolhimento",
-    "descricao": "Gestão das transmissões ao vivo, redes sociais, avisos e canais digitais."
+    "descricao": "Gestão das transmissões de cultos ao vivo no YouTube, redes sociais, avisos audiovisuais, design e portal web.",
+    "lideres": "Equipe de Comunicação",
+    "publico_alvo": "Membros voluntários e audiência digital",
+    "reunioes_horario": "Durante todos os cultos oficiais e escalas",
+    "atividades": [
+      "Operação de câmeras e mesa de transmissão",
+      "Sonorização e mixagem de áudio",
+      "Design de cartazes e projeção de letras",
+      "Gestão do portal e mídias sociais oficiais"
+    ]
+  },
+  {
+    "nome": "Ministério da Mulher & Família",
+    "categoria": "Novas Gerações & Família",
+    "descricao": "Fortalecimento espiritual das mulheres e suporte ao relacionamento conjugal e familiar através de oração, capacitação e aconselhamento.",
+    "lideres": "Diretoria do Ministério da Mulher",
+    "publico_alvo": "Mulheres, mães e famílias",
+    "reunioes_horario": "Encontros mensais e projetos contínuos",
+    "atividades": [
+      "Chás de mulheres e congressos anuais",
+      "Corrente de oração e apoio mútuo",
+      "Seminários de casamento e educação de filhos",
+      "Projetos de acolhimento emocional"
+    ]
   }
 ]

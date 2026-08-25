@@ -13,9 +13,34 @@
       "**/node_modules/**"
     ],
     "rewrites": [
+      { "source": "/horarios", "destination": "/index.html" },
+      { "source": "/ao-vivo", "destination": "/index.html" },
+      { "source": "/eventos", "destination": "/index.html" },
+      { "source": "/ministerios", "destination": "/index.html" },
+      { "source": "/estudos", "destination": "/index.html" },
+      { "source": "/sou-novo", "destination": "/index.html" },
+      { "source": "/contato", "destination": "/index.html" },
+      { "source": "/admin/**", "destination": "/index.html" },
+      { "source": "**", "destination": "/index.html" }
+    ],
+    "headers": [
       {
-        "source": "**",
-        "destination": "/index.html"
+        "source": "sitemap.xml",
+        "headers": [
+          { "key": "Content-Type", "value": "application/xml; charset=utf-8" }
+        ]
+      },
+      {
+        "source": "llms.txt",
+        "headers": [
+          { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
+        ]
+      },
+      {
+        "source": "llms-full.txt",
+        "headers": [
+          { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
+        ]
       }
     ]
   }

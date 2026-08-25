@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { SITE_CONFIG } from '../../core/site/site.config';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <footer class="mt-16 bg-advent-blue text-white">
@@ -23,11 +25,12 @@ import { SITE_CONFIG } from '../../core/site/site.config';
           <p class="text-xs text-white/70">{{ site.address.locality }}-{{ site.address.region }}</p>
           <div class="mt-3 border-t border-white/10 pt-2 text-xs text-white/80 space-y-1">
             <p>• <strong>Sábados:</strong> 09:00 e 10:15</p>
+            <p>• <strong>Domingos:</strong> 19:30</p>
             <p>• <strong>Quartas:</strong> 19:30</p>
           </div>
           <a
             class="mt-3 inline-flex items-center text-xs font-semibold text-white underline hover:text-white/80"
-            href="/horarios"
+            routerLink="/horarios"
           >
             Ver mapa e como chegar →
           </a>
@@ -66,17 +69,16 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               </a>
             </li>
             <li>
-              <a class="hover:text-white hover:underline transition-colors" href="/estudos">
+              <a class="hover:text-white hover:underline transition-colors" routerLink="/estudos">
                 Pequenos Grupos & Estudos →
               </a>
             </li>
             <li>
-              <a class="hover:text-white hover:underline transition-colors" href="/contato">
+              <a class="hover:text-white hover:underline transition-colors" routerLink="/contato">
                 Fale Conosco / Oração →
               </a>
             </li>
           </ul>
-
         </section>
       </div>
     </footer>

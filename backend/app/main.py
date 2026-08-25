@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from scalar_fastapi import AgentScalarConfig, get_scalar_api_reference
-from app.api.routes import contato, oracao, youtube
+from app.api.routes import contato, licao, oracao, youtube
 from app.core.config import settings
 from app.core.security import SecurityHeadersMiddleware
 
@@ -12,11 +12,15 @@ tags_metadata = [
     },
     {
         "name": "Contato & Atendimento",
-        "description": "Canais seguros de comunicação e envio de mensagens para a liderança e secretaria da igreja.",
+        "description": "Canais seguros de comunicação e envio de mensagens para a liderança e secretaria da igreja com notificações automáticas.",
     },
     {
         "name": "Oração & Intercessão",
         "description": "Recepção de pedidos de oração com suporte a sigilo confidencial e encaminhamento pastoral.",
+    },
+    {
+        "name": "Estudo & Lição da Bíblia",
+        "description": "Recursos de estudo bíblico diário, temas da Lição da Escola Sabatina e versículos.",
     },
     {
         "name": "Monitoramento & Saúde",
@@ -29,7 +33,7 @@ is_production = settings.app_env.lower() == "production"
 app = FastAPI(
     title=settings.app_name,
     version="1.0.0",
-    description="API oficial da Igreja Adventista do Sétimo Dia das Mangueiras (Tatuí-SP). Fornece serviços de integração com YouTube, formulários de contato e pedidos de oração.",
+    description="API oficial da Igreja Adventista do Sétimo Dia das Mangueiras (Tatuí-SP). Fornece serviços de integração com YouTube, formulários de contato, pedidos de oração e estudos bíblicos.",
     openapi_tags=tags_metadata,
     openapi_url="/openapi.json" if not is_production or settings.debug else None,
     docs_url=None,
@@ -53,6 +57,8 @@ app.add_middleware(
 app.include_router(youtube.router, prefix="/api")
 app.include_router(contato.router, prefix="/api")
 app.include_router(oracao.router, prefix="/api")
+app.include_router(licao.router, prefix="/api")
+
 
 
 @app.get(
