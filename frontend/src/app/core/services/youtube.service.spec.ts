@@ -150,4 +150,61 @@ describe('YoutubeService', () => {
     expect(service.isLive()).toBe(false);
     expect(service.liveVideo()).toBeNull();
   });
+
+  it('faz fetch do catálogo completo e atualiza videos signal', () => {
+    service.fetchCatalogVideos().subscribe((vids) => {
+      expect(vids.length).toBe(2);
+      expect(vids[0].id).toBe('cat-1');
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/youtube/catalog`);
+    expect(req.request.method).toBe('GET');
+    req.flush({
+      channel_id: 'test-chan',
+      videos: [
+        {
+          id: 'cat-1',
+          title: 'Culto de Sábado',
+          description: 'Desc 1',
+          thumbnail_url: 'http://thumb1',
+          published_at: '2026-08-22',
+          video_url: 'http://video1',
+        },
+        {
+          id: 'cat-2',
+          title: 'Culto de Domingo',
+          description: 'Desc 2',
+          thumbnail_url: 'http://thumb2',
+          published_at: '2026-08-23',
+          video_url: 'http://video2',
+        },
+      ],
+    });
+
+    expect(service.videos().length).toBe(2);
+    expect(service.videos()[0].id).toBe('cat-1');
+  });
+
+  it('faz fetch de vídeos por playlist específica', () => {
+    service.fetchPlaylistVideos('sabado').subscribe((vids) => {
+      expect(vids.length).toBe(1);
+      expect(vids[0].id).toBe('sab-1');
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/youtube/playlist/sabado`);
+    expect(req.request.method).toBe('GET');
+    req.flush({
+      channel_id: 'test-chan',
+      videos: [
+        {
+          id: 'sab-1',
+          title: 'Culto de Sábado',
+          description: 'Desc',
+          thumbnail_url: 'http://thumb',
+          published_at: '2026-08-22',
+          video_url: 'http://video',
+        },
+      ],
+    });
+  });
 });

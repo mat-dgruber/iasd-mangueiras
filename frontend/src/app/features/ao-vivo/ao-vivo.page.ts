@@ -357,36 +357,74 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
           }
         </section>
 
-        <!-- Série Presente 7 -->
-        <section class="mt-16" aria-labelledby="serie-title">
-          <div class="rounded-section border border-advent-border bg-advent-neutral p-6 md:p-10">
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <!-- Série Presente 7 (Carrossel Lateral) -->
+        <section class="mt-14" aria-labelledby="serie-title">
+          <div class="rounded-section border border-advent-border bg-advent-neutral p-6 md:p-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div class="max-w-2xl">
-                <span class="text-xs font-bold uppercase tracking-wider text-advent-blue">
-                  Série Especial
-                </span>
-                <h2 id="serie-title" class="mt-2 text-3xl font-bold text-advent-text">
+                <div class="flex items-center gap-2">
+                  <span
+                    class="rounded-sm bg-advent-blue px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white"
+                  >
+                    Série Especial
+                  </span>
+                  <span class="text-xs text-advent-muted font-medium">Estudos e Lição da Semana</span>
+                </div>
+                <h2 id="serie-title" class="mt-2 text-2xl md:text-3xl font-bold text-advent-text">
                   Série Presente 7
                 </h2>
-                <p class="mt-2 text-advent-muted leading-relaxed">
-                  Acompanhe os estudos bíblicos, reflexões da Lição da Escola Sabatina e temas práticos
-                  apresentados pelos pastores na IASD Mangueiras.
+                <p class="mt-1 text-sm text-advent-muted leading-relaxed">
+                  Acompanhe os episódios mais recentes gravados na IASD Mangueiras. Deslize lateralmente para explorar a série.
                 </p>
               </div>
-              <a
-                class="font-semibold text-advent-blue hover:underline text-sm inline-flex items-center gap-1 shrink-0 min-h-[44px] items-center"
-                [href]="site.playlists.presente7"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Ver playlist completa no YouTube ↗
-              </a>
+
+              <div class="flex items-center gap-3 self-start md:self-auto">
+                <!-- Controles de Navegação do Carrossel -->
+                <div class="flex items-center gap-1.5 bg-white p-1 rounded-card border border-advent-border shadow-2xs">
+                  <button
+                    type="button"
+                    (click)="scrollPresente7('prev')"
+                    class="flex h-9 w-9 items-center justify-center rounded-sm text-advent-text hover:bg-advent-neutral hover:text-advent-blue transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-advent-blue"
+                    aria-label="Episódios anteriores"
+                  >
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    (click)="scrollPresente7('next')"
+                    class="flex h-9 w-9 items-center justify-center rounded-sm text-advent-text hover:bg-advent-neutral hover:text-advent-blue transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-advent-blue"
+                    aria-label="Próximos episódios"
+                  >
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+
+                <a
+                  class="font-semibold text-advent-blue hover:underline text-xs md:text-sm inline-flex items-center gap-1 shrink-0 min-h-[44px]"
+                  [href]="site.playlists.presente7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Playlist completa ↗
+                </a>
+              </div>
             </div>
 
-            <div class="mt-8 grid gap-6 md:grid-cols-2">
+            <!-- Trilho Horizontal do Carrossel -->
+            <div
+              id="presente7Carousel"
+              class="mt-6 flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-3 pt-1 -mx-2 px-2 scrollbar-none"
+              tabindex="0"
+              role="region"
+              aria-label="Carrossel de episódios da Série Presente 7"
+            >
               @for (ep of presente7Videos(); track ep.id; let idx = $index) {
                 <article
-                  class="flex flex-col justify-between rounded-card border border-advent-border bg-white overflow-hidden shadow-xs transition-all duration-300 hover:shadow-md"
+                  class="flex flex-col justify-between rounded-card border border-advent-border bg-white overflow-hidden shadow-xs transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 w-[280px] sm:w-[320px] shrink-0 snap-start"
                 >
                   <div class="relative aspect-video bg-slate-900 overflow-hidden group">
                     <img
@@ -403,47 +441,48 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                       [attr.aria-label]="'Assistir ' + ep.title"
                     >
                       <span
-                        class="flex h-12 w-12 items-center justify-center rounded-full bg-advent-blue/90 text-white shadow-lg backdrop-blur-xs transition-transform duration-300 group-hover:scale-110"
+                        class="flex h-11 w-11 items-center justify-center rounded-full bg-advent-blue/90 text-white shadow-lg backdrop-blur-xs transition-transform duration-300 group-hover:scale-110"
                       >
-                        <svg class="h-6 w-6 fill-current ml-0.5" viewBox="0 0 24 24" aria-hidden="true">
+                        <svg class="h-5 w-5 fill-current ml-0.5" viewBox="0 0 24 24" aria-hidden="true">
                           <path d="M8 5v14l11-7z" />
                         </svg>
                       </span>
                     </button>
                     <span
-                      class="absolute top-3 left-3 rounded-full bg-advent-blue px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-xs"
+                      class="absolute top-2.5 left-2.5 rounded-full bg-advent-blue px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-xs"
                     >
                       Episódio {{ idx + 1 }}
                     </span>
                   </div>
 
-                  <div class="p-6 flex flex-col justify-between flex-1">
+                  <div class="p-4 flex flex-col justify-between flex-1">
                     <div>
-                      <h3 class="text-lg font-bold text-advent-text line-clamp-2 leading-snug">
+                      <h3 class="text-sm font-bold text-advent-text line-clamp-2 leading-snug">
                         {{ ep.title }}
                       </h3>
-                      <p class="mt-2 text-xs text-advent-muted line-clamp-2 leading-relaxed">
+                      <p class="mt-1.5 text-xs text-advent-muted line-clamp-2 leading-relaxed">
                         {{ ep.description }}
                       </p>
                     </div>
 
-                    <div class="mt-6 pt-4 border-t border-advent-border flex items-center justify-between">
+                    <div class="mt-4 pt-3 border-t border-advent-border flex items-center justify-between">
                       <button
                         type="button"
-                        class="text-xs font-bold text-advent-blue hover:underline cursor-pointer flex items-center gap-1.5 min-h-[38px]"
+                        class="text-xs font-bold text-advent-blue hover:underline cursor-pointer flex items-center gap-1 min-h-[36px]"
                         (click)="openModal(ep)"
                         aria-label="Assistir episódio no site"
                       >
-                        <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                        <svg class="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
                           <path d="M8 5v14l11-7z" />
                         </svg>
-                        Assistir no Site
+                        <span>Assistir</span>
                       </button>
                       <a
-                        class="text-xs font-semibold text-advent-muted hover:text-advent-blue min-h-[38px] flex items-center"
+                        class="text-[11px] text-advent-muted hover:text-advent-blue hover:underline flex items-center gap-0.5"
                         [href]="ep.video_url"
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="Abrir no YouTube"
                       >
                         YouTube ↗
                       </a>
@@ -767,7 +806,12 @@ export class AoVivoPage implements OnInit, OnDestroy {
           text.includes('adoração') ||
           text.includes('adoracao') ||
           text.includes('divino') ||
-          text.includes('identidade') ||
+          text.includes('saudade') ||
+          text.includes('dilemas') ||
+          text.includes('haja luz') ||
+          text.includes('viva seus') ||
+          text.includes('essência') ||
+          text.includes('essencia') ||
           text.includes('escola sabatina')
         );
       });
@@ -778,7 +822,14 @@ export class AoVivoPage implements OnInit, OnDestroy {
           text.includes('domingo') ||
           text.includes('família') ||
           text.includes('familia') ||
-          text.includes('evangelismo')
+          text.includes('evangelismo') ||
+          text.includes('imortalidade') ||
+          text.includes('santuário') ||
+          text.includes('santuario') ||
+          text.includes('grato') ||
+          text.includes('marcados') ||
+          text.includes('controle') ||
+          text.includes('mais poderosa')
         );
       });
     } else if (category === 'quarta') {
@@ -788,7 +839,12 @@ export class AoVivoPage implements OnInit, OnDestroy {
           text.includes('quarta') ||
           text.includes('oração') ||
           text.includes('oracao') ||
-          text.includes('estudo')
+          text.includes('servir') ||
+          text.includes('financeira') ||
+          text.includes('elias') ||
+          text.includes('caminho') ||
+          text.includes('cuida') ||
+          text.includes('semeador')
         );
       });
     } else if (category === 'semana') {
@@ -808,15 +864,18 @@ export class AoVivoPage implements OnInit, OnDestroy {
       list = this.allVideos();
     }
 
-    if (!query) {
-      return list;
+    if (query) {
+      list = list.filter((v) => {
+        const titleMatch = v.title.toLowerCase().includes(query);
+        const descMatch = v.description.toLowerCase().includes(query);
+        return titleMatch || descMatch;
+      });
     }
 
-    return list.filter((v) => {
-      const titleMatch = v.title.toLowerCase().includes(query);
-      const descMatch = v.description.toLowerCase().includes(query);
-      return titleMatch || descMatch;
-    });
+    // Ordenação rigorosamente decrescente: do mais recente para o mais antigo
+    return [...list].sort(
+      (a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+    );
   });
 
   protected readonly safeEmbedUrl = computed<SafeResourceUrl | null>(() => {
@@ -861,6 +920,17 @@ export class AoVivoPage implements OnInit, OnDestroy {
 
   selectCategory(cat: VideoCategory): void {
     this.selectedCategory.set(cat);
+  }
+
+  scrollPresente7(direction: 'prev' | 'next'): void {
+    if (typeof document === 'undefined') return;
+    const container = document.getElementById('presente7Carousel');
+    if (!container) return;
+    const scrollAmount = 340;
+    container.scrollBy({
+      left: direction === 'next' ? scrollAmount : -scrollAmount,
+      behavior: 'smooth',
+    });
   }
 
   onSearchInput(event: Event): void {

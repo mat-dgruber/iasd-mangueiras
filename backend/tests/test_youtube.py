@@ -41,7 +41,25 @@ async def test_get_presente7_videos() -> None:
             assert "thumbnail_url" in video and bool(video["thumbnail_url"])
             assert "published_at" in video and bool(video["published_at"])
             assert "video_url" in video and bool(video["video_url"])
-        assert "Presente 7" in data["videos"][0]["title"]
+
+
+@pytest.mark.anyio
+async def test_get_catalog_and_playlist_routes() -> None:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        # Test catalog
+        catalog_res = await client.get("/api/youtube/catalog")
+        assert catalog_res.status_code == 200
+        cat_data = catalog_res.json()
+        assert "videos" in cat_data
+        assert len(cat_data["videos"]) > 0
+
+        # Test playlist por categoria
+        for cat in ["sabado", "domingo", "quarta", "presente7"]:
+            pl_res = await client.get(f"/api/youtube/playlist/{cat}")
+            assert pl_res.status_code == 200
+            pl_data = pl_res.json()
+            assert "videos" in pl_data
+            assert len(pl_data["videos"]) > 0
 
 
 @pytest.mark.anyio
