@@ -23,7 +23,7 @@ describe('YoutubeService', () => {
   it('inicia com lista de vídeos padrão', () => {
     expect(service.videos().length).toBeGreaterThan(0);
     expect(service.videos()[0].title).toBe(DEFAULT_VIDEOS[0].title);
-    expect(service.presente7Videos().length).toBe(2);
+    expect(service.presente7Videos().length).toBe(4);
   });
 
   it('faz fetch dos vídeos e atualiza signal em sucesso', () => {
@@ -51,9 +51,9 @@ describe('YoutubeService', () => {
     expect(service.videos()[0].id).toBe('test-vid');
   });
 
-  it('faz fetch dos vídeos da playlist Presente 7 e limita aos 2 últimos', () => {
+  it('faz fetch dos vídeos da playlist Presente 7 e atualiza signal', () => {
     service.fetchPresente7Videos().subscribe((vids) => {
-      expect(vids.length).toBe(2);
+      expect(vids.length).toBe(3);
       expect(vids[0].id).toBe('p7-1');
     });
 
@@ -89,7 +89,7 @@ describe('YoutubeService', () => {
       ],
     });
 
-    expect(service.presente7Videos().length).toBe(2);
+    expect(service.presente7Videos().length).toBe(3);
     expect(service.presente7Videos()[0].id).toBe('p7-1');
   });
 
@@ -102,5 +102,52 @@ describe('YoutubeService', () => {
     req.error(new ProgressEvent('Network error'));
 
     expect(service.videos()).toEqual(DEFAULT_VIDEOS);
+  });
+
+  it('faz fallback para DEFAULT_PRESENTE7_VIDEOS quando a API de presente7 falha', () => {
+    service.fetchPresente7Videos().subscribe((vids) => {
+      expect(vids).toEqual(DEFAULT_PRESENTE7_VIDEOS);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/youtube/presente7`);
+    req.error(new ProgressEvent('Network error'));
+
+    expect(service.presente7Videos()).toEqual(DEFAULT_PRESENTE7_VIDEOS);
+  });
+
+  it('faz fetch do status de live e atualiza signals isLive e liveVideo', () => {
+    const mockLiveVid = {
+      id: 'live-1',
+      title: 'Culto Ao Vivo',
+      description: 'Ao vivo agora',
+      thumbnail_url: 'http://live-thumb',
+      published_at: '2026-08-25T10:00:00Z',
+      video_url: 'http://live-vid',
+    };
+
+    service.fetchLiveStatus().subscribe((res) => {
+      expect(res.is_live).toBe(true);
+      expect(res.live_video?.id).toBe('live-1');
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/youtube/live`);
+    expect(req.request.method).toBe('GET');
+    req.flush({ is_live: true, live_video: mockLiveVid });
+
+    expect(service.isLive()).toBe(true);
+    expect(service.liveVideo()?.id).toBe('live-1');
+  });
+
+  it('faz fallback seguro quando a API de live falha', () => {
+    service.fetchLiveStatus().subscribe((res) => {
+      expect(res.is_live).toBe(false);
+      expect(res.live_video).toBeNull();
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/youtube/live`);
+    req.error(new ProgressEvent('Network error'));
+
+    expect(service.isLive()).toBe(false);
+    expect(service.liveVideo()).toBeNull();
   });
 });

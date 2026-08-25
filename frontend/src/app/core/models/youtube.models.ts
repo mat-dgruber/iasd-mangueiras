@@ -16,3 +16,5 @@ export interface YouTubeLiveResponse {
   is_live: boolean;
   live_video?: VideoItem | null;
 }
+
+export type VideoCategory = 'todos' | 'presente7' | 'sabado' | 'semana';

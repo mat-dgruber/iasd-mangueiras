@@ -44,7 +44,8 @@ export const DEFAULT_PRESENTE7_VIDEOS: readonly VideoItem[] = [
   {
     id: 'YyFgCdgq_So',
     title: 'Série Presente 7 — Lição da Semana | Pr. Michelson Borges & Pr. Osmar Borges',
-    description: 'Estudo bíblico e reflexão da série Presente 7 gravada na IASD Mangueiras em Tatuí-SP.',
+    description:
+      'Estudo bíblico aprofundado e reflexão temática da série especial Presente 7 gravada na IASD Mangueiras em Tatuí-SP.',
     thumbnail_url: 'https://i.ytimg.com/vi/YyFgCdgq_So/hqdefault.jpg',
     published_at: '2026-08-22T12:00:00Z',
     video_url: 'https://www.youtube.com/watch?v=YyFgCdgq_So',
@@ -52,10 +53,29 @@ export const DEFAULT_PRESENTE7_VIDEOS: readonly VideoItem[] = [
   {
     id: 'EWYzMii3Jj4',
     title: 'Série Presente 7 — Princípios e Fundamentos da Fé | Pr. Osmar Borges',
-    description: 'Comentários inspiradores e aplicação prática das Escrituras Sagradas para a vida diária.',
+    description:
+      'Comentários inspiradores e aplicação prática das Escrituras Sagradas para a vida espiritual diária.',
     thumbnail_url: 'https://i.ytimg.com/vi/EWYzMii3Jj4/hqdefault.jpg',
     published_at: '2026-08-15T12:00:00Z',
     video_url: 'https://www.youtube.com/watch?v=EWYzMii3Jj4',
+  },
+  {
+    id: 'oarhiElXlSk',
+    title: 'Série Presente 7 — Esperança Viva em Tempos Decisivos | Pr. Gabriel Pilon',
+    description:
+      'Estudo bíblico dinâmico e edificante sobre as verdades proféticas e a comunhão cristã.',
+    thumbnail_url: 'https://i.ytimg.com/vi/oarhiElXlSk/hqdefault.jpg',
+    published_at: '2026-08-08T12:00:00Z',
+    video_url: 'https://www.youtube.com/watch?v=oarhiElXlSk',
+  },
+  {
+    id: 'o3aiUSbprt8',
+    title: 'Série Presente 7 — O Santuário e as Promessas Eternas | Pr. Paulo Pinheiro',
+    description:
+      'Mensagem especial sobre as promessas bíblicas e a preparação espiritual para a caminhada de fé.',
+    thumbnail_url: 'https://i.ytimg.com/vi/o3aiUSbprt8/hqdefault.jpg',
+    published_at: '2026-08-01T12:00:00Z',
+    video_url: 'https://www.youtube.com/watch?v=o3aiUSbprt8',
   },
 ];
 
@@ -88,11 +108,7 @@ export class YoutubeService {
 
   fetchPresente7Videos(): Observable<readonly VideoItem[]> {
     return this.http.get<YouTubeLatestResponse>(`${this.apiUrl}/presente7`).pipe(
-      map((res) =>
-        res.videos && res.videos.length > 0
-          ? res.videos.slice(0, 2)
-          : DEFAULT_PRESENTE7_VIDEOS,
-      ),
+      map((res) => (res.videos && res.videos.length > 0 ? res.videos : DEFAULT_PRESENTE7_VIDEOS)),
       tap((vids) => {
         this.presente7Videos.set(vids);
       }),
