@@ -476,7 +476,7 @@ import {
                     <div>
                       <h4 class="text-xs font-bold text-advent-text">Estacionamento</h4>
                       <p class="text-[11px] text-advent-muted mt-0.5">
-                        Vagas gratuitas e seguras no local e entorno.
+                        Vagas gratuitas e seguras no entorno.
                       </p>
                     </div>
                   </div>
