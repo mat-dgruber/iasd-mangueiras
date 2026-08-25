@@ -24,7 +24,7 @@ module.exports = {
         section: '20px',
       },
       maxWidth: {
-        site: '1120px',
+        site: '1380px',
       },
     },
   },

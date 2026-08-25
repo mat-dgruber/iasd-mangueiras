@@ -73,19 +73,6 @@ export interface PequenoGrupo {
   ativo?: boolean;
 }
 
-export interface LicaoVideo {
-  id: string;
-  titulo: string;
-  canal: string;
-  autor: string;
-  video_url: string;
-  thumbnail_url: string;
-  trimestre?: string;
-  categoria?: 'lamed' | 'presente7' | 'cpb' | 'geral';
-  descricao?: string;
-  duracao?: string;
-}
-
 export interface EscalaItem {
   id?: string;
   data: string; // Ex: '2026-08-29'
