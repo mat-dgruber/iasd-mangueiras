@@ -148,19 +148,31 @@ class YouTubeService:
 
         try:
             async with httpx.AsyncClient(timeout=5.0) as client:
-                url = (
-                    "https://www.googleapis.com/youtube/v3/search"
-                    f"?key={settings.youtube_api_key}"
-                    f"&channelId={settings.youtube_channel_id}"
-                    "&part=snippet,id&order=date&q=Presente%207&maxResults=6&type=video"
-                )
+                if settings.youtube_presente7_playlist_id:
+                    url = (
+                        "https://www.googleapis.com/youtube/v3/playlistItems"
+                        f"?key={settings.youtube_api_key}"
+                        f"&playlistId={settings.youtube_presente7_playlist_id}"
+                        "&part=snippet&maxResults=8"
+                    )
+                else:
+                    url = (
+                        "https://www.googleapis.com/youtube/v3/search"
+                        f"?key={settings.youtube_api_key}"
+                        f"&channelId={settings.youtube_channel_id}"
+                        "&part=snippet,id&order=date&q=Presente%207&maxResults=6&type=video"
+                    )
                 response = await client.get(url)
                 if response.status_code == 200:
                     data = response.json()
                     videos: list[VideoItem] = []
                     for item in data.get("items", []):
-                        vid_id = item.get("id", {}).get("videoId", "")
                         snippet = item.get("snippet", {})
+                        vid_id = (
+                            snippet.get("resourceId", {}).get("videoId")
+                            or item.get("id", {}).get("videoId")
+                            or (item.get("id") if isinstance(item.get("id"), str) else "")
+                        )
                         thumbnails = snippet.get("thumbnails", {})
                         thumb_url = (
                             thumbnails.get("high", {}).get("url")

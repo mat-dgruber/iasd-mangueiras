@@ -129,8 +129,9 @@ export interface CategoryFilterOption {
 export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
   { id: 'todos', label: 'Todas as Mensagens' },
   { id: 'presente7', label: 'Série Presente 7' },
-  { id: 'sabado', label: 'Sermões de Sábado' },
-  { id: 'semana', label: 'Quarta e Domingo' },
+  { id: 'sabado', label: 'Cultos de Sábado' },
+  { id: 'domingo', label: 'Cultos de Domingo' },
+  { id: 'quarta', label: 'Cultos de Quarta' },
 ];
 
 @Component({
@@ -374,7 +375,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
               </div>
               <a
                 class="font-semibold text-advent-blue hover:underline text-sm inline-flex items-center gap-1 shrink-0 min-h-[44px] items-center"
-                href="https://www.youtube.com/@IASDMangueiras/playlists"
+                [href]="site.playlists.presente7"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -470,11 +471,11 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
             </div>
             <a
               class="font-semibold text-advent-blue hover:underline text-sm min-h-[44px] flex items-center"
-              [href]="site.social.youtube"
+              [href]="getCategoryPlaylistUrl().url"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Ver canal completo no YouTube ↗
+              {{ getCategoryPlaylistUrl().label }}
             </a>
           </div>
 
@@ -770,6 +771,26 @@ export class AoVivoPage implements OnInit, OnDestroy {
           text.includes('escola sabatina')
         );
       });
+    } else if (category === 'domingo') {
+      list = this.allVideos().filter((v) => {
+        const text = `${v.title} ${v.description}`.toLowerCase();
+        return (
+          text.includes('domingo') ||
+          text.includes('família') ||
+          text.includes('familia') ||
+          text.includes('evangelismo')
+        );
+      });
+    } else if (category === 'quarta') {
+      list = this.allVideos().filter((v) => {
+        const text = `${v.title} ${v.description}`.toLowerCase();
+        return (
+          text.includes('quarta') ||
+          text.includes('oração') ||
+          text.includes('oracao') ||
+          text.includes('estudo')
+        );
+      });
     } else if (category === 'semana') {
       list = this.allVideos().filter((v) => {
         const text = `${v.title} ${v.description}`.toLowerCase();
@@ -883,6 +904,42 @@ export class AoVivoPage implements OnInit, OnDestroy {
     const target = event.target as HTMLElement | null;
     if (this.openCalendarMenu() && target && !target.closest('[data-calendar-menu]')) {
       this.closeCalendarMenu();
+    }
+  }
+
+  getCategoryPlaylistUrl(): { url: string; label: string } {
+    const cat = this.selectedCategory();
+    switch (cat) {
+      case 'presente7':
+        return {
+          url: this.site.playlists.presente7,
+          label: 'Ver playlist Presente 7 no YouTube ↗',
+        };
+      case 'sabado':
+        return {
+          url: this.site.playlists.cultosSabado,
+          label: 'Ver playlist Cultos de Sábado no YouTube ↗',
+        };
+      case 'domingo':
+        return {
+          url: this.site.playlists.cultosDomingo,
+          label: 'Ver playlist Cultos de Domingo no YouTube ↗',
+        };
+      case 'quarta':
+        return {
+          url: this.site.playlists.cultosQuarta,
+          label: 'Ver playlist Cultos de Quarta no YouTube ↗',
+        };
+      case 'semana':
+        return {
+          url: this.site.playlists.cultosQuarta,
+          label: 'Ver playlist Cultos de Quarta e Domingo no YouTube ↗',
+        };
+      default:
+        return {
+          url: this.site.social.youtube,
+          label: 'Ver canal completo no YouTube ↗',
+        };
     }
   }
 

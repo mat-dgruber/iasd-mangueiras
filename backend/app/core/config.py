@@ -21,9 +21,13 @@ class Settings(BaseSettings):
         "http://127.0.0.1:4000",
     ]
 
-    # YouTube API
+    # YouTube API & Playlists
     youtube_api_key: str = ""
     youtube_channel_id: str = "UC4x7BBBm6Ds1JZYit0yMhuQ"
+    youtube_presente7_playlist_id: str = "PLNgTlCgGyS2GLFNcIWz1_CuCYJOhWOe28"
+    youtube_sabado_playlist_id: str = "PLNgTlCgGyS2GD4T7wfkl7H8a8PCOjBCQU"
+    youtube_domingo_playlist_id: str = "PLNgTlCgGyS2FF1Q6uHqZkNKLwij1xKO2T"
+    youtube_quarta_playlist_id: str = "PLNgTlCgGyS2GRDfZ364omUABt5_2sUoTY"
     youtube_cache_ttl_seconds: int = 1800  # 30 minutos
 
     # Notificações e Webhooks (Telegram / Discord / WhatsApp)

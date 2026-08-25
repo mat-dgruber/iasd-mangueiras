@@ -800,11 +800,11 @@ import { StoryCanvasService } from '../../core/services/story-canvas.service';
 
                   <div class="relative z-10 mt-6 pt-4 border-t border-rose-100/80">
                     <a
-                      href="https://www.youtube.com/@IASDMangueiras"
+                      href="https://youtube.com/playlist?list=PLNgTlCgGyS2GLFNcIWz1_CuCYJOhWOe28"
                       target="_blank"
                       rel="noopener noreferrer"
                       class="w-full flex items-center justify-center gap-2 rounded-xl bg-rose-800 px-4 py-3 text-xs font-bold text-white shadow-sm hover:bg-rose-900 active:scale-[0.98] transition-all"
-                      aria-label="Acessar Canal da IASD Mangueiras no YouTube"
+                      aria-label="Acessar Playlist da Série Presente 7 no YouTube"
                     >
                       <svg
                         class="h-4 w-4 fill-current shrink-0"
