@@ -57,20 +57,13 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
                 type="search"
                 [ngModel]="query()"
                 (ngModelChange)="onQueryChange($event)"
-                placeholder="Busque por sentimentos, oradores, eventos, PGs ou ministérios..."
+                placeholder="Busque por eventos, horários, versículos, PGs ou ministérios..."
                 class="w-full text-base sm:text-lg bg-transparent text-advent-text placeholder:text-slate-400 focus:outline-none focus:ring-0 border-0 p-0 font-normal leading-relaxed"
                 autocomplete="off"
               />
             </div>
 
             <div class="flex items-center gap-2 ml-3 shrink-0">
-              @if (searchService.isLoading()) {
-                <div class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-advent-blue border border-blue-200/60 animate-pulse">
-                  <span class="h-1.5 w-1.5 rounded-full bg-advent-blue"></span>
-                  <span>IA Ativa</span>
-                </div>
-              }
-
               @if (query()) {
                 <button
                   type="button"
@@ -103,7 +96,7 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
             <div class="px-5 py-3.5 sm:px-6 bg-gradient-to-r from-blue-50/50 via-slate-50/80 to-amber-50/20 border-b border-slate-100">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                  <span>✨</span> Sugestões em Linguagem Natural
+                  <span>💡</span> Sugestões Rápidas
                 </span>
                 <span class="text-[10px] text-slate-400 font-medium hidden sm:inline-block">Clique para testar</span>
               </div>
@@ -232,7 +225,7 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
             }
           </div>
 
-          <!-- Rodapé Refinado -->
+          <!-- Rodapé Limpo e Direto -->
           <div class="px-5 py-3 bg-slate-50/90 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
             <div class="flex items-center gap-3">
               <span class="flex items-center gap-1">
@@ -246,9 +239,8 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
               </span>
             </div>
 
-            <div class="flex items-center gap-1.5 font-semibold text-advent-blue text-[11px]">
-              <span class="inline-block h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
-              <span>Busca Semântica Híbrida (Neural RRF + On-Device AI)</span>
+            <div class="flex items-center gap-1.5 font-semibold text-slate-400 text-[11px]">
+              <span>IASD Mangueiras</span>
             </div>
           </div>
         </div>
