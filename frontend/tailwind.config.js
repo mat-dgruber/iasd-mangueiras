@@ -7,6 +7,8 @@ module.exports = {
         advent: {
           blue: '#003767',
           'blue-dark': '#003366',
+          gold: '#c59b27',
+          teal: '#0d9488',
           black: '#000000',
           white: '#FFFFFF',
           neutral: '#F4F4F4',
@@ -17,6 +19,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         brand: ['AdventSansLogo', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
