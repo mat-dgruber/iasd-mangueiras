@@ -2,7 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
+  Output,
   ViewChild,
   signal,
 } from '@angular/core';
@@ -81,6 +83,23 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               >Sou novo</a>
             </li>
 
+            <!-- Botão de Busca Semântica Global -->
+            <li>
+              <button
+                type="button"
+                (click)="onSearch()"
+                class="inline-flex items-center gap-2 rounded-xl border border-advent-border bg-slate-50 px-3 py-1.5 text-xs text-advent-muted hover:border-advent-blue/40 hover:text-advent-blue hover:bg-white transition-all cursor-pointer shadow-2xs"
+                title="Buscar no site (Ctrl + K)"
+                aria-label="Abrir busca semântica"
+              >
+                <svg class="h-4 w-4 text-advent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+                <span>Buscar</span>
+                <kbd class="hidden lg:inline-block rounded bg-white px-1.5 py-0.5 text-[10px] font-semibold text-slate-500 border border-slate-200">⌘K</kbd>
+              </button>
+            </li>
+
             <li>
               <a
                 class="rounded-card bg-advent-blue px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner"
@@ -92,40 +111,53 @@ import { SITE_CONFIG } from '../../core/site/site.config';
           </ul>
         </nav>
 
-        <!-- Mobile Hamburger Button -->
-        <button
-          #hamburgerBtn
-          type="button"
-          class="flex h-10 w-10 items-center justify-center rounded-lg border border-advent-border text-advent-text transition-colors hover:bg-gray-100 active:scale-95 md:hidden cursor-pointer"
-          (click)="toggleMenu()"
-          [attr.aria-expanded]="menuOpen()"
-          aria-controls="mobile-menu-drawer"
-          aria-label="Abrir ou fechar menu de navegação"
-        >
-          @if (!menuOpen()) {
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-              aria-hidden="true"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        <!-- Mobile Buttons (Busca + Hamburger) -->
+        <div class="flex items-center gap-2 md:hidden">
+          <button
+            type="button"
+            (click)="onSearch()"
+            class="flex h-10 w-10 items-center justify-center rounded-lg border border-advent-border text-advent-text transition-colors hover:bg-gray-100 active:scale-95 cursor-pointer"
+            aria-label="Abrir busca"
+          >
+            <svg class="h-5 w-5 text-advent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
-          } @else {
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-              aria-hidden="true"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          }
-        </button>
+          </button>
+
+          <button
+            #hamburgerBtn
+            type="button"
+            class="flex h-10 w-10 items-center justify-center rounded-lg border border-advent-border text-advent-text transition-colors hover:bg-gray-100 active:scale-95 cursor-pointer"
+            (click)="toggleMenu()"
+            [attr.aria-expanded]="menuOpen()"
+            aria-controls="mobile-menu-drawer"
+            aria-label="Abrir ou fechar menu de navegação"
+          >
+            @if (!menuOpen()) {
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            } @else {
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            }
+          </button>
+        </div>
       </div>
 
       <!-- Mobile Drawer Container com Backdrop e Focus Trap -->
@@ -139,39 +171,45 @@ import { SITE_CONFIG } from '../../core/site/site.config';
         <div
           #drawerElement
           id="mobile-menu-drawer"
-          class="fixed inset-y-0 right-0 z-50 flex w-4/5 max-w-sm flex-col justify-between bg-white p-6 shadow-2xl transition-transform duration-300 ease-out md:hidden animate-slideLeft"
+          class="fixed inset-y-0 right-0 z-50 flex w-full max-w-xs flex-col justify-between bg-white p-6 shadow-2xl transition-transform duration-300 md:hidden animate-slideInRight"
           role="dialog"
           aria-modal="true"
-          aria-label="Menu de navegação móvel"
+          aria-label="Menu principal de navegação"
           (keydown)="handleDrawerKeydown($event)"
         >
           <div>
-            <!-- Drawer Header -->
             <div class="flex items-center justify-between border-b border-advent-border pb-4">
-              <span class="font-brand text-lg text-advent-blue">{{ site.name }}</span>
+              <span class="font-brand text-lg font-bold text-advent-blue">Menu Principal</span>
               <button
                 #closeBtn
                 type="button"
-                class="flex h-9 w-9 items-center justify-center rounded-lg border border-advent-border text-advent-muted hover:bg-gray-100 hover:text-advent-text active:scale-95 cursor-pointer"
+                class="rounded-lg p-1.5 text-advent-muted hover:bg-gray-100 hover:text-advent-text focus:outline-none focus:ring-2 focus:ring-advent-blue cursor-pointer"
                 (click)="closeMenu()"
                 aria-label="Fechar menu"
               >
-                <svg
-                  class="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  aria-hidden="true"
-                >
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            <!-- Drawer Links com Ícones SVG Limpos -->
             <nav class="mt-6" aria-label="Navegação móvel">
-              <ul class="space-y-2 text-base font-medium text-advent-text">
+              <ul class="space-y-3 text-base font-medium text-advent-text">
+                <li>
+                  <button
+                    type="button"
+                    class="w-full flex items-center justify-between rounded-lg px-3 py-2.5 bg-blue-50/70 text-advent-blue font-bold transition-colors cursor-pointer"
+                    (click)="onSearch(); closeMenu()"
+                  >
+                    <span class="flex items-center gap-3">
+                      <svg class="h-5 w-5 text-advent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                      </svg>
+                      Busca Semântica (IA)
+                    </span>
+                    <span class="text-xs text-advent-blue">⌘K</span>
+                  </button>
+                </li>
                 <li>
                   <a
                     class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
@@ -182,7 +220,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                       <svg class="h-5 w-5 text-advent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      Horários & Localização
+                      Horários de Culto
                     </span>
                     <span class="text-xs text-advent-muted">→</span>
                   </a>
@@ -266,26 +304,13 @@ import { SITE_CONFIG } from '../../core/site/site.config';
             </nav>
           </div>
 
-          <!-- Drawer Footer CTAs -->
-          <div class="mt-6 border-t border-advent-border pt-6 space-y-3">
+          <div class="border-t border-advent-border pt-6">
             <a
-              class="flex items-center justify-center gap-2 w-full rounded-card bg-advent-blue py-3 text-center text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98]"
+              class="block w-full rounded-card bg-advent-blue py-3 text-center text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner"
               routerLink="/contato"
               (click)="closeMenu()"
             >
-              <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-              Fale Conosco & Oração
-            </a>
-            <a
-              class="block w-full rounded-card border border-advent-border py-2.5 text-center text-xs font-semibold text-advent-muted hover:bg-gray-50 active:scale-[0.98]"
-              [href]="site.social.whatsapp"
-              target="_blank"
-              rel="noopener noreferrer"
-              (click)="closeMenu()"
-            >
-              Conversar no WhatsApp ↗
+              Fale Conosco
             </a>
           </div>
         </div>
@@ -297,9 +322,15 @@ export class HeaderComponent {
   protected readonly site = SITE_CONFIG;
   protected readonly menuOpen = signal(false);
 
+  @Output() searchClick = new EventEmitter<void>();
+
   @ViewChild('hamburgerBtn') private readonly hamburgerBtn?: ElementRef<HTMLButtonElement>;
   @ViewChild('closeBtn') private readonly closeBtn?: ElementRef<HTMLButtonElement>;
   @ViewChild('drawerElement') private readonly drawerElement?: ElementRef<HTMLElement>;
+
+  onSearch(): void {
+    this.searchClick.emit();
+  }
 
   toggleMenu(): void {
     if (this.menuOpen()) {
