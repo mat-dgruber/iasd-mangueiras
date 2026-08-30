@@ -3,11 +3,14 @@ import { RouterLink } from '@angular/router';
 import { SeoService } from '../../core/seo/seo.service';
 import { ContentService } from '../../core/services/content.service';
 import { Ministerio } from '../../core/models/content.models';
+import { MinisterioSkeletonComponent } from './ministerio-skeleton.component';
+import { MinisterioCardComponent } from './ministerio-card.component';
+import { MinisterioModalComponent } from './ministerio-modal.component';
 
 @Component({
   selector: 'app-ministerios-page',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, MinisterioSkeletonComponent, MinisterioCardComponent, MinisterioModalComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main id="conteudo" class="py-10 md:py-14">
@@ -38,11 +41,11 @@ import { Ministerio } from '../../core/models/content.models';
         <section class="mt-10" aria-label="Filtros de ministérios">
           <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <!-- Chips de Categoria -->
-            <div class="flex flex-wrap gap-2">
-              @for (cat of categories; track cat) {
+            <div class="flex overflow-x-auto pb-1 gap-2">
+              @for (cat of categories(); track cat) {
                 <button
                   type="button"
-                  class="rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                  class="shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
                   [class]="
                     selectedCategory() === cat
                       ? 'bg-advent-blue text-white shadow-sm'
@@ -98,7 +101,10 @@ import { Ministerio } from '../../core/models/content.models';
         <!-- Lista de Ministérios Filtrados -->
         <section class="mt-8" aria-labelledby="ministerios-title">
           <h2 id="ministerios-title" class="sr-only">Todos os Ministérios</h2>
-          @if (filteredMinisterios().length === 0) {
+
+          @if (isLoading()) {
+            <app-ministerio-skeleton />
+          } @else if (filteredMinisterios().length === 0) {
             <div
               class="rounded-card border border-advent-border bg-white p-12 text-center text-advent-muted shadow-sm"
             >
@@ -133,103 +139,22 @@ import { Ministerio } from '../../core/models/content.models';
               </button>
             </div>
           } @else {
+            <!-- Destaques -->
+            @if (highlightedMinisterios().length > 0) {
+              <div class="mb-8">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-advent-blue mb-4">Destaques</h3>
+                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  @for (item of highlightedMinisterios(); track (item.id || item.nome)) {
+                    <app-ministerio-card [ministerio]="item" (details)="openDetails($event)" />
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Todos (ou filtrados sem destaques) -->
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              @for (item of filteredMinisterios(); track (item.id || item.nome)) {
-                <article
-                  class="flex flex-col justify-between rounded-2xl border border-advent-border bg-white overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
-                >
-                  <div>
-                    <!-- Imagem ou Header Visual do Ministério -->
-                    @if (item.banner_url || item.imagem_url) {
-                      <div class="aspect-video w-full overflow-hidden bg-gray-100 border-b border-advent-border">
-                        <img
-                          [src]="item.banner_url || item.imagem_url"
-                          [alt]="item.nome"
-                          class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-                          loading="lazy"
-                        />
-                      </div>
-                    } @else {
-                      <div class="h-3 bg-linear-to-r from-advent-blue via-blue-400 to-advent-gold/70"></div>
-                    }
-
-                    <div class="p-6">
-                      <div class="flex flex-wrap items-center gap-2 mb-3">
-                        @if (item.categoria) {
-                          <span
-                            class="inline-block rounded-md bg-advent-blue/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-advent-blue"
-                          >
-                            {{ item.categoria }}
-                          </span>
-                        }
-
-                        @if (item.destaque) {
-                          <span class="rounded-md bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800">
-                            ⭐ Destaque
-                          </span>
-                        }
-                      </div>
-
-                      <h3 class="text-xl font-bold text-advent-text leading-snug">{{ item.nome }}</h3>
-                      
-                      <p class="mt-2.5 text-sm text-advent-muted leading-relaxed">
-                        {{ item.descricao }}
-                      </p>
-
-                      <!-- Metadados Adicionais -->
-                      <div class="mt-4 space-y-2 border-t border-advent-border/60 pt-3 text-xs text-advent-text">
-                        @if (item.lideres) {
-                          <p class="flex items-center gap-1.5 font-medium">
-                            <span class="text-advent-muted">👥 Liderança:</span>
-                            <span class="font-semibold text-advent-blue">{{ item.lideres }}</span>
-                          </p>
-                        }
-
-                        @if (item.publico_alvo) {
-                          <p class="flex items-center gap-1.5 font-medium">
-                            <span class="text-advent-muted">🎯 Público:</span>
-                            <span>{{ item.publico_alvo }}</span>
-                          </p>
-                        }
-
-                        @if (item.reunioes_horario) {
-                          <p class="flex items-start gap-1.5 font-medium">
-                            <span class="text-advent-muted shrink-0">⏰ Encontros:</span>
-                            <span>{{ item.reunioes_horario }}</span>
-                          </p>
-                        }
-
-                        @if (item.atividades && item.atividades.length > 0) {
-                          <div class="pt-2">
-                            <span class="text-advent-muted font-semibold block mb-1">Principais Atividades:</span>
-                            <ul class="list-disc list-inside space-y-0.5 text-advent-muted text-[11px]">
-                              @for (ativ of item.atividades.slice(0, 3); track ativ) {
-                                <li class="truncate">{{ ativ }}</li>
-                              }
-                            </ul>
-                          </div>
-                        }
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="p-6 pt-0 flex items-center justify-between border-t border-advent-border/50">
-                    <button
-                      type="button"
-                      (click)="openDetails(item)"
-                      class="text-xs font-semibold text-advent-blue hover:underline cursor-pointer"
-                    >
-                      Ver detalhes completos →
-                    </button>
-
-                    <a
-                      class="rounded-lg bg-advent-blue/10 hover:bg-advent-blue hover:text-white text-advent-blue px-3 py-1.5 text-xs font-bold transition-colors"
-                      routerLink="/contato"
-                    >
-                      Quero Servir
-                    </a>
-                  </div>
-                </article>
+              @for (item of nonHighlightedMinisterios(); track (item.id || item.nome)) {
+                <app-ministerio-card [ministerio]="item" (details)="openDetails($event)" />
               }
             </div>
           }
@@ -237,104 +162,7 @@ import { Ministerio } from '../../core/models/content.models';
 
         <!-- Modal de Detalhes do Ministério -->
         @if (selectedMinisterio(); as modalItem) {
-          <div
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modal-ministerio-title"
-          >
-            <div class="w-full max-w-xl rounded-3xl bg-white p-6 md:p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
-              <div class="flex items-center justify-between pb-4 border-b border-advent-border">
-                <div>
-                  <span class="text-xs font-bold uppercase tracking-wider text-advent-blue">
-                    {{ modalItem.categoria }}
-                  </span>
-                  <h3 id="modal-ministerio-title" class="text-2xl font-bold text-advent-text mt-0.5">
-                    {{ modalItem.nome }}
-                  </h3>
-                </div>
-                <button
-                  type="button"
-                  (click)="closeDetails()"
-                  class="text-advent-muted hover:text-advent-text cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg"
-                  aria-label="Fechar modal"
-                >
-                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              @if (modalItem.banner_url || modalItem.imagem_url) {
-                <div class="mt-4 aspect-video w-full overflow-hidden rounded-2xl border border-advent-border shadow-xs bg-slate-100">
-                  <img
-                    [src]="modalItem.banner_url || modalItem.imagem_url"
-                    [alt]="modalItem.nome"
-                    class="h-full w-full object-cover"
-                  />
-                </div>
-              }
-
-              <div class="mt-5 space-y-4">
-                <div>
-                  <h4 class="text-xs font-bold uppercase tracking-wider text-advent-muted mb-1">Sobre o Ministério</h4>
-                  <p class="text-sm text-advent-text leading-relaxed">{{ modalItem.descricao }}</p>
-                </div>
-
-                <div class="grid gap-3 sm:grid-cols-2 bg-advent-neutral p-4 rounded-2xl border border-advent-border">
-                  @if (modalItem.lideres) {
-                    <div>
-                      <span class="text-xs font-bold text-advent-muted block">Liderança Responsável</span>
-                      <span class="text-sm font-semibold text-advent-blue">{{ modalItem.lideres }}</span>
-                    </div>
-                  }
-                  @if (modalItem.publico_alvo) {
-                    <div>
-                      <span class="text-xs font-bold text-advent-muted block">Público-Alvo</span>
-                      <span class="text-sm text-advent-text">{{ modalItem.publico_alvo }}</span>
-                    </div>
-                  }
-                  @if (modalItem.reunioes_horario) {
-                    <div class="sm:col-span-2">
-                      <span class="text-xs font-bold text-advent-muted block">Horários e Encontros</span>
-                      <span class="text-sm text-advent-text">{{ modalItem.reunioes_horario }}</span>
-                    </div>
-                  }
-                </div>
-
-                @if (modalItem.atividades && modalItem.atividades.length > 0) {
-                  <div>
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-advent-muted mb-2">Projetos & Atividades</h4>
-                    <ul class="space-y-1.5">
-                      @for (ativ of modalItem.atividades; track ativ) {
-                        <li class="flex items-start gap-2 text-xs md:text-sm text-advent-text">
-                          <span class="text-advent-blue font-bold">✓</span>
-                          <span>{{ ativ }}</span>
-                        </li>
-                      }
-                    </ul>
-                  </div>
-                }
-              </div>
-
-              <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-advent-border">
-                <button
-                  type="button"
-                  (click)="closeDetails()"
-                  class="w-full sm:w-auto rounded-card border border-advent-border px-5 py-2.5 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer"
-                >
-                  Fechar
-                </button>
-                <a
-                  routerLink="/contato"
-                  (click)="closeDetails()"
-                  class="w-full sm:w-auto rounded-card bg-advent-blue px-6 py-2.5 text-center text-xs font-bold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98]"
-                >
-                  Entrar em Contato para Servir →
-                </a>
-              </div>
-            </div>
-          </div>
+          <app-ministerio-modal [ministerio]="modalItem" (close)="closeDetails()" />
         }
 
         <!-- Chamada para Envolvimento -->
@@ -372,22 +200,27 @@ export class MinisteriosPage {
   private readonly contentService = inject(ContentService);
   private readonly seo = inject(SeoService);
 
-  protected readonly categories = [
-    'Todos',
-    'Novas Gerações & Família',
-    'Louvor & Adoração',
-    'Ação Social & Comunidade',
-    'Comunicação & Acolhimento',
-  ] as const;
-
   readonly selectedCategory = signal<string>('Todos');
   readonly searchQuery = signal<string>('');
   readonly selectedMinisterio = signal<Ministerio | null>(null);
+  readonly isLoading = signal<boolean>(false);
 
-  protected readonly allMinisterios = () => this.contentService.ministerios();
+  /** Categorias derivadas dinamicamente dos dados */
+  readonly categories = computed(() => {
+    const cats = this.contentService.ministerios()
+      .map(m => m.categoria)
+      .filter((c): c is string => !!c);
+    return ['Todos', ...new Set(cats)];
+  });
 
+  /** Apenas ministérios ativos (ativo !== false) */
+  protected readonly activeMinisterios = computed(() =>
+    this.contentService.ministerios().filter(m => m.ativo !== false),
+  );
+
+  /** Ministérios filtrados por categoria e busca */
   readonly filteredMinisterios = computed(() => {
-    const list = this.allMinisterios();
+    const list = this.activeMinisterios();
     const cat = this.selectedCategory();
     const query = this.searchQuery().trim().toLowerCase();
 
@@ -402,6 +235,20 @@ export class MinisteriosPage {
     });
   });
 
+  /** Destaques: só quando category='Todos' e sem busca */
+  readonly highlightedMinisterios = computed(() => {
+    if (this.selectedCategory() !== 'Todos' || this.searchQuery().trim()) return [];
+    return this.filteredMinisterios().filter(m => m.destaque);
+  });
+
+  /** Restante: não-destaque quando há destaques, senão todos os filtrados */
+  readonly nonHighlightedMinisterios = computed(() => {
+    const highlighted = this.highlightedMinisterios();
+    if (!highlighted.length) return this.filteredMinisterios();
+    const ids = new Set(highlighted.map(m => m.id));
+    return this.filteredMinisterios().filter(m => !ids.has(m.id));
+  });
+
   constructor() {
     this.seo.apply({
       title: 'Ministérios — IASD Mangueiras',
@@ -409,6 +256,9 @@ export class MinisteriosPage {
         'Conheça os ministérios e áreas de serviço da Igreja Adventista do Sétimo Dia das Mangueiras em Tatuí-SP e descubra como participar.',
       path: '/ministerios',
     });
+
+    // ponytail: simula carregamento async do Firestore; substituir por signal real quando ContentService expor loading
+    setTimeout(() => this.isLoading.set(false), 300);
   }
 
   setCategory(category: string): void {
