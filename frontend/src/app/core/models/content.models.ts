@@ -64,6 +64,7 @@ export interface Ministerio {
   publico_alvo?: string;
   atividades?: string[];
   destaque?: boolean;
+  ativo?: boolean;
 }
 
 export interface PequenoGrupo {
