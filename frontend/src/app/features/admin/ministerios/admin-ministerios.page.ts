@@ -25,7 +25,7 @@ import defaultMinisterios from '../../../../content/ministerios.json';
         <button
           type="button"
           (click)="openModal()"
-          class="rounded-card bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner cursor-pointer min-h-[40px] flex items-center justify-center gap-1.5"
+          class="rounded-card bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner cursor-pointer min-h-[44px] flex items-center justify-center gap-1.5"
         >
           <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -105,7 +105,7 @@ import defaultMinisterios from '../../../../content/ministerios.json';
                   <button
                     type="button"
                     (click)="editMinisterio(ministerio)"
-                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-advent-blue bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer min-h-[36px] flex items-center"
+                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-advent-blue bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer min-h-[44px] flex items-center"
                     aria-label="Editar ministério {{ ministerio.nome }}"
                   >
                     Editar
@@ -113,7 +113,7 @@ import defaultMinisterios from '../../../../content/ministerios.json';
                   <button
                     type="button"
                     (click)="deleteMinisterio(ministerio)"
-                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[36px] flex items-center"
+                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[44px] flex items-center"
                     aria-label="Excluir ministério {{ ministerio.nome }}"
                   >
                     Excluir
@@ -307,14 +307,14 @@ import defaultMinisterios from '../../../../content/ministerios.json';
                 <button
                   type="button"
                   (click)="closeModal()"
-                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[36px]"
+                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[44px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   [disabled]="ministerioForm.invalid || isSaving()"
-                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[36px]"
+                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[44px]"
                 >
                   {{ isSaving() ? 'Salvando...' : 'Salvar Ministério' }}
                 </button>
@@ -489,8 +489,7 @@ export class AdminMinisteriosPage implements OnInit {
       this.updateCategorias();
       this.toastService.info(`Ministério "${ministerio.nome}" excluído.`);
     } catch {
-      this.ministerios.update((prev) => prev.filter((m) => m !== ministerio));
-      this.updateCategorias();
+      this.toastService.error(`Erro ao excluir "${ministerio.nome}". Tente novamente.`);
     }
   }
 }
