@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { GlobalSemanticSearchService } from '../../../core/services/global-semantic-search.service';
 import { SearchEntityType, SemanticSearchResult } from '../../../core/models/search.models';
-import { ToastService } from '../toast/toast.service';
 
 @Component({
   selector: 'app-global-search-dialog',
@@ -22,116 +21,141 @@ import { ToastService } from '../toast/toast.service';
   template: `
     @if (isOpen()) {
       <div
-        class="fixed inset-0 z-50 flex items-start justify-center p-3 sm:p-6 md:p-16 bg-black/65 backdrop-blur-xs animate-fadeIn"
+        class="fixed inset-0 z-50 flex items-start justify-center p-3 sm:p-6 md:p-12 lg:pt-16 bg-slate-900/60 backdrop-blur-md animate-fadeIn"
         role="dialog"
         aria-modal="true"
         aria-labelledby="search-modal-title"
         (click)="onBackdropClick($event)"
       >
         <div
-          class="w-full max-w-3xl rounded-3xl bg-white shadow-2xl border border-advent-border overflow-hidden flex flex-col max-h-[88vh] animate-scaleUp"
+          class="w-full max-w-3xl rounded-3xl bg-white shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col max-h-[88vh] animate-modalSlideUp"
           (click)="$event.stopPropagation()"
         >
-          <!-- Input Header -->
-          <div class="relative flex items-center border-b border-advent-border px-4 py-3.5 sm:px-6 bg-white">
-            <svg
-              class="h-5 w-5 text-advent-blue shrink-0 mr-3"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2.5"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-              />
-            </svg>
-
-            <input
-              #searchInput
-              id="search-modal-title"
-              type="search"
-              [ngModel]="query()"
-              (ngModelChange)="onQueryChange($event)"
-              placeholder="Pergunte em linguagem natural (ex: 'onde levar meus filhos', 'oração para angústia')..."
-              class="w-full text-base sm:text-lg bg-transparent text-advent-text placeholder:text-advent-muted focus:outline-hidden min-h-[44px]"
-              autocomplete="off"
-            />
-
-            @if (searchService.isLoading()) {
-              <div class="flex items-center gap-1.5 text-xs text-advent-blue font-semibold mr-2 shrink-0">
-                <span class="inline-block h-2 w-2 rounded-full bg-advent-blue animate-ping"></span>
-                <span>IA Carregando</span>
-              </div>
-            }
-
-            <button
-              type="button"
-              (click)="close()"
-              class="rounded-lg p-1.5 text-advent-muted hover:text-advent-text hover:bg-slate-100 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
-              aria-label="Fechar busca"
-            >
-              <kbd class="hidden sm:inline-block rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-semibold text-slate-500 shadow-xs mr-2">ESC</kbd>
-              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <!-- Search Header Input -->
+          <div class="relative flex items-center border-b border-slate-100 px-5 py-4 bg-white/90">
+            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-advent-blue shrink-0 mr-3.5 border border-blue-100/80 shadow-2xs">
+              <svg
+                class="h-4.5 w-4.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2.5"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                />
               </svg>
-            </button>
+            </div>
+
+            <div class="relative flex-1 min-w-0">
+              <input
+                #searchInput
+                id="search-modal-title"
+                type="search"
+                [ngModel]="query()"
+                (ngModelChange)="onQueryChange($event)"
+                placeholder="Busque por sentimentos, oradores, eventos, PGs ou ministérios..."
+                class="w-full text-base sm:text-lg bg-transparent text-advent-text placeholder:text-slate-400 focus:outline-none focus:ring-0 border-0 p-0 font-normal leading-relaxed"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="flex items-center gap-2 ml-3 shrink-0">
+              @if (searchService.isLoading()) {
+                <div class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-advent-blue border border-blue-200/60 animate-pulse">
+                  <span class="h-1.5 w-1.5 rounded-full bg-advent-blue"></span>
+                  <span>IA Carregando</span>
+                </div>
+              }
+
+              @if (query()) {
+                <button
+                  type="button"
+                  (click)="clearQuery()"
+                  class="rounded-full p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                  title="Limpar pesquisa"
+                >
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              }
+
+              <button
+                type="button"
+                (click)="close()"
+                class="rounded-xl px-2 py-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer flex items-center gap-1 min-h-[36px]"
+                aria-label="Fechar busca"
+              >
+                <kbd class="hidden sm:inline-block rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-bold text-slate-500 shadow-2xs">ESC</kbd>
+                <svg class="h-4.5 w-4.5 sm:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
 
-          <!-- Sugestões Rápidas / Zero-State Prompts -->
+          <!-- Sugestões Rápidas (Zero-State Prompts com visual refinado) -->
           @if (!query()) {
-            <div class="px-4 py-3 sm:px-6 bg-blue-50/40 border-b border-advent-border">
-              <span class="text-[11px] font-bold uppercase tracking-wider text-advent-muted block mb-2">
-                💡 Sugestões de Perguntas & Temas
-              </span>
-              <div class="flex flex-wrap gap-1.5">
+            <div class="px-5 py-3.5 sm:px-6 bg-gradient-to-r from-blue-50/50 via-slate-50/80 to-amber-50/20 border-b border-slate-100">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                  <span>✨</span> Sugestões em Linguagem Natural
+                </span>
+                <span class="text-[10px] text-slate-400 font-medium hidden sm:inline-block">Clique para testar</span>
+              </div>
+              <div class="flex flex-wrap gap-2">
                 @for (prompt of promptSuggestions; track prompt) {
                   <button
                     type="button"
                     (click)="applyPrompt(prompt)"
-                    class="rounded-xl border border-blue-200/70 bg-white px-3 py-1.5 text-xs font-medium text-advent-text hover:border-advent-blue hover:text-advent-blue hover:bg-blue-50 transition-colors cursor-pointer shadow-2xs"
+                    class="group inline-flex items-center gap-1.5 rounded-xl border border-slate-200/90 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:border-advent-blue/60 hover:text-advent-blue hover:bg-blue-50/50 hover:shadow-2xs transition-all duration-150 cursor-pointer active:scale-98"
                   >
-                    {{ prompt }}
+                    <span>{{ prompt }}</span>
+                    <span class="text-slate-300 group-hover:text-advent-blue transition-colors text-[10px]">→</span>
                   </button>
                 }
               </div>
             </div>
           }
 
-          <!-- Filtros de Categorias Rápidas -->
-          <div class="flex items-center gap-1.5 px-4 py-2.5 sm:px-6 bg-slate-50 border-b border-advent-border overflow-x-auto no-scrollbar">
+          <!-- Filtros de Categorias em Chips Minimalistas -->
+          <div class="flex items-center gap-1.5 px-5 py-2.5 sm:px-6 bg-slate-50/70 border-b border-slate-100 overflow-x-auto no-scrollbar">
             @for (cat of categories; track cat.id) {
               <button
                 type="button"
                 (click)="setCategory(cat.id)"
-                class="rounded-xl px-3 py-1 text-xs font-bold transition-all whitespace-nowrap min-h-[32px] cursor-pointer"
+                class="rounded-xl px-3 py-1 text-xs font-bold transition-all duration-150 whitespace-nowrap min-h-[30px] cursor-pointer flex items-center gap-1"
                 [class.bg-advent-blue]="selectedCategory() === cat.id"
                 [class.text-white]="selectedCategory() === cat.id"
                 [class.shadow-xs]="selectedCategory() === cat.id"
                 [class.bg-white]="selectedCategory() !== cat.id"
-                [class.text-advent-muted]="selectedCategory() !== cat.id"
+                [class.text-slate-600]="selectedCategory() !== cat.id"
                 [class.border]="selectedCategory() !== cat.id"
-                [class.border-advent-border]="selectedCategory() !== cat.id"
+                [class.border-slate-200]="selectedCategory() !== cat.id"
+                [class.hover:border-advent-blue]="selectedCategory() !== cat.id"
               >
-                {{ cat.label }}
+                <span>{{ cat.icon }}</span>
+                <span>{{ cat.label }}</span>
               </button>
             }
           </div>
 
-          <!-- Lista de Resultados -->
-          <div class="overflow-y-auto p-4 sm:p-6 space-y-3 divide-y divide-slate-100 flex-1">
+          <!-- Lista de Resultados com Transições e Hover Suave -->
+          <div class="overflow-y-auto p-3 sm:p-5 space-y-2.5 flex-1 divide-y divide-slate-50">
             @if (results().length === 0) {
-              <div class="py-12 text-center text-advent-muted">
-                <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-advent-neutral text-advent-blue mb-3">
+              <div class="py-14 text-center text-slate-400">
+                <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-advent-blue mb-3 border border-blue-100 shadow-2xs">
                   <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <p class="font-bold text-advent-text text-base">Nenhum resultado encontrado</p>
-                <p class="text-xs sm:text-sm mt-1">
-                  Tente buscar por palavras como "música", "família", "oração", "sábado" ou "jovens".
+                <p class="font-bold text-slate-700 text-base">Nenhum resultado para esta consulta</p>
+                <p class="text-xs sm:text-sm mt-1 max-w-sm mx-auto text-slate-500 leading-relaxed">
+                  Tente reformular sua busca usando termos bíblicos, sentimentos ou nomes de departamentos.
                 </p>
               </div>
             } @else {
@@ -140,13 +164,14 @@ import { ToastService } from '../toast/toast.service';
                   (click)="navigate(item.url)"
                   (keydown.enter)="navigate(item.url)"
                   tabindex="0"
-                  class="group flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-2xl hover:bg-blue-50/60 transition-colors cursor-pointer border border-transparent hover:border-advent-blue/20 pt-3"
+                  class="group relative flex flex-col md:flex-row md:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl transition-all duration-150 cursor-pointer border border-transparent hover:border-advent-blue/20 hover:bg-blue-50/40 hover:shadow-xs focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
                   [class.bg-blue-50]="selectedIndex() === idx"
+                  [class.border-advent-blue]="selectedIndex() === idx"
                 >
-                  <div class="space-y-1.5 max-w-xl">
+                  <div class="space-y-1.5 max-w-xl min-w-0">
                     <div class="flex flex-wrap items-center gap-2">
                       <span
-                        class="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+                        class="rounded-lg px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider shadow-2xs"
                         [class.bg-blue-100]="item.type === 'evento' || item.type === 'horario'"
                         [class.text-advent-blue]="item.type === 'evento' || item.type === 'horario'"
                         [class.bg-purple-100]="item.type === 'ministerio'"
@@ -162,52 +187,69 @@ import { ToastService } from '../toast/toast.service';
                       </span>
 
                       @if (item.departmentOrCategory) {
-                        <span class="text-[11px] text-advent-muted font-medium">
+                        <span class="text-[11px] text-slate-400 font-medium truncate">
                           • {{ item.departmentOrCategory }}
                         </span>
                       }
                     </div>
 
-                    <h4 class="text-base font-bold text-advent-text group-hover:text-advent-blue transition-colors leading-snug">
+                    <h4 class="text-base font-bold text-slate-900 group-hover:text-advent-blue transition-colors leading-snug">
                       {{ item.title }}
                     </h4>
 
-                    <p class="text-xs text-advent-muted line-clamp-2 leading-relaxed">
+                    <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed font-normal">
                       {{ item.description }}
                     </p>
                   </div>
 
-                  <!-- Ações Rápidas & Match Badge -->
-                  <div class="flex items-center gap-2.5 self-end md:self-center shrink-0 pt-2 md:pt-0">
+                  <!-- Ações Rápidas & Match Badge com Transição Elegante -->
+                  <div class="flex items-center gap-2 self-end md:self-center shrink-0 pt-2 md:pt-0">
                     @if (item.metadata?.['whatsapp'] || item.metadata?.['telefone'] || item.metadata?.['whatsapp_contato']) {
                       <button
                         type="button"
                         (click)="$event.stopPropagation(); openWhatsApp(item)"
-                        class="text-xs font-semibold text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 px-3 py-1.5 rounded-xl transition-colors min-h-[36px] flex items-center gap-1.5 cursor-pointer"
+                        class="text-xs font-semibold text-green-800 bg-green-50 hover:bg-green-100 border border-green-200/80 px-2.5 py-1.5 rounded-xl transition-all min-h-[34px] flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs"
                         title="Falar no WhatsApp"
                       >
-                        💬 WhatsApp
+                        <span class="text-sm">💬</span>
+                        <span class="hidden sm:inline">WhatsApp</span>
                       </button>
                     }
 
-                    <span class="rounded-full bg-slate-100 group-hover:bg-advent-blue group-hover:text-white px-3 py-1 text-[11px] font-extrabold text-advent-text transition-colors">
-                      {{ item.matchPercentage }}% afinidade
-                    </span>
+                    <div class="flex items-center gap-1.5 bg-slate-100/80 group-hover:bg-advent-blue group-hover:text-white px-2.5 py-1 rounded-full text-[11px] font-bold text-slate-600 transition-colors shadow-2xs">
+                      <span>{{ item.matchPercentage }}%</span>
+                      <span class="text-[9px] uppercase tracking-wider opacity-80">afinidade</span>
+                    </div>
+
+                    <div class="h-6 w-6 rounded-full flex items-center justify-center text-slate-300 group-hover:text-advent-blue group-hover:translate-x-0.5 transition-all">
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               }
             }
           </div>
 
-          <!-- Rodapé com Dicas e Atalhos -->
-          <div class="px-4 py-3 bg-slate-50 border-t border-advent-border flex flex-wrap items-center justify-between text-xs text-advent-muted">
+          <!-- Rodapé Refinado -->
+          <div class="px-5 py-3 bg-slate-50/90 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
             <div class="flex items-center gap-3">
-              <span>Navegue com <kbd class="rounded border border-slate-200 bg-white px-1 font-semibold">↑</kbd> <kbd class="rounded border border-slate-200 bg-white px-1 font-semibold">↓</kbd></span>
-              <span>Abrir com <kbd class="rounded border border-slate-200 bg-white px-1 font-semibold">ENTER</kbd></span>
+              <span class="flex items-center gap-1">
+                <kbd class="rounded border border-slate-200 bg-white px-1 py-0.5 text-[10px] font-semibold text-slate-600 shadow-2xs">↑</kbd>
+                <kbd class="rounded border border-slate-200 bg-white px-1 py-0.5 text-[10px] font-semibold text-slate-600 shadow-2xs">↓</kbd>
+                <span class="hidden sm:inline">navegar</span>
+              </span>
+              <span class="flex items-center gap-1">
+                <kbd class="rounded border border-slate-200 bg-white px-1.5 py-0.5 text-[10px] font-semibold text-slate-600 shadow-2xs">↵</kbd>
+                <span class="hidden sm:inline">abrir</span>
+              </span>
             </div>
-            <span class="font-bold text-advent-blue flex items-center gap-1">
-              ✨ Busca Semântica Híbrida (Neural RRF + On-Device AI)
-            </span>
+
+            <div class="flex items-center gap-1.5 font-semibold text-advent-blue text-[11px]">
+              <span class="inline-block h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+              <span>Busca Semântica Neural On-Device (IA Local)</span>
+            </div>
           </div>
         </div>
       </div>
@@ -217,7 +259,6 @@ import { ToastService } from '../toast/toast.service';
 export class GlobalSearchDialogComponent {
   protected readonly searchService = inject(GlobalSemanticSearchService);
   private readonly router = inject(Router);
-  private readonly toast = inject(ToastService);
 
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
 
@@ -228,22 +269,22 @@ export class GlobalSearchDialogComponent {
   readonly selectedIndex = signal<number>(0);
 
   readonly promptSuggestions = [
-    'O que a Bíblia diz sobre ansiedade e paz?',
+    'O que a Bíblia diz sobre paz e ansiedade?',
     'Atividades para crianças e adolescentes',
     'Horário da Escola Sabatina e Culto',
-    'Onde tem Pequeno Grupo perto de mim?',
+    'Onde tem Pequeno Grupo em Tatuí?',
     'Quero ajudar com cestas básicas (ASA)',
     'Culto jovem e ministério de louvor',
   ];
 
   readonly categories = [
-    { id: 'all' as const, label: 'Tudo' },
-    { id: 'evento' as const, label: 'Eventos' },
-    { id: 'horario' as const, label: 'Cultos & Horários' },
-    { id: 'ministerio' as const, label: 'Ministérios' },
-    { id: 'pg' as const, label: 'Pequenos Grupos' },
-    { id: 'versiculo' as const, label: 'Bíblia & Temas' },
-    { id: 'video' as const, label: 'Vídeos / Ao Vivo' },
+    { id: 'all' as const, label: 'Tudo', icon: '🌐' },
+    { id: 'evento' as const, label: 'Eventos', icon: '📅' },
+    { id: 'horario' as const, label: 'Cultos & Horários', icon: '⏰' },
+    { id: 'ministerio' as const, label: 'Ministérios', icon: '🤝' },
+    { id: 'pg' as const, label: 'Pequenos Grupos', icon: '🏡' },
+    { id: 'versiculo' as const, label: 'Bíblia & Temas', icon: '📖' },
+    { id: 'video' as const, label: 'Vídeos / Ao Vivo', icon: '📺' },
   ];
 
   constructor() {
@@ -252,7 +293,7 @@ export class GlobalSearchDialogComponent {
         setTimeout(() => {
           this.searchInput?.nativeElement?.focus();
           this.searchService.initializeNeuralModel();
-        }, 50);
+        }, 60);
         this.runSearch();
       }
     });
@@ -303,6 +344,13 @@ export class GlobalSearchDialogComponent {
     } else {
       this.open();
     }
+  }
+
+  clearQuery(): void {
+    this.query.set('');
+    this.selectedIndex.set(0);
+    this.searchInput?.nativeElement?.focus();
+    this.runSearch();
   }
 
   applyPrompt(prompt: string): void {
