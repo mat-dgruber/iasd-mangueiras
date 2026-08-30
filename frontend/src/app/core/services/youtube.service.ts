@@ -1,4 +1,5 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -12,6 +13,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class YoutubeService {
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/youtube`;
 
@@ -22,6 +24,9 @@ export class YoutubeService {
   readonly loading = signal<boolean>(false);
 
   fetchLatestVideos(): Observable<readonly VideoItem[]> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return of([]);
+    }
     this.loading.set(true);
     return this.http.get<YouTubeLatestResponse>(`${this.apiUrl}/latest`).pipe(
       map((res) => res.videos || []),
@@ -38,6 +43,9 @@ export class YoutubeService {
   }
 
   fetchCatalogVideos(): Observable<readonly VideoItem[]> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return of([]);
+    }
     this.loading.set(true);
     return this.http.get<YouTubeLatestResponse>(`${this.apiUrl}/catalog`).pipe(
       map((res) => res.videos || []),
@@ -54,6 +62,9 @@ export class YoutubeService {
   }
 
   fetchPlaylistVideos(category: VideoCategory): Observable<readonly VideoItem[]> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return of([]);
+    }
     if (category === 'todos') {
       return this.fetchCatalogVideos();
     }
@@ -67,6 +78,9 @@ export class YoutubeService {
   }
 
   fetchPresente7Videos(): Observable<readonly VideoItem[]> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return of([]);
+    }
     return this.http.get<YouTubeLatestResponse>(`${this.apiUrl}/presente7`).pipe(
       map((res) => res.videos || []),
       tap((vids) => {
@@ -80,6 +94,9 @@ export class YoutubeService {
   }
 
   fetchLiveStatus(): Observable<YouTubeLiveResponse> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return of({ is_live: false, live_video: null });
+    }
     return this.http.get<YouTubeLiveResponse>(`${this.apiUrl}/live`).pipe(
       tap((res) => {
         this.isLive.set(res.is_live);

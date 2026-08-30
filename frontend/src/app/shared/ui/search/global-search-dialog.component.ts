@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { GlobalSemanticSearchService } from '../../../core/services/global-semantic-search.service';
 import { SearchEntityType, SemanticSearchResult } from '../../../core/models/search.models';
+import { ToastService } from '../toast/toast.service';
 
 @Component({
   selector: 'app-global-search-dialog',
@@ -21,18 +22,18 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
   template: `
     @if (isOpen()) {
       <div
-        class="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-6 md:p-20 bg-black/60 backdrop-blur-xs animate-fadeIn"
+        class="fixed inset-0 z-50 flex items-start justify-center p-3 sm:p-6 md:p-16 bg-black/65 backdrop-blur-xs animate-fadeIn"
         role="dialog"
         aria-modal="true"
         aria-labelledby="search-modal-title"
         (click)="onBackdropClick($event)"
       >
         <div
-          class="w-full max-w-2xl rounded-3xl bg-white shadow-2xl border border-advent-border overflow-hidden flex flex-col max-h-[85vh] animate-scaleUp"
+          class="w-full max-w-3xl rounded-3xl bg-white shadow-2xl border border-advent-border overflow-hidden flex flex-col max-h-[88vh] animate-scaleUp"
           (click)="$event.stopPropagation()"
         >
           <!-- Input Header -->
-          <div class="relative flex items-center border-b border-advent-border px-4 py-3 sm:px-6">
+          <div class="relative flex items-center border-b border-advent-border px-4 py-3.5 sm:px-6 bg-white">
             <svg
               class="h-5 w-5 text-advent-blue shrink-0 mr-3"
               fill="none"
@@ -54,7 +55,7 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
               type="search"
               [ngModel]="query()"
               (ngModelChange)="onQueryChange($event)"
-              placeholder="Pesquise por temas, eventos, ministérios, versículos, PGs..."
+              placeholder="Pergunte em linguagem natural (ex: 'onde levar meus filhos', 'oração para angústia')..."
               class="w-full text-base sm:text-lg bg-transparent text-advent-text placeholder:text-advent-muted focus:outline-hidden min-h-[44px]"
               autocomplete="off"
             />
@@ -78,6 +79,26 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
               </svg>
             </button>
           </div>
+
+          <!-- Sugestões Rápidas / Zero-State Prompts -->
+          @if (!query()) {
+            <div class="px-4 py-3 sm:px-6 bg-blue-50/40 border-b border-advent-border">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-advent-muted block mb-2">
+                💡 Sugestões de Perguntas & Temas
+              </span>
+              <div class="flex flex-wrap gap-1.5">
+                @for (prompt of promptSuggestions; track prompt) {
+                  <button
+                    type="button"
+                    (click)="applyPrompt(prompt)"
+                    class="rounded-xl border border-blue-200/70 bg-white px-3 py-1.5 text-xs font-medium text-advent-text hover:border-advent-blue hover:text-advent-blue hover:bg-blue-50 transition-colors cursor-pointer shadow-2xs"
+                  >
+                    {{ prompt }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
 
           <!-- Filtros de Categorias Rápidas -->
           <div class="flex items-center gap-1.5 px-4 py-2.5 sm:px-6 bg-slate-50 border-b border-advent-border overflow-x-auto no-scrollbar">
@@ -110,7 +131,7 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
                 </div>
                 <p class="font-bold text-advent-text text-base">Nenhum resultado encontrado</p>
                 <p class="text-xs sm:text-sm mt-1">
-                  Tente buscar por palavras diferentes como "música", "família", "oração" ou "sábado".
+                  Tente buscar por palavras como "música", "família", "oração", "sábado" ou "jovens".
                 </p>
               </div>
             } @else {
@@ -119,10 +140,10 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
                   (click)="navigate(item.url)"
                   (keydown.enter)="navigate(item.url)"
                   tabindex="0"
-                  class="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl hover:bg-blue-50/60 transition-colors cursor-pointer border border-transparent hover:border-advent-blue/20 pt-3"
+                  class="group flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-2xl hover:bg-blue-50/60 transition-colors cursor-pointer border border-transparent hover:border-advent-blue/20 pt-3"
                   [class.bg-blue-50]="selectedIndex() === idx"
                 >
-                  <div class="space-y-1 max-w-xl">
+                  <div class="space-y-1.5 max-w-xl">
                     <div class="flex flex-wrap items-center gap-2">
                       <span
                         class="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
@@ -147,7 +168,7 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
                       }
                     </div>
 
-                    <h4 class="text-base font-bold text-advent-text group-hover:text-advent-blue transition-colors">
+                    <h4 class="text-base font-bold text-advent-text group-hover:text-advent-blue transition-colors leading-snug">
                       {{ item.title }}
                     </h4>
 
@@ -156,11 +177,22 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
                     </p>
                   </div>
 
-                  <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
-                    <span class="rounded-full bg-slate-100 group-hover:bg-advent-blue group-hover:text-white px-2.5 py-1 text-[11px] font-extrabold text-advent-text transition-colors">
-                      {{ item.matchPercentage }}% match
+                  <!-- Ações Rápidas & Match Badge -->
+                  <div class="flex items-center gap-2.5 self-end md:self-center shrink-0 pt-2 md:pt-0">
+                    @if (item.metadata?.['whatsapp'] || item.metadata?.['telefone'] || item.metadata?.['whatsapp_contato']) {
+                      <button
+                        type="button"
+                        (click)="$event.stopPropagation(); openWhatsApp(item)"
+                        class="text-xs font-semibold text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 px-3 py-1.5 rounded-xl transition-colors min-h-[36px] flex items-center gap-1.5 cursor-pointer"
+                        title="Falar no WhatsApp"
+                      >
+                        💬 WhatsApp
+                      </button>
+                    }
+
+                    <span class="rounded-full bg-slate-100 group-hover:bg-advent-blue group-hover:text-white px-3 py-1 text-[11px] font-extrabold text-advent-text transition-colors">
+                      {{ item.matchPercentage }}% afinidade
                     </span>
-                    <span class="text-advent-blue font-bold text-sm hidden sm:inline-block">→</span>
                   </div>
                 </div>
               }
@@ -173,7 +205,9 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
               <span>Navegue com <kbd class="rounded border border-slate-200 bg-white px-1 font-semibold">↑</kbd> <kbd class="rounded border border-slate-200 bg-white px-1 font-semibold">↓</kbd></span>
               <span>Abrir com <kbd class="rounded border border-slate-200 bg-white px-1 font-semibold">ENTER</kbd></span>
             </div>
-            <span class="font-medium text-advent-blue">Busca Semântica On-Device (IA Local)</span>
+            <span class="font-bold text-advent-blue flex items-center gap-1">
+              ✨ Busca Semântica Híbrida (Neural RRF + On-Device AI)
+            </span>
           </div>
         </div>
       </div>
@@ -183,6 +217,7 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
 export class GlobalSearchDialogComponent {
   protected readonly searchService = inject(GlobalSemanticSearchService);
   private readonly router = inject(Router);
+  private readonly toast = inject(ToastService);
 
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
 
@@ -191,6 +226,15 @@ export class GlobalSearchDialogComponent {
   readonly selectedCategory = signal<SearchEntityType | 'all'>('all');
   readonly results = signal<SemanticSearchResult[]>([]);
   readonly selectedIndex = signal<number>(0);
+
+  readonly promptSuggestions = [
+    'O que a Bíblia diz sobre ansiedade e paz?',
+    'Atividades para crianças e adolescentes',
+    'Horário da Escola Sabatina e Culto',
+    'Onde tem Pequeno Grupo perto de mim?',
+    'Quero ajudar com cestas básicas (ASA)',
+    'Culto jovem e ministério de louvor',
+  ];
 
   readonly categories = [
     { id: 'all' as const, label: 'Tudo' },
@@ -261,6 +305,12 @@ export class GlobalSearchDialogComponent {
     }
   }
 
+  applyPrompt(prompt: string): void {
+    this.query.set(prompt);
+    this.selectedIndex.set(0);
+    this.runSearch();
+  }
+
   onQueryChange(val: string): void {
     this.query.set(val);
     this.selectedIndex.set(0);
@@ -288,6 +338,21 @@ export class GlobalSearchDialogComponent {
     } else {
       this.router.navigateByUrl(url);
     }
+  }
+
+  openWhatsApp(item: SemanticSearchResult): void {
+    const num =
+      item.metadata?.['whatsapp'] ||
+      item.metadata?.['telefone'] ||
+      item.metadata?.['whatsapp_contato'];
+    if (!num) return;
+
+    const cleanNum = String(num).replace(/\D/g, '');
+    const finalNum = cleanNum.startsWith('55') ? cleanNum : `55${cleanNum}`;
+    const text = encodeURIComponent(
+      `Olá! Vi o item "${item.title}" no site da IASD Mangueiras e gostaria de saber mais informações.`,
+    );
+    window.open(`https://wa.me/${finalNum}?text=${text}`, '_blank');
   }
 
   onBackdropClick(event: MouseEvent): void {

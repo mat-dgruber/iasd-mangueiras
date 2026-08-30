@@ -18,8 +18,24 @@ const PT_STOPWORDS = new Set([
   'nos', 'num', 'numa', 'o', 'os', 'ou', 'para', 'pela', 'pelas', 'pelo', 'pelos',
   'por', 'qual', 'quando', 'que', 'quem', 'se', 'seja', 'sem', 'sera', 'seu', 'seus',
   'so', 'sua', 'suas', 'tambem', 'te', 'tem', 'tenho', 'ter', 'teu', 'teus', 'tinha',
-  'tu', 'tua', 'tuas', 'um', 'uma', 'voce', 'voces', 'vos', 'onde', 'como',
+  'tu', 'tua', 'tuas', 'um', 'uma', 'voce', 'voces', 'vos', 'onde', 'como', 'quem',
 ]);
+
+// Dicionário de sinônimos e termos eclesiásticos adventistas
+const ADVENTIST_SYNONYMS: Record<string, string[]> = {
+  ja: ['jovens adventistas', 'mocidade', 'culto jovem', 'geracao 148', 'musica jovem'],
+  desbravadores: ['clube de desbravadores', 'criancas', 'acampamento', 'especialidades', 'guardioes da colina', 'adolescentes'],
+  aventureiros: ['clube de aventureiros', 'criancas pequenas', 'pais e filhos', 'natureza'],
+  asa: ['acao solidaria adventista', 'assistencia social', 'cestas basicas', 'alimentos', 'agasalho', 'caridade', 'ajuda comunitaria'],
+  sabado: ['culto divino', 'escola sabatina', 'dia sagrado', 'descanso', 'adoracao matinal', 'dia do senhor'],
+  quarta: ['culto de oracao', 'reuniao de oracao', 'estudo biblico', 'testemunhos'],
+  pg: ['pequeno grupo', 'comunhao nos lares', 'amizade', 'estudo em casa', 'bairros'],
+  crianca: ['ministerio infantil', 'escola sabatina infantil', 'departamento infantil', 'menores'],
+  casal: ['ministerio da familia', 'noivos', 'encontro de casais', 'lar'],
+  musica: ['ministerio de louvor', 'coral', 'sonorizacao', 'instrumental', 'canto'],
+  estudo: ['estudo biblico', 'escola sabatina', 'licoes da biblia', 'duvidas biblicas'],
+  saude: ['ministerio da saude', 'feira de saude', 'alimentacao saudavel', 'oito remedios naturais'],
+};
 
 interface CorpusItem {
   result: Omit<SemanticSearchResult, 'similarityScore' | 'matchPercentage'>;
@@ -44,7 +60,6 @@ export class GlobalSemanticSearchService {
   private model: any = null;
   private tf: any = null;
   private embeddingsMatrix: any = null;
-  private embeddedCorpusIds: string[] = [];
   private initPromise?: Promise<boolean>;
 
   private get isBrowser(): boolean {
@@ -68,8 +83,12 @@ export class GlobalSemanticSearchService {
           badgeText: 'Horário de Culto',
           departmentOrCategory: 'Cultos & Programação',
           tags: ['culto', 'igreja', 'sabado', 'quarta', 'oracao', 'louvor', h.dia.toLowerCase()],
+          metadata: {
+            horario: h.horario,
+            dia: h.dia,
+          },
         },
-        searchText: `${h.titulo} ${h.dia} ${h.horario} ${h.descricao || ''} culto igreja sabado domingo quarta`,
+        searchText: `${h.titulo} ${h.dia} ${h.horario} ${h.descricao || ''} culto igreja sabado domingo quarta adoracao`,
       });
     }
 
@@ -94,11 +113,13 @@ export class GlobalSemanticSearchService {
           ].filter(Boolean),
           metadata: {
             data: ev.data,
+            horario: ev.horario,
             local: ev.local || ev.endereco,
             link_inscricao: ev.link_inscricao,
+            whatsapp_contato: ev.whatsapp_contato,
           },
         },
-        searchText: `${ev.titulo} ${ev.descricao} ${ev.departamento || ''} ${ev.palestrante || ''} ${ev.publico_alvo || ''} ${ev.data} ${ev.local || ''}`,
+        searchText: `${ev.titulo} ${ev.descricao} ${ev.departamento || ''} ${ev.palestrante || ''} ${ev.publico_alvo || ''} ${ev.data} ${ev.local || ''} evento`,
       });
     }
 
@@ -122,6 +143,10 @@ export class GlobalSemanticSearchService {
             m.nome.toLowerCase(),
             ...(m.atividades || []).map((a) => a.toLowerCase()),
           ],
+          metadata: {
+            whatsapp: m.contato_whatsapp,
+            lideres: m.lideres,
+          },
         },
         searchText: `${m.nome} ${m.descricao} ${m.lideres || ''} ${(m.atividades || []).join(' ')} servir voluntariado`,
       });
@@ -143,6 +168,7 @@ export class GlobalSemanticSearchService {
           metadata: {
             bairro: pg.bairro,
             telefone: pg.telefone,
+            lider: pg.lider,
           },
         },
         searchText: `${pg.nome} ${pg.dia} ${pg.horario} ${pg.lider} ${pg.bairro} ${pg.perfil} ${pg.descricao} pequeno grupo comunhao amizade`,
@@ -161,12 +187,17 @@ export class GlobalSemanticSearchService {
           badgeText: `Bíblia • ${v.categoria}`,
           departmentOrCategory: v.categoria,
           tags: ['biblia', 'versiculo', 'palavra de deus', ...(v.tagsSemanticas || [])],
+          metadata: {
+            referencia: v.referencia,
+            texto: v.texto,
+            tema: v.tema,
+          },
         },
         searchText: `${v.tema} ${v.texto} ${v.referencia} ${v.categoria} ${(v.tagsSemanticas || []).join(' ')}`,
       });
     }
 
-    // 6. Vídeos e Pregações do YouTube (se carregados)
+    // 6. Vídeos e Pregações do YouTube
     for (const vid of this.youtubeService.videos()) {
       items.push({
         result: {
@@ -233,7 +264,6 @@ export class GlobalSemanticSearchService {
 
     const textsToEmbed = currentCorpus.map((item) => item.searchText);
     this.embeddingsMatrix = await this.model.embed(textsToEmbed);
-    this.embeddedCorpusIds = currentCorpus.map((item) => item.result.id);
   }
 
   async search(
@@ -257,27 +287,68 @@ export class GlobalSemanticSearchService {
       }));
     }
 
-    // Se o modelo neural estiver pronto, usa Inferência Neural via Tensor
+    // Busca Híbrida Inteligente (Reciprocal Rank Fusion entre Neural e BM25/Léxico)
     if (this._isModelReady() && this.model && this.embeddingsMatrix && this.tf) {
       try {
-        return await this.neuralSearch(cleanQuery, currentCorpus, maxResults, options.minScore);
+        const neuralRank = await this.neuralSearch(cleanQuery, currentCorpus, currentCorpus.length, 0.1);
+        const lexicalRank = this.heuristicSearch(cleanQuery, currentCorpus, currentCorpus.length, 0.05);
+
+        return this.reciprocalRankFusion(neuralRank, lexicalRank, maxResults);
       } catch {
         return this.heuristicSearch(cleanQuery, currentCorpus, maxResults, options.minScore);
       }
     }
 
-    // Fallback heurístico ultra-rápido
     return this.heuristicSearch(cleanQuery, currentCorpus, maxResults, options.minScore);
+  }
+
+  // Reciprocal Rank Fusion (RRF) para combinar Busca Densa (Neural) e Busca Esparsa (Léxica)
+  private reciprocalRankFusion(
+    neuralMatches: SemanticSearchResult[],
+    lexicalMatches: SemanticSearchResult[],
+    maxResults: number,
+    k = 60,
+  ): SemanticSearchResult[] {
+    const scoreMap = new Map<string, { item: SemanticSearchResult; rrfScore: number }>();
+
+    neuralMatches.forEach((item, rank) => {
+      const current = scoreMap.get(item.id) || { item, rrfScore: 0 };
+      current.rrfScore += 1 / (k + rank + 1);
+      scoreMap.set(item.id, current);
+    });
+
+    lexicalMatches.forEach((item, rank) => {
+      const current = scoreMap.get(item.id) || { item, rrfScore: 0 };
+      current.rrfScore += 1 / (k + rank + 1);
+      scoreMap.set(item.id, current);
+    });
+
+    const combined = Array.from(scoreMap.values())
+      .sort((a, b) => b.rrfScore - a.rrfScore)
+      .slice(0, maxResults);
+
+    if (combined.length === 0) return [];
+
+    const maxRrf = combined[0].rrfScore;
+    return combined.map(({ item, rrfScore }) => {
+      const normalizedScore = Math.min(0.99, Math.max(0.2, (rrfScore / maxRrf) * 0.95));
+      return {
+        ...item,
+        similarityScore: Number(normalizedScore.toFixed(4)),
+        matchPercentage: Math.round(normalizedScore * 100),
+      };
+    });
   }
 
   private async neuralSearch(
     query: string,
     filteredCorpus: CorpusItem[],
     maxResults: number,
-    minScore = 0.2,
+    minScore = 0.1,
   ): Promise<SemanticSearchResult[]> {
     const allCorpus = this.corpus();
-    const queryEmbedding = await this.model.embed([query]);
+    const expandedQuery = this.expandQueryWithSynonyms(query);
+    const queryEmbedding = await this.model.embed([expandedQuery]);
 
     try {
       const scoresArray: Float32Array = this.tf.tidy(() => {
@@ -299,7 +370,6 @@ export class GlobalSemanticSearchService {
         }
 
         const rawScore = scoresArray[i] ?? 0;
-        // Normaliza de [-1, 1] para [0, 1]
         const normalized = Math.max(0, Math.min(1, (rawScore + 1) / 2));
 
         if (normalized >= minScore) {
@@ -323,7 +393,7 @@ export class GlobalSemanticSearchService {
     query: string,
     corpus: CorpusItem[],
     maxResults: number,
-    minScore = 0.1,
+    minScore = 0.05,
   ): SemanticSearchResult[] {
     const queryTokens = this.tokenize(query);
     if (queryTokens.length === 0) {
@@ -332,6 +402,16 @@ export class GlobalSemanticSearchService {
         similarityScore: 0.5,
         matchPercentage: 50,
       }));
+    }
+
+    const expandedTokens = [...queryTokens];
+    for (const token of queryTokens) {
+      const syns = ADVENTIST_SYNONYMS[token];
+      if (syns) {
+        for (const s of syns) {
+          expandedTokens.push(...this.tokenize(s));
+        }
+      }
     }
 
     const scored: SemanticSearchResult[] = [];
@@ -343,14 +423,14 @@ export class GlobalSemanticSearchService {
       const tagsNorm = (item.result.tags || []).map((t) => this.normalizeText(t));
       const deptNorm = this.normalizeText(item.result.departmentOrCategory || '');
 
-      for (const token of queryTokens) {
-        if (titleNorm.includes(token)) score += 3.5;
-        if (tagsNorm.some((t) => t.includes(token))) score += 2.5;
-        if (deptNorm.includes(token)) score += 1.8;
-        if (descNorm.includes(token)) score += 1.0;
+      for (const token of expandedTokens) {
+        if (titleNorm.includes(token)) score += 3.8;
+        if (tagsNorm.some((t) => t.includes(token))) score += 2.8;
+        if (deptNorm.includes(token)) score += 2.0;
+        if (descNorm.includes(token)) score += 1.2;
       }
 
-      const maxPossible = queryTokens.length * 4.0;
+      const maxPossible = expandedTokens.length * 4.0;
       const normalizedScore = Math.min(0.99, Math.max(0.05, score / maxPossible));
 
       if (normalizedScore >= minScore) {
@@ -365,6 +445,17 @@ export class GlobalSemanticSearchService {
     return scored
       .sort((a, b) => b.similarityScore - a.similarityScore)
       .slice(0, maxResults);
+  }
+
+  private expandQueryWithSynonyms(query: string): string {
+    const tokens = this.tokenize(query);
+    const expansions: string[] = [query];
+    for (const t of tokens) {
+      if (ADVENTIST_SYNONYMS[t]) {
+        expansions.push(...ADVENTIST_SYNONYMS[t]);
+      }
+    }
+    return expansions.join(' ');
   }
 
   private normalizeText(text: string): string {
