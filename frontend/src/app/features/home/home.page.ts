@@ -201,12 +201,12 @@ interface NextServiceInfo {
           >
             @for (i of [1, 2, 3, 4]; track i) {
               <div
-                class="rounded-section border border-advent-border bg-white p-6 shadow-sm animate-pulse"
+                class="rounded-section border border-advent-border bg-white p-6 shadow-sm overflow-hidden"
               >
-                <div class="h-5 w-20 rounded bg-gray-200"></div>
-                <div class="mt-3 h-8 w-24 rounded bg-gray-200"></div>
-                <div class="mt-2 h-5 w-3/4 rounded bg-gray-200"></div>
-                <div class="mt-2 h-4 w-full rounded bg-gray-100"></div>
+                <div class="h-5 w-20 rounded bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 bg-[length:200%_100%] animate-shimmer"></div>
+                <div class="mt-3 h-8 w-24 rounded bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 bg-[length:200%_100%] animate-shimmer"></div>
+                <div class="mt-2 h-5 w-3/4 rounded bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 bg-[length:200%_100%] animate-shimmer"></div>
+                <div class="mt-2 h-4 w-full rounded bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 bg-[length:200%_100%] animate-shimmer"></div>
               </div>
             }
           </div>
@@ -475,8 +475,11 @@ interface NextServiceInfo {
                     </h3>
 
                     @if (evento.palestrante) {
-                      <p class="mt-1 text-xs font-bold text-advent-blue">
-                        🎙️ Orador: {{ evento.palestrante }}
+                      <p class="mt-1 flex items-center gap-1.5 text-xs font-bold text-advent-blue">
+                        <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                        </svg>
+                        Orador: {{ evento.palestrante }}
                       </p>
                     }
 
@@ -536,8 +539,11 @@ interface NextServiceInfo {
                   <p class="mt-1.5 text-xs text-advent-muted leading-relaxed">{{ min.descricao }}</p>
                   
                   @if (min.lideres) {
-                    <p class="mt-3 text-[11px] font-medium text-advent-blue">
-                      👥 {{ min.lideres }}
+                    <p class="mt-3 flex items-center gap-1.5 text-[11px] font-medium text-advent-blue">
+                      <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                      </svg>
+                      {{ min.lideres }}
                     </p>
                   }
                 </div>
@@ -613,7 +619,7 @@ interface NextServiceInfo {
 
             <!-- Pequenos Grupos -->
             <a
-              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
+              class="flex flex-col justify-between rounded-section border border-advent-border bg-advent-neutral/50 p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
               routerLink="/estudos"
             >
               <div>
@@ -683,7 +689,7 @@ interface NextServiceInfo {
 
             <!-- Estudo Bíblico -->
             <a
-              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
+              class="flex flex-col justify-between rounded-section border border-advent-border bg-advent-neutral/50 p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
               routerLink="/contato"
             >
               <div>
