@@ -67,7 +67,7 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
               @if (searchService.isLoading()) {
                 <div class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-advent-blue border border-blue-200/60 animate-pulse">
                   <span class="h-1.5 w-1.5 rounded-full bg-advent-blue"></span>
-                  <span>IA Carregando</span>
+                  <span>IA Ativa</span>
                 </div>
               }
 
@@ -98,7 +98,7 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
             </div>
           </div>
 
-          <!-- Sugestões Rápidas (Zero-State Prompts com visual refinado) -->
+          <!-- Sugestões Rápidas (Zero-State Prompts) -->
           @if (!query()) {
             <div class="px-5 py-3.5 sm:px-6 bg-gradient-to-r from-blue-50/50 via-slate-50/80 to-amber-50/20 border-b border-slate-100">
               <div class="flex items-center justify-between mb-2">
@@ -248,7 +248,7 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
 
             <div class="flex items-center gap-1.5 font-semibold text-advent-blue text-[11px]">
               <span class="inline-block h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
-              <span>Busca Semântica Neural On-Device (IA Local)</span>
+              <span>Busca Semântica Híbrida (Neural RRF + On-Device AI)</span>
             </div>
           </div>
         </div>
@@ -267,6 +267,8 @@ export class GlobalSearchDialogComponent {
   readonly selectedCategory = signal<SearchEntityType | 'all'>('all');
   readonly results = signal<SemanticSearchResult[]>([]);
   readonly selectedIndex = signal<number>(0);
+
+  private debounceTimer: any = null;
 
   readonly promptSuggestions = [
     'O que a Bíblia diz sobre paz e ansiedade?',
@@ -293,8 +295,8 @@ export class GlobalSearchDialogComponent {
         setTimeout(() => {
           this.searchInput?.nativeElement?.focus();
           this.searchService.initializeNeuralModel();
-        }, 60);
-        this.runSearch();
+        }, 50);
+        this.runInstantSearch();
       }
     });
   }
@@ -350,33 +352,54 @@ export class GlobalSearchDialogComponent {
     this.query.set('');
     this.selectedIndex.set(0);
     this.searchInput?.nativeElement?.focus();
-    this.runSearch();
+    this.runInstantSearch();
   }
 
   applyPrompt(prompt: string): void {
     this.query.set(prompt);
     this.selectedIndex.set(0);
-    this.runSearch();
+    this.runInstantSearch();
   }
 
   onQueryChange(val: string): void {
     this.query.set(val);
     this.selectedIndex.set(0);
-    this.runSearch();
+
+    // Resposta imediata em 0ms (Léxica/BM25)
+    this.runInstantSearch();
+
+    // Refinamento neural assíncrono sem travar digitação
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      this.runDeepNeuralSearch();
+    }, 180);
   }
 
   setCategory(cat: SearchEntityType | 'all'): void {
     this.selectedCategory.set(cat);
     this.selectedIndex.set(0);
-    this.runSearch();
+    this.runInstantSearch();
   }
 
-  private async runSearch(): Promise<void> {
-    const res = await this.searchService.search(this.query(), {
+  // 1. Resposta em 0ms: atualiza a lista instantaneamente
+  private runInstantSearch(): void {
+    const instantResults = this.searchService.searchSync(this.query(), {
       category: this.selectedCategory(),
       maxResults: 15,
     });
-    this.results.set(res);
+    this.results.set(instantResults);
+  }
+
+  // 2. Refinamento Neural assíncrono em background
+  private async runDeepNeuralSearch(): Promise<void> {
+    if (!this.query().trim()) return;
+    const deepResults = await this.searchService.search(this.query(), {
+      category: this.selectedCategory(),
+      maxResults: 15,
+    });
+    if (deepResults.length > 0) {
+      this.results.set(deepResults);
+    }
   }
 
   navigate(url: string): void {

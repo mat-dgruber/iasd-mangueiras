@@ -21,7 +21,6 @@ const PT_STOPWORDS = new Set([
   'tu', 'tua', 'tuas', 'um', 'uma', 'voce', 'voces', 'vos', 'onde', 'como', 'quem',
 ]);
 
-// Dicionário de sinônimos e termos eclesiásticos adventistas
 const ADVENTIST_SYNONYMS: Record<string, string[]> = {
   ja: ['jovens adventistas', 'mocidade', 'culto jovem', 'geracao 148', 'musica jovem'],
   desbravadores: ['clube de desbravadores', 'criancas', 'acampamento', 'especialidades', 'guardioes da colina', 'adolescentes'],
@@ -30,8 +29,8 @@ const ADVENTIST_SYNONYMS: Record<string, string[]> = {
   sabado: ['culto divino', 'escola sabatina', 'dia sagrado', 'descanso', 'adoracao matinal', 'dia do senhor'],
   quarta: ['culto de oracao', 'reuniao de oracao', 'estudo biblico', 'testemunhos'],
   pg: ['pequeno grupo', 'comunhao nos lares', 'amizade', 'estudo em casa', 'bairros'],
-  crianca: ['ministerio infantil', 'escola sabatina infantil', 'departamento infantil', 'menores'],
-  casal: ['ministerio da familia', 'noivos', 'encontro de casais', 'lar'],
+  crianca: ['ministerio infantil', 'escola sabatina infantil', 'departamento infantil', 'menores', 'criancas'],
+  casal: ['ministerio da familia', 'noivos', 'encontro de casais', 'lar', 'casais'],
   musica: ['ministerio de louvor', 'coral', 'sonorizacao', 'instrumental', 'canto'],
   estudo: ['estudo biblico', 'escola sabatina', 'licoes da biblia', 'duvidas biblicas'],
   saude: ['ministerio da saude', 'feira de saude', 'alimentacao saudavel', 'oito remedios naturais'],
@@ -226,28 +225,38 @@ export class GlobalSemanticSearchService {
     if (this.initPromise) return this.initPromise;
     if (!this.isBrowser) return false;
 
-    this.initPromise = (async () => {
-      this._isLoading.set(true);
-      try {
-        const [tfModule, useModule] = await Promise.all([
-          import('@tensorflow/tfjs'),
-          import('@tensorflow-models/universal-sentence-encoder'),
-        ]);
+    // Inicialização assíncrona desacoplada da thread da UI
+    this.initPromise = new Promise<boolean>((resolve) => {
+      // Deferir para requestIdleCallback / setTimeout para nunca travar a renderização inicial do modal
+      const runInit = async () => {
+        this._isLoading.set(true);
+        try {
+          const [tfModule, useModule] = await Promise.all([
+            import('@tensorflow/tfjs'),
+            import('@tensorflow-models/universal-sentence-encoder'),
+          ]);
 
-        this.tf = tfModule;
-        this.model = await useModule.load();
+          this.tf = tfModule;
+          this.model = await useModule.load();
 
-        await this.rebuildEmbeddings();
+          await this.rebuildEmbeddings();
 
-        this._isModelReady.set(true);
-        return true;
-      } catch {
-        this._isModelReady.set(false);
-        return false;
-      } finally {
-        this._isLoading.set(false);
+          this._isModelReady.set(true);
+          resolve(true);
+        } catch {
+          this._isModelReady.set(false);
+          resolve(false);
+        } finally {
+          this._isLoading.set(false);
+        }
+      };
+
+      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(() => runInit());
+      } else {
+        setTimeout(runInit, 100);
       }
-    })();
+    });
 
     return this.initPromise;
   }
@@ -264,6 +273,31 @@ export class GlobalSemanticSearchService {
 
     const textsToEmbed = currentCorpus.map((item) => item.searchText);
     this.embeddingsMatrix = await this.model.embed(textsToEmbed);
+  }
+
+  // Retorna imediatamente o resultado rápido e pode atualizar via IA
+  searchSync(
+    query: string,
+    options: SearchFilterOptions = {},
+  ): SemanticSearchResult[] {
+    const cleanQuery = query.trim();
+    const maxResults = options.maxResults ?? 12;
+    const category = options.category ?? 'all';
+
+    let currentCorpus = this.corpus();
+    if (category !== 'all') {
+      currentCorpus = currentCorpus.filter((item) => item.result.type === category);
+    }
+
+    if (!cleanQuery) {
+      return currentCorpus.slice(0, maxResults).map((item, index) => ({
+        ...item.result,
+        similarityScore: Math.max(0.5, 1 - index * 0.05),
+        matchPercentage: Math.round(Math.max(50, 100 - index * 5)),
+      }));
+    }
+
+    return this.heuristicSearch(cleanQuery, currentCorpus, maxResults, options.minScore);
   }
 
   async search(
@@ -287,10 +321,10 @@ export class GlobalSemanticSearchService {
       }));
     }
 
-    // Busca Híbrida Inteligente (Reciprocal Rank Fusion entre Neural e BM25/Léxico)
+    // Busca Híbrida Inteligente com timeout de segurança
     if (this._isModelReady() && this.model && this.embeddingsMatrix && this.tf) {
       try {
-        const neuralRank = await this.neuralSearch(cleanQuery, currentCorpus, currentCorpus.length, 0.1);
+        const neuralRank = await this.neuralSearch(cleanQuery, currentCorpus, currentCorpus.length, 0.05);
         const lexicalRank = this.heuristicSearch(cleanQuery, currentCorpus, currentCorpus.length, 0.05);
 
         return this.reciprocalRankFusion(neuralRank, lexicalRank, maxResults);
@@ -302,7 +336,7 @@ export class GlobalSemanticSearchService {
     return this.heuristicSearch(cleanQuery, currentCorpus, maxResults, options.minScore);
   }
 
-  // Reciprocal Rank Fusion (RRF) para combinar Busca Densa (Neural) e Busca Esparsa (Léxica)
+  // Reciprocal Rank Fusion (RRF)
   private reciprocalRankFusion(
     neuralMatches: SemanticSearchResult[],
     lexicalMatches: SemanticSearchResult[],
@@ -344,7 +378,7 @@ export class GlobalSemanticSearchService {
     query: string,
     filteredCorpus: CorpusItem[],
     maxResults: number,
-    minScore = 0.1,
+    minScore = 0.05,
   ): Promise<SemanticSearchResult[]> {
     const allCorpus = this.corpus();
     const expandedQuery = this.expandQueryWithSynonyms(query);
@@ -393,7 +427,7 @@ export class GlobalSemanticSearchService {
     query: string,
     corpus: CorpusItem[],
     maxResults: number,
-    minScore = 0.05,
+    minScore = 0.02,
   ): SemanticSearchResult[] {
     const queryTokens = this.tokenize(query);
     if (queryTokens.length === 0) {
