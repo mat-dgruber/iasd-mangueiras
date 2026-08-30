@@ -58,7 +58,7 @@ import { Ministerio } from '../../core/models/content.models';
 
             @if (ministerio().publico_alvo) {
               <p class="flex items-center gap-1.5 font-medium">
-                <span class="text-advent-muted"><span class="material-symbols-outlined text-sm">person_target</span> Público:</span>
+                <span class="text-advent-muted"><span class="material-symbols-outlined text-sm">public</span> Público:</span>
                 <span>{{ ministerio().publico_alvo }}</span>
               </p>
             }
