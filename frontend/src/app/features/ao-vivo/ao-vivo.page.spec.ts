@@ -79,14 +79,23 @@ describe('AoVivoPage', () => {
     const reqLive = httpMock.match(`${environment.apiUrl}/youtube/live`);
     reqLive.forEach((r) => r.flush({ is_live: false, live_video: null }));
 
-    const reqCatalog = httpMock.match(`${environment.apiUrl}/youtube/catalog`);
-    reqCatalog.forEach((r) => r.flush({ videos: MOCK_TEST_VIDEOS }));
-
     const reqLatest = httpMock.match(`${environment.apiUrl}/youtube/latest`);
     reqLatest.forEach((r) => r.flush({ videos: MOCK_TEST_VIDEOS }));
 
+    const reqCatalog = httpMock.match(`${environment.apiUrl}/youtube/catalog`);
+    reqCatalog.forEach((r) => r.flush({ videos: MOCK_TEST_VIDEOS }));
+
     const reqPresente7 = httpMock.match(`${environment.apiUrl}/youtube/presente7`);
     reqPresente7.forEach((r) => r.flush({ videos: MOCK_TEST_PRESENTE7_VIDEOS }));
+
+    const reqPlSabado = httpMock.match(`${environment.apiUrl}/youtube/playlist/sabado`);
+    reqPlSabado.forEach((r) => r.flush({ videos: [MOCK_TEST_VIDEOS[0]] }));
+
+    const reqPlDomingo = httpMock.match(`${environment.apiUrl}/youtube/playlist/domingo`);
+    reqPlDomingo.forEach((r) => r.flush({ videos: [MOCK_TEST_VIDEOS[1]] }));
+
+    const reqPlQuarta = httpMock.match(`${environment.apiUrl}/youtube/playlist/quarta`);
+    reqPlQuarta.forEach((r) => r.flush({ videos: [MOCK_TEST_VIDEOS[2]] }));
 
     fixture.detectChanges();
   });
@@ -146,13 +155,22 @@ describe('AoVivoPage', () => {
     expect(youtubeService.isLive()).toBe(false);
 
     const text = fixture.nativeElement.textContent;
-    expect(text).toContain('Próxima Transmissão Ao Vivo');
+    expect(text).toContain('Próxima Transmissão');
     expect(text).toContain('Dias');
     expect(text).toContain('Horas');
-    expect(text).toContain('Minutos');
-    expect(text).toContain('Segundos');
+    expect(text).toContain('Min');
+    expect(text).toContain('Seg');
     expect(text).toContain('+ Adicionar à Agenda');
-    expect(text).toContain('Convidar no WhatsApp');
+    expect(text).toContain('Convidar');
+    expect(text).toContain('Última Mensagem Gravada');
+  });
+
+  it('exibe a barra de recursos e apoio ao culto (7me, lição, bíblia e oração)', () => {
+    const text = fixture.nativeElement.textContent;
+    expect(text).toContain('Pedido de Oração');
+    expect(text).toContain('Dízimos & Ofertas');
+    expect(text).toContain('Lição da Semana');
+    expect(text).toContain('Bíblia Online');
   });
 
   it('calcula a contagem regressiva corretamente para datas de referência', () => {
@@ -198,7 +216,7 @@ describe('AoVivoPage', () => {
     const text = fixture.nativeElement.textContent;
     expect(text).toContain('Ao Vivo Agora');
     expect(text).toContain('Transmissão Ao Vivo do Culto Divino');
-    expect(text).toContain('Assistir Ao Vivo no Site');
+    expect(text).toContain('Abrir no YouTube ↗');
   });
 
   it('filtra vídeos do catálogo por categoria de forma reativa', () => {
@@ -209,12 +227,14 @@ describe('AoVivoPage', () => {
 
     // Categoria 'presente7'
     component.selectCategory('presente7');
+    httpMock.match(`${environment.apiUrl}/youtube/presente7`).forEach((r) => r.flush({ videos: MOCK_TEST_PRESENTE7_VIDEOS }));
     fixture.detectChanges();
     expect(component.selectedCategory()).toBe('presente7');
     expect(component.filteredVideos().every((v) => v.title.includes('Presente 7'))).toBe(true);
 
     // Categoria 'sabado'
     component.selectCategory('sabado');
+    httpMock.match(`${environment.apiUrl}/youtube/playlist/sabado`).forEach((r) => r.flush({ videos: [MOCK_TEST_VIDEOS[0]] }));
     fixture.detectChanges();
     expect(component.selectedCategory()).toBe('sabado');
     expect(
@@ -234,6 +254,7 @@ describe('AoVivoPage', () => {
 
     // Categoria 'semana'
     component.selectCategory('semana');
+    httpMock.match(`${environment.apiUrl}/youtube/playlist/semana`).forEach((r) => r.flush({ videos: [] }));
     fixture.detectChanges();
     expect(component.selectedCategory()).toBe('semana');
   });

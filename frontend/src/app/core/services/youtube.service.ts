@@ -19,6 +19,9 @@ export class YoutubeService {
 
   readonly videos = signal<readonly VideoItem[]>([]);
   readonly presente7Videos = signal<readonly VideoItem[]>([]);
+  readonly sabadoVideos = signal<readonly VideoItem[]>([]);
+  readonly domingoVideos = signal<readonly VideoItem[]>([]);
+  readonly quartaVideos = signal<readonly VideoItem[]>([]);
   readonly isLive = signal<boolean>(false);
   readonly liveVideo = signal<VideoItem | null>(null);
   readonly loading = signal<boolean>(false);
@@ -73,6 +76,11 @@ export class YoutubeService {
     }
     return this.http.get<YouTubeLatestResponse>(`${this.apiUrl}/playlist/${category}`).pipe(
       map((res) => res.videos || []),
+      tap((vids) => {
+        if (category === 'sabado') this.sabadoVideos.set(vids);
+        if (category === 'domingo') this.domingoVideos.set(vids);
+        if (category === 'quarta') this.quartaVideos.set(vids);
+      }),
       catchError(() => of([])),
     );
   }

@@ -29,8 +29,8 @@
       "**/node_modules/**"
     ],
     "rewrites": [
-      { "source": "/api/**", "function": "api" },
-      { "source": "/health", "function": "api" },
+      { "source": "/api/**", "function": { "functionId": "api", "region": "southamerica-east1" } },
+      { "source": "/health", "function": { "functionId": "api", "region": "southamerica-east1" } },
       { "source": "/horarios", "destination": "/index.html" },
       { "source": "/ao-vivo", "destination": "/index.html" },
       { "source": "/eventos", "destination": "/index.html" },

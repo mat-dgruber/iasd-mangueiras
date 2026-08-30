@@ -28,4 +28,10 @@ export const SITE_CONFIG = {
     cultosDomingo: 'https://youtube.com/playlist?list=PLNgTlCgGyS2FF1Q6uHqZkNKLwij1xKO2T',
     cultosQuarta: 'https://youtube.com/playlist?list=PLNgTlCgGyS2GRDfZ364omUABt5_2sUoTY',
   },
+  resources: {
+    seteme: 'https://7me.adventistas.org/',
+    cpbMais: 'https://mais.cpb.com.br/',
+    licaoAdultos: 'https://mais.cpb.com.br/licao-da-escola-sabatina/',
+    bibliaOnline: 'https://www.bibliaonline.com.br/',
+  },
 } as const;

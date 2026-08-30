@@ -87,6 +87,16 @@ htmlcov/
 .ruff_cache/
 
 # ==========================================
+# Firebase & Cloud Functions
+# ==========================================
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+functions/dist/
+functions/node_modules/
+
+# ==========================================
 # IDEs, Editores e Agentes IA
 # ==========================================
 .idea/
@@ -104,12 +114,14 @@ htmlcov/
 !.vscode/mcp.json
 .history/*
 
-# Agentes e caches temporários
+# Agentes, ferramentas e caches temporários
 .gemini/
 .openclaude/
 .playwright-mcp/
+.trunk/
+.remember/
+.superpowers/sdd/
 continue-*.md
-.agents/
-.firebase/
 graphify-out/
+*-command-message*.md
 
