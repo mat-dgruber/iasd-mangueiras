@@ -128,6 +128,15 @@ import { SITE_CONFIG } from '../../../core/site/site.config';
               </svg>
               Escalas & Oficiais
             </a>
+
+            <a
+              routerLink="/admin/ministerios"
+              routerLinkActive="bg-advent-blue text-white shadow-sm font-semibold"
+              class="flex items-center gap-3 rounded-card px-3.5 py-2.5 text-sm font-medium text-advent-text hover:bg-slate-100 transition-colors"
+            >
+              <span class="material-symbols-outlined h-5 w-5 shrink-0" aria-hidden="true">group</span>
+              Ministérios
+            </a>
           </nav>
         </div>
 

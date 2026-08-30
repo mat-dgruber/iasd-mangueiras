@@ -100,6 +100,14 @@ export const routes: Routes = [
           import('./features/admin/escalas/admin-escalas.page').then((m) => m.AdminEscalasPage),
         title: 'Escalas dos Departamentos — IASD Mangueiras',
       },
+      {
+        path: 'ministerios',
+        loadComponent: () =>
+          import('./features/admin/ministerios/admin-ministerios.page').then(
+            (m) => m.AdminMinisteriosPage,
+          ),
+        title: 'Gestão de Ministérios — IASD Mangueiras',
+      },
     ],
   },
 
