@@ -77,13 +77,13 @@ import { Ministerio } from '../../core/models/content.models';
             }
           </div>
 
-          @if (ministerio().atividades && ministerio().atividades!.length > 0) {
+          @if (ministerio().atividades && (ministerio().atividades?.length ?? 0) > 0) {
             <div>
               <h4 class="text-xs font-bold uppercase tracking-wider text-advent-muted mb-2">Projetos & Atividades</h4>
               <ul class="space-y-1.5">
                 @for (ativ of ministerio().atividades; track ativ) {
                   <li class="flex items-start gap-2 text-xs md:text-sm text-advent-text">
-                    <span class="text-advent-blue font-bold">✓</span>
+                    <span class="material-symbols-outlined text-sm text-advent-blue">check_circle</span>
                     <span>{{ ativ }}</span>
                   </li>
                 }
@@ -96,7 +96,7 @@ import { Ministerio } from '../../core/models/content.models';
           <button
             type="button"
             (click)="close.emit()"
-            class="w-full sm:w-auto rounded-card border border-advent-border px-5 py-2.5 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer"
+            class="w-full sm:w-auto rounded-card border border-advent-border px-5 min-h-[44px] flex items-center text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer"
           >
             Fechar
           </button>
@@ -104,7 +104,7 @@ import { Ministerio } from '../../core/models/content.models';
           <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
             @if (ministerio().contato_whatsapp) {
               <a
-                class="w-full sm:w-auto rounded-card bg-green-600 px-6 py-2.5 text-center text-xs font-bold text-white shadow-sm hover:bg-green-700 active:scale-[0.98]"
+                class="w-full sm:w-auto rounded-card bg-green-600 px-6 min-h-[44px] flex items-center justify-center text-xs font-bold text-white shadow-sm hover:bg-green-700 active:scale-[0.98]"
                 [href]="'https://wa.me/' + ministerio().contato_whatsapp"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -116,7 +116,7 @@ import { Ministerio } from '../../core/models/content.models';
             <a
               routerLink="/contato"
               (click)="close.emit()"
-              class="w-full sm:w-auto rounded-card bg-advent-blue px-6 py-2.5 text-center text-xs font-bold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98]"
+              class="w-full sm:w-auto rounded-card bg-advent-blue px-6 min-h-[44px] flex items-center justify-center text-xs font-bold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98]"
             >
               Entrar em Contato para Servir →
             </a>

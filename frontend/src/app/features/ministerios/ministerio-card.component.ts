@@ -37,7 +37,7 @@ import { Ministerio } from '../../core/models/content.models';
 
             @if (ministerio().destaque) {
               <span class="rounded-md bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800">
-                ⭐ Destaque
+                <span class="material-symbols-outlined text-sm">star</span> Destaque
               </span>
             }
           </div>
@@ -51,30 +51,30 @@ import { Ministerio } from '../../core/models/content.models';
           <div class="mt-4 space-y-2 border-t border-advent-border/60 pt-3 text-xs text-advent-text">
             @if (ministerio().lideres) {
               <p class="flex items-center gap-1.5 font-medium">
-                <span class="text-advent-muted">👥 Liderança:</span>
+                <span class="text-advent-muted"><span class="material-symbols-outlined text-sm">group</span> Liderança:</span>
                 <span class="font-semibold text-advent-blue">{{ ministerio().lideres }}</span>
               </p>
             }
 
             @if (ministerio().publico_alvo) {
               <p class="flex items-center gap-1.5 font-medium">
-                <span class="text-advent-muted">🎯 Público:</span>
+                <span class="text-advent-muted"><span class="material-symbols-outlined text-sm">person_target</span> Público:</span>
                 <span>{{ ministerio().publico_alvo }}</span>
               </p>
             }
 
             @if (ministerio().reunioes_horario) {
               <p class="flex items-start gap-1.5 font-medium">
-                <span class="text-advent-muted shrink-0">⏰ Encontros:</span>
+                <span class="text-advent-muted shrink-0"><span class="material-symbols-outlined text-sm">schedule</span> Encontros:</span>
                 <span>{{ ministerio().reunioes_horario }}</span>
               </p>
             }
 
-            @if (ministerio().atividades && ministerio().atividades!.length > 0) {
+            @if (ministerio().atividades && (ministerio().atividades?.length ?? 0) > 0) {
               <div class="pt-2">
                 <span class="text-advent-muted font-semibold block mb-1">Principais Atividades:</span>
                 <ul class="list-disc list-inside space-y-0.5 text-advent-muted text-[11px]">
-                  @for (ativ of ministerio().atividades!.slice(0, 3); track ativ) {
+                  @for (ativ of ministerio().atividades?.slice(0, 3); track ativ) {
                     <li class="truncate">{{ ativ }}</li>
                   }
                 </ul>
@@ -88,7 +88,7 @@ import { Ministerio } from '../../core/models/content.models';
         <button
           type="button"
           (click)="details.emit(ministerio())"
-          class="text-xs font-semibold text-advent-blue hover:underline cursor-pointer"
+          class="text-xs font-semibold text-advent-blue hover:underline cursor-pointer min-h-[44px] flex items-center"
         >
           Ver detalhes completos →
         </button>
@@ -96,7 +96,7 @@ import { Ministerio } from '../../core/models/content.models';
         <div class="flex items-center gap-2">
           @if (ministerio().contato_whatsapp) {
             <a
-              class="rounded-lg bg-green-100 hover:bg-green-600 hover:text-white text-green-700 px-3 py-1.5 text-xs font-bold transition-colors"
+              class="rounded-lg bg-green-100 hover:bg-green-600 hover:text-white text-green-700 px-3 min-h-[44px] flex items-center text-xs font-bold transition-colors"
               [href]="'https://wa.me/' + ministerio().contato_whatsapp"
               target="_blank"
               rel="noopener noreferrer"
@@ -106,7 +106,7 @@ import { Ministerio } from '../../core/models/content.models';
           }
 
           <a
-            class="rounded-lg bg-advent-blue/10 hover:bg-advent-blue hover:text-white text-advent-blue px-3 py-1.5 text-xs font-bold transition-colors"
+            class="rounded-lg bg-advent-blue/10 hover:bg-advent-blue hover:text-white text-advent-blue px-3 min-h-[44px] flex items-center text-xs font-bold transition-colors"
             routerLink="/contato"
           >
             Quero Servir
