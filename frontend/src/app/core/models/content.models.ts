@@ -35,6 +35,10 @@ export interface Evento {
   link_inscricao?: string;
   publico_alvo?: string;
   status?: 'publicado' | 'rascunho' | 'encerrado';
+  data_inicio?: string;
+  data_fim?: string;
+  endereco?: string;
+  whatsapp_contato?: string;
 }
 
 export interface Comunicado {
