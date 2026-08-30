@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ContentService } from './content.service';
 import { FirebaseService } from '../firebase/firebase.service';
-import { AvisoHorarioEspecial } from '../models/content.models';
+import { AvisoHorarioEspecial, Evento } from '../models/content.models';
 
 describe('ContentService', () => {
   let service: ContentService;
@@ -50,6 +50,16 @@ describe('ContentService', () => {
 
     expect(filtered.length).toBe(2);
     expect(filtered.map((a) => a.id)).toEqual(['1', '4']);
+  });
+
+  it('expõe os novos campos opcionais de evento', () => {
+    const evento = service.eventos()[0] as Partial<Evento>;
+
+    expect(evento).toBeDefined();
+    expect('data_inicio' in evento).toBe(true);
+    expect('data_fim' in evento).toBe(true);
+    expect('endereco' in evento).toBe(true);
+    expect('whatsapp_contato' in evento).toBe(true);
   });
 });
 
