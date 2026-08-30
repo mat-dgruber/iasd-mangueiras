@@ -1,9 +1,12 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   HostListener,
+  OnDestroy,
   ViewChild,
+  effect,
   input,
   output,
 } from '@angular/core';
@@ -35,6 +38,7 @@ import {
           <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
             <h2 class="text-lg font-bold text-advent-text">{{ title() }}</h2>
             <button
+              #closeBtn
               type="button"
               class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors cursor-pointer"
               (click)="close.emit()"
@@ -62,7 +66,7 @@ import {
     }
   `,
 })
-export class ModalComponent {
+export class ModalComponent implements AfterViewInit, OnDestroy {
   readonly isOpen = input.required<boolean>();
   readonly title = input<string>('');
   readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
@@ -72,6 +76,27 @@ export class ModalComponent {
   readonly close = output<void>();
 
   @ViewChild('modalPanel') modalPanel?: ElementRef<HTMLElement>;
+  @ViewChild('closeBtn') closeBtn?: ElementRef<HTMLButtonElement>;
+
+  private triggerElement: HTMLElement | null = null;
+
+  constructor() {
+    effect(() => {
+      if (this.isOpen()) {
+        this.triggerElement = document.activeElement as HTMLElement;
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.isOpen()) {
+      setTimeout(() => this.closeBtn?.nativeElement?.focus(), 50);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.restoreFocus();
+  }
 
   @HostListener('window:keydown.escape')
   onEscape(): void {
@@ -80,9 +105,37 @@ export class ModalComponent {
     }
   }
 
+  @HostListener('window:keydown.tab', ['$event'])
+  onTabKeydown(event: Event): void {
+    const keyboardEvent = event as KeyboardEvent;
+    if (!this.isOpen() || !this.modalPanel) return;
+
+    const focusable = this.modalPanel.nativeElement.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (keyboardEvent.shiftKey && document.activeElement === first) {
+      last.focus();
+      keyboardEvent.preventDefault();
+    } else if (!keyboardEvent.shiftKey && document.activeElement === last) {
+      first.focus();
+      keyboardEvent.preventDefault();
+    }
+  }
+
   onBackdropClick(event: MouseEvent): void {
     if (this.closeOnBackdrop()) {
       this.close.emit();
+    }
+  }
+
+  private restoreFocus(): void {
+    if (this.triggerElement && typeof this.triggerElement.focus === 'function') {
+      this.triggerElement.focus();
     }
   }
 }
