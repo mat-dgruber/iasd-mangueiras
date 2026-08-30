@@ -18,7 +18,7 @@ import defaultEventos from '../../../../content/eventos.json';
             Eventos & Programações
           </h1>
           <p class="text-sm text-advent-muted mt-1">
-            Cadastre eventos com banners ilustrativos, oradores convidados, público-alvo e links de inscrição.
+            Cadastre eventos com banners ilustrativos, oradores convidados, público-alvo, datas estruturadas e links de inscrição.
           </p>
         </div>
 
@@ -94,13 +94,13 @@ import defaultEventos from '../../../../content/eventos.json';
 
                     <p class="text-xs text-advent-muted max-w-2xl leading-relaxed">{{ evento.descricao }}</p>
 
-                    @if (evento.local) {
+                    @if (evento.endereco || evento.local) {
                       <p class="inline-flex items-center gap-1 text-xs text-advent-muted">
                         <svg class="h-3.5 w-3.5 shrink-0 text-advent-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                           <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                         </svg>
-                        {{ evento.local }}
+                        {{ evento.endereco || evento.local }}
                       </p>
                     }
                   </div>
@@ -156,7 +156,7 @@ import defaultEventos from '../../../../content/eventos.json';
             </div>
 
             <form [formGroup]="eventoForm" (ngSubmit)="saveEvento()" class="mt-5 space-y-4">
-              <!-- Título e Destaque -->
+              <!-- Título e Departamento -->
               <div class="grid gap-3 sm:grid-cols-3">
                 <div class="sm:col-span-2">
                   <label for="titulo" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Título do Evento *</label>
@@ -164,7 +164,7 @@ import defaultEventos from '../../../../content/eventos.json';
                     id="titulo"
                     type="text"
                     formControlName="titulo"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
                     placeholder="Ex: Semana de Oração da Família"
                   />
                 </div>
@@ -173,7 +173,7 @@ import defaultEventos from '../../../../content/eventos.json';
                   <select
                     id="departamento"
                     formControlName="departamento"
-                    class="w-full rounded-card border border-advent-border px-3 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none bg-white"
+                    class="w-full rounded-card border border-advent-border px-3 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden bg-white"
                   >
                     <option value="">Geral / Igreja</option>
                     <option value="Jovens (JA)">Jovens (JA)</option>
@@ -195,7 +195,7 @@ import defaultEventos from '../../../../content/eventos.json';
                     id="data"
                     type="text"
                     formControlName="data"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
                     placeholder="Ex: 15 a 22 de Março"
                   />
                 </div>
@@ -206,7 +206,7 @@ import defaultEventos from '../../../../content/eventos.json';
                     id="horario"
                     type="text"
                     formControlName="horario"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
                     placeholder="Ex: 19:30"
                   />
                 </div>
@@ -217,8 +217,56 @@ import defaultEventos from '../../../../content/eventos.json';
                     id="local"
                     type="text"
                     formControlName="local"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
                     placeholder="Ex: Templo Principal"
+                  />
+                </div>
+              </div>
+
+              <!-- Datas Estruturadas (Início e Fim) -->
+              <div class="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label for="data_inicio" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Data Início</label>
+                  <input
+                    id="data_inicio"
+                    type="date"
+                    formControlName="data_inicio"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
+                  />
+                </div>
+
+                <div>
+                  <label for="data_fim" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Data Fim</label>
+                  <input
+                    id="data_fim"
+                    type="date"
+                    formControlName="data_fim"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
+                  />
+                </div>
+              </div>
+
+              <!-- Endereço Completo e WhatsApp de Contato -->
+              <div class="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label for="endereco" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Endereço</label>
+                  <input
+                    id="endereco"
+                    type="text"
+                    formControlName="endereco"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
+                    placeholder="Ex: Rua Chiquinha Rodrigues, 1005 - Tatuí, SP"
+                  />
+                </div>
+
+                <div>
+                  <label for="whatsapp_contato" class="block text-xs font-semibold uppercase text-advent-muted mb-1">WhatsApp de Contato</label>
+                  <input
+                    id="whatsapp_contato"
+                    type="text"
+                    formControlName="whatsapp_contato"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
+                    placeholder="Ex: 5515999999999"
                   />
                 </div>
               </div>
@@ -231,7 +279,7 @@ import defaultEventos from '../../../../content/eventos.json';
                     id="palestrante"
                     type="text"
                     formControlName="palestrante"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
                     placeholder="Ex: Pr. Luís Gonçalves"
                   />
                 </div>
@@ -242,7 +290,7 @@ import defaultEventos from '../../../../content/eventos.json';
                     id="valor_entrada"
                     type="text"
                     formControlName="valor_entrada"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
                     placeholder="Ex: Gratuito / 1kg de Alimento"
                   />
                 </div>
@@ -253,13 +301,13 @@ import defaultEventos from '../../../../content/eventos.json';
                     id="publico_alvo"
                     type="text"
                     formControlName="publico_alvo"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
                     placeholder="Ex: Toda a Igreja / Casais"
                   />
                 </div>
               </div>
 
-              <!-- Link de Inscrição / WhatsApp -->
+              <!-- Link de Inscrição / Banner -->
               <div class="grid gap-3 sm:grid-cols-2">
                 <div>
                   <label for="link_inscricao" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Link de Inscrição / Ingressos</label>
@@ -267,7 +315,7 @@ import defaultEventos from '../../../../content/eventos.json';
                     id="link_inscricao"
                     type="text"
                     formControlName="link_inscricao"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
                     placeholder="https://forms.gle/... ou https://wa.me/..."
                   />
                 </div>
@@ -278,7 +326,7 @@ import defaultEventos from '../../../../content/eventos.json';
                     id="banner_url"
                     type="text"
                     formControlName="banner_url"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
                     placeholder="https://.../banner.jpg"
                   />
                 </div>
@@ -302,7 +350,7 @@ import defaultEventos from '../../../../content/eventos.json';
                   id="descricao"
                   rows="3"
                   formControlName="descricao"
-                  class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                  class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
                   placeholder="Informações completas sobre o evento, cronograma e orientações aos participantes..."
                 ></textarea>
               </div>
@@ -324,14 +372,14 @@ import defaultEventos from '../../../../content/eventos.json';
                 <button
                   type="button"
                   (click)="closeModal()"
-                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer"
+                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[36px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   [disabled]="eventoForm.invalid || isSaving()"
-                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer"
+                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[36px]"
                 >
                   {{ isSaving() ? 'Salvando...' : 'Salvar Evento' }}
                 </button>
@@ -367,6 +415,10 @@ export class AdminEventosPage implements OnInit {
     link_inscricao: new FormControl(''),
     banner_url: new FormControl(''),
     destaque: new FormControl(false),
+    data_inicio: new FormControl(''),
+    data_fim: new FormControl(''),
+    endereco: new FormControl(''),
+    whatsapp_contato: new FormControl(''),
   });
 
   async ngOnInit(): Promise<void> {
@@ -392,6 +444,10 @@ export class AdminEventosPage implements OnInit {
       publico_alvo: 'Toda a Igreja',
       departamento: '',
       destaque: false,
+      data_inicio: '',
+      data_fim: '',
+      endereco: '',
+      whatsapp_contato: '',
     });
     this.selectedFile = null;
     this.isModalOpen.set(true);
@@ -416,6 +472,10 @@ export class AdminEventosPage implements OnInit {
       link_inscricao: evento.link_inscricao || evento.href || '',
       banner_url: evento.banner_url || evento.imagem_url || '',
       destaque: Boolean(evento.destaque),
+      data_inicio: evento.data_inicio || '',
+      data_fim: evento.data_fim || '',
+      endereco: evento.endereco || '',
+      whatsapp_contato: evento.whatsapp_contato || '',
     });
     this.isModalOpen.set(true);
   }
@@ -454,6 +514,10 @@ export class AdminEventosPage implements OnInit {
         destaque: Boolean(formVal.destaque),
         banner_url: bannerFinal,
         imagem_url: bannerFinal,
+        data_inicio: formVal.data_inicio || undefined,
+        data_fim: formVal.data_fim || undefined,
+        endereco: formVal.endereco || undefined,
+        whatsapp_contato: formVal.whatsapp_contato || undefined,
       };
 
       await this.cmsService.saveEvento(eventoData, this.editingId() || undefined);

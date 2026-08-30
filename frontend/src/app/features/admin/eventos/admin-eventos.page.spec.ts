@@ -10,7 +10,21 @@ describe('AdminEventosPage', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AdminEventosPage],
-      providers: [AdminCmsService, FirebaseService],
+      providers: [
+        {
+          provide: AdminCmsService,
+          useValue: {
+            getEventos: () => Promise.resolve([]),
+            saveEvento: () => Promise.resolve(),
+            deleteEvento: () => Promise.resolve(),
+            uploadBanner: () => Promise.resolve(''),
+          },
+        },
+        {
+          provide: FirebaseService,
+          useValue: { firestore: null, auth: null, storage: null },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AdminEventosPage);
@@ -34,5 +48,19 @@ describe('AdminEventosPage', () => {
     component.closeModal();
     fixture.detectChanges();
     expect(component.isModalOpen()).toBe(false);
+  });
+
+  it('exibe campos extras para data estruturada e contato no modal', () => {
+    component.openModal();
+    fixture.detectChanges();
+
+    const labels = Array.from(
+      fixture.nativeElement.querySelectorAll('label')
+    ).map((el) => (el as HTMLLabelElement).textContent?.trim());
+
+    expect(labels).toContain('Data Início');
+    expect(labels).toContain('Data Fim');
+    expect(labels).toContain('Endereço');
+    expect(labels).toContain('WhatsApp de Contato');
   });
 });
