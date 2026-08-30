@@ -203,11 +203,11 @@ export class MinisteriosPage {
   readonly selectedCategory = signal<string>('Todos');
   readonly searchQuery = signal<string>('');
   readonly selectedMinisterio = signal<Ministerio | null>(null);
-  readonly isLoading = signal<boolean>(false);
+  readonly isLoading = signal<boolean>(true);
 
   /** Categorias derivadas dinamicamente dos dados */
   readonly categories = computed(() => {
-    const cats = this.contentService.ministerios()
+    const cats = this.activeMinisterios()
       .map(m => m.categoria)
       .filter((c): c is string => !!c);
     return ['Todos', ...new Set(cats)];
@@ -245,8 +245,8 @@ export class MinisteriosPage {
   readonly nonHighlightedMinisterios = computed(() => {
     const highlighted = this.highlightedMinisterios();
     if (!highlighted.length) return this.filteredMinisterios();
-    const ids = new Set(highlighted.map(m => m.id));
-    return this.filteredMinisterios().filter(m => !ids.has(m.id));
+    const ids = new Set(highlighted.map(m => m.id ?? m.nome));
+    return this.filteredMinisterios().filter(m => !ids.has(m.id ?? m.nome));
   });
 
   constructor() {
