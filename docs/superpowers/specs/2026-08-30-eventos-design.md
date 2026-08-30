@@ -1,10 +1,9 @@
 ---
-title: Redesign da Página de Eventos
 date: 2026-08-30
 status: approved
 ---
 
-# Redesign da Página de Eventos
+## Redesign da Página de Eventos
 
 ## Objetivo
 
