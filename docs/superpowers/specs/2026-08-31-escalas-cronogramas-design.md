@@ -10,6 +10,7 @@
 ## 1. Contexto e Motivação
 
 A IASD Mangueiras conta com diversas frentes de trabalho ministerial e voluntariado (Sonorização & Transmissão, Diaconato, Recepção, Música & Louvor, Escola Sabatina, Ministério Infantil, etc.). Atualmente:
+
 - As escalas são cadastradas e exportadas pelos administradores em `admin-escalas.page.ts` para WhatsApp e Stories (.png via Canvas).
 - **Principal Gargalo:** Não existe uma página pública de consulta (`/escalas`) para que os membros e voluntários possam consultar suas escalas no site/boletim digital, buscar por seu nome, adicionar compromissos diretamente à agenda de seus celulares (.ics / Google Calendar) ou solicitar trocas/substituições de forma rápida.
 - **Painel Administrativo:** A entrada de dados pode ser acelerada com auto-sugestão de voluntários prévios e validações de data para evitar inconsistências.
@@ -27,22 +28,22 @@ O objetivo deste projeto é implementar o **Portal Público de Escalas (`/escala
    - **Busca Global Instantânea:** Campo de busca reativo que permite ao membro digitar seu nome (ou parte dele) e destacar visualmente todas as suas participações.
    - **Filtro Rápido por Departamento:** Chips horizontais com scroll suave (`Todos`, `Diaconato`, `Sonorização & Transmissão`, `Recepção`, `Música & Louvor`, `Escola Sabatina`, `Ministério Infantil`).
    - **Destaque Temporal:** Badges automáticos de `Hoje` (se o culto for no dia atual) e `Próximo Culto` (no primeiro sábado futuro da grade).
-   - **Filtro de Histórico:** Ocultação padrão de cultos que já passaram há mais de 7 dias, com botão discreto *"Ver escalas anteriores"*.
+   - **Filtro de Histórico:** Ocultação padrão de cultos que já passaram há mais de 7 dias, com botão discreto _"Ver escalas anteriores"_.
 
 2. **Ações Rápidas para Voluntários:**
    - **Adicionar à Minha Agenda:**
-     - Link direto para criação de evento no *Google Calendar* com título, horário, local e observações.
+     - Link direto para criação de evento no _Google Calendar_ com título, horário, local e observações.
      - Download de arquivo `.ics` para integração nativa com Apple Calendar, Outlook e calendários móveis.
    - **Solicitar Troca / Falar com Líder via WhatsApp:**
      - Botão que abre conversa no WhatsApp com o líder ou com mensagem estruturada pré-preenchida:
-       > *"Olá! Sou [Nome], estou na escala de [Departamento] no dia [Data] e gostaria de tirar uma dúvida / solicitar uma troca."*
+       > _"Olá! Sou [Nome], estou na escala de [Departamento] no dia [Data] e gostaria de tirar uma dúvida / solicitar uma troca."_
    - **Compartilhamento de Escala:**
      - Ação de compartilhar a escala completa do culto formatada em texto ou via Web Share API do navegador.
 
 3. **Melhorias no Painel Administrativo (`/admin/escalas`):**
    - Auto-sugestão rápida de nomes de oficiais já cadastrados em escalas anteriores para acelerar o preenchimento e evitar duplicidades por erros de digitação.
    - Preenchimento automático do `dia_semana` baseado na seleção da data `YYYY-MM-DD`.
-   - Botão no cabeçalho administrativo com atalho *"Ver Portal Público"*.
+   - Botão no cabeçalho administrativo com atalho _"Ver Portal Público"_.
 
 ### 2.2. Requisitos Não Funcionais & Acessibilidade (WCAG 2.2 AA/AAA)
 
@@ -70,18 +71,18 @@ O modelo existente `EscalaItem` é mantido e complementado com o tipo derivado d
 ```typescript
 export interface EscalaItem {
   id: string;
-  data: string;           // Formato YYYY-MM-DD
-  dia_semana: string;     // 'Sábado', 'Quarta', 'Domingo'
-  departamento: string;   // 'Sonorização & Transmissão', 'Diaconato', 'Recepção', etc.
-  oficiais: string[];     // ['Matheus Diniz', 'João Silva']
-  horario?: string;       // '08:45', '19:30'
-  observacoes?: string;   // Instruções específicas
+  data: string; // Formato YYYY-MM-DD
+  dia_semana: string; // 'Sábado', 'Quarta', 'Domingo'
+  departamento: string; // 'Sonorização & Transmissão', 'Diaconato', 'Recepção', etc.
+  oficiais: string[]; // ['Matheus Diniz', 'João Silva']
+  horario?: string; // '08:45', '19:30'
+  observacoes?: string; // Instruções específicas
 }
 
 export interface CultoEscalaGroup {
   data: string;
-  dataFormatada: string;     // '06 de Setembro, 2026'
-  diaSemana: string;         // 'Sábado'
+  dataFormatada: string; // '06 de Setembro, 2026'
+  diaSemana: string; // 'Sábado'
   isHoje: boolean;
   isProximoCulto: boolean;
   isPassado: boolean;
@@ -96,14 +97,21 @@ Funções puras desacopladas para facilidade de testes unitários:
 ```typescript
 export function generateGoogleCalendarUrl(escala: EscalaItem): string;
 export function generateIcsBlob(escala: EscalaItem): Blob;
-export function generateWhatsAppTrocaUrl(escala: EscalaItem, oficialNome?: string): string;
+export function generateWhatsAppTrocaUrl(
+  escala: EscalaItem,
+  oficialNome?: string,
+): string;
 export function formatEscalaShareText(group: CultoEscalaGroup): string;
-export function groupEscalasByCulto(escalas: EscalaItem[], referenceDate?: Date): CultoEscalaGroup[];
+export function groupEscalasByCulto(
+  escalas: EscalaItem[],
+  referenceDate?: Date,
+): CultoEscalaGroup[];
 ```
 
 ### 3.3. Roteamento & Navegação
 
 - Registro da rota `/escalas` em `frontend/src/app/app.routes.ts`:
+
 ```typescript
 {
   path: 'escalas',
@@ -111,6 +119,7 @@ export function groupEscalasByCulto(escalas: EscalaItem[], referenceDate?: Date)
   title: 'Escalas & Voluntários | IASD Mangueiras'
 }
 ```
+
 - Inclusão de link no `NavbarComponent` (menu dropdown/navegação) e no `FooterComponent`.
 
 ---
@@ -119,7 +128,7 @@ export function groupEscalasByCulto(escalas: EscalaItem[], referenceDate?: Date)
 
 ### 4.1. Estrutura de Componentes
 
-```
+```text
 frontend/src/app/features/escalas/
 ├── escalas.page.ts              # Container principal com Signals e filtros
 ├── escalas.page.html            # Template com 5 estados de UI
@@ -134,8 +143,8 @@ frontend/src/app/features/escalas/
 ### 4.2. Os 5 Estados da Interface
 
 1. **Loading State:** Skeletons animados simulando os cards de culto sem salto de layout (Zero Cumulative Layout Shift).
-2. **Empty State:** Ilustração com ícone `event_busy`, mensagem *"Nenhuma escala encontrada com os filtros selecionados"* e botão *"Limpar filtros"*.
-3. **Error State:** Banner de alerta discreto com botão de recuperação *"Tentar reconectar"*.
+2. **Empty State:** Ilustração com ícone `event_busy`, mensagem _"Nenhuma escala encontrada com os filtros selecionados"_ e botão _"Limpar filtros"_.
+3. **Error State:** Banner de alerta discreto com botão de recuperação _"Tentar reconectar"_.
 4. **Success / Content State:** Linha do tempo de cultos com agrupamentos claros, badges de oficiais e botões de ação rápida.
 5. **Disabled / Readonly:** Notificação informativa caso as escalas de determinado período ainda estejam em elaboração.
 
@@ -144,6 +153,7 @@ frontend/src/app/features/escalas/
 ## 5. Estratégia de Testes
 
 ### 5.1. Testes Unitários Frontend (`*.spec.ts`)
+
 - **`escalas.utils.spec.ts`**:
   - Validação de agrupamento cronológico e identificação precisa de `isHoje` e `isProximoCulto`.
   - Geração de URLs de Google Calendar com codificação correta de caracteres (espaços, acentuações).
