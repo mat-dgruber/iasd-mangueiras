@@ -11,7 +11,7 @@ export function normalizeText(text: string): string {
 }
 
 export function filterEscalas(
-  escalas: EscalaItem[],
+  escalas: readonly EscalaItem[],
   searchTerm: string,
   department: string,
 ): EscalaItem[] {
@@ -50,7 +50,7 @@ export function formatDateBr(dateStr: string): string {
 }
 
 export function groupEscalasByCulto(
-  escalas: EscalaItem[],
+  escalas: readonly EscalaItem[],
   referenceDate: Date = new Date(),
 ): CultoEscalaGroup[] {
   const groupsMap = new Map<string, EscalaItem[]>();

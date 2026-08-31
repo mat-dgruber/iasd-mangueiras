@@ -1,0 +1,147 @@
+<main class="min-h-screen bg-advent-bg text-advent-text py-10 px-4 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-5xl">
+    <!-- Hero / Cabeçalho -->
+    <header class="text-center mb-8 sm:mb-12">
+      <div class="inline-flex items-center gap-2 rounded-full bg-advent-blue/10 px-3.5 py-1 text-xs font-semibold text-advent-blue dark:bg-blue-950/70 dark:text-blue-300 mb-3">
+        <span class="material-symbols-outlined text-[16px]">calendar_month</span>
+        <span>Escalas Ministeriais</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-advent-text dark:text-white">
+        Escalas & Voluntários
+      </h1>
+      <p class="mt-2 text-base text-advent-muted dark:text-slate-300 max-w-2xl mx-auto">
+        Consulte as escalas de serviço das equipes e voluntários da IASD Mangueiras. Busque seu nome ou adicione seu compromisso à agenda.
+      </p>
+    </header>
+
+    <!-- Barra de Filtros e Busca -->
+    <section class="mb-8 space-y-4" aria-label="Filtros de escalas">
+      <!-- Input de Busca -->
+      <div class="relative max-w-xl mx-auto">
+        <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]" [attr.aria-hidden]="true">
+          search
+        </span>
+        <input
+          type="text"
+          [value]="searchTerm()"
+          (input)="onSearchInput($event)"
+          placeholder="Buscar por seu nome ou ministério..."
+          class="w-full rounded-2xl border border-advent-border bg-white pl-10 pr-10 py-3 text-sm text-advent-text shadow-sm placeholder:text-slate-400 focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/20 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+          aria-label="Buscar escalas por nome ou ministério"
+        />
+        @if (searchTerm()) {
+          <button
+            type="button"
+            (click)="clearSearch()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+            aria-label="Limpar busca"
+          >
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        }
+      </div>
+
+      <!-- Chips de Departamentos -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none justify-start sm:justify-center px-1">
+        @for (dept of departments; track dept.id) {
+          <button
+            type="button"
+            (click)="selectedDepartment.set(dept.id)"
+            class="inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all cursor-pointer min-h-[38px]"
+            [class.bg-advent-blue]="selectedDepartment() === dept.id"
+            [class.text-white]="selectedDepartment() === dept.id"
+            [class.shadow-sm]="selectedDepartment() === dept.id"
+            [class.bg-white]="selectedDepartment() !== dept.id"
+            [class.text-slate-700]="selectedDepartment() !== dept.id"
+            [class.border]="selectedDepartment() !== dept.id"
+            [class.border-advent-border]="selectedDepartment() !== dept.id"
+            [class.hover:bg-slate-50]="selectedDepartment() !== dept.id"
+            [class.dark:bg-slate-800]="selectedDepartment() !== dept.id"
+            [class.dark:border-slate-700]="selectedDepartment() !== dept.id"
+            [class.dark:text-slate-300]="selectedDepartment() !== dept.id"
+            [class.dark:hover:bg-slate-700]="selectedDepartment() !== dept.id"
+          >
+            <span class="material-symbols-outlined text-[16px]">{{ dept.icon }}</span>
+            <span>{{ dept.label }}</span>
+          </button>
+        }
+      </div>
+    </section>
+
+    <!-- Estados de UI -->
+    <!-- 1. Loading State -->
+    @if (isLoading()) {
+      <div class="space-y-6">
+        @for (i of [1, 2]; track i) {
+          <div class="rounded-2xl border border-advent-border bg-white p-6 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+            <app-ui-skeleton width="40%" height="24px" rounded="md" class="mb-4 block" />
+            <app-ui-skeleton width="100%" height="60px" rounded="md" class="mb-3 block" />
+            <app-ui-skeleton width="100%" height="60px" rounded="md" class="block" />
+          </div>
+        }
+      </div>
+    }
+
+    <!-- 2. Empty State -->
+    @else if (activeGroups().length === 0 && pastGroups().length === 0) {
+      <div class="rounded-2xl border border-advent-border bg-white p-12 text-center shadow-sm dark:bg-slate-900 dark:border-slate-800">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 mb-4">
+          <span class="material-symbols-outlined text-[32px]">event_busy</span>
+        </div>
+        <h3 class="text-lg font-bold text-advent-text dark:text-white">Nenhuma escala encontrada</h3>
+        <p class="mt-1 text-sm text-advent-muted dark:text-slate-400 max-w-md mx-auto">
+          Não encontramos nenhuma escala com os filtros aplicados. Tente buscar por outro termo ou selecione todos os ministérios.
+        </p>
+        <button
+          type="button"
+          (click)="clearFilters()"
+          class="mt-5 inline-flex items-center gap-2 rounded-xl bg-advent-blue px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-800 transition-colors cursor-pointer"
+        >
+          <span class="material-symbols-outlined text-[16px]">refresh</span>
+          Limpar Filtros
+        </button>
+      </div>
+    }
+
+    <!-- 3. Lista de Cultos Ativos / Futuros -->
+    @else {
+      <div class="space-y-6">
+        @for (group of activeGroups(); track group.data) {
+          <app-escala-culto-card
+            [group]="group"
+            [highlightName]="searchTerm()"
+          />
+        }
+
+        <!-- Toggle de Escalas Anteriores -->
+        @if (pastGroups().length > 0) {
+          <div class="pt-4 text-center">
+            <button
+              type="button"
+              (click)="showPastEscalas.set(!showPastEscalas())"
+              class="inline-flex items-center gap-2 rounded-xl border border-advent-border bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 transition-colors cursor-pointer dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
+            >
+              <span class="material-symbols-outlined text-[18px]">
+                {{ showPastEscalas() ? 'expand_less' : 'history' }}
+              </span>
+              <span>
+                {{ showPastEscalas() ? 'Ocultar escalas anteriores' : 'Ver escalas anteriores (' + pastGroups().length + ')' }}
+              </span>
+            </button>
+          </div>
+
+          @if (showPastEscalas()) {
+            <div class="space-y-6 pt-2">
+              @for (group of pastGroups(); track group.data) {
+                <app-escala-culto-card
+                  [group]="group"
+                  [highlightName]="searchTerm()"
+                />
+              }
+            </div>
+          }
+        }
+      </div>
+    }
+  </div>
+</main>
