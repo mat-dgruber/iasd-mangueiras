@@ -297,6 +297,8 @@ interface NextServiceInfo {
                     [alt]="video.title"
                     class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
+                    width="640"
+                    height="360"
                   />
                   <div
                     class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 flex flex-col justify-end p-5 md:p-6 text-white"
@@ -437,6 +439,8 @@ interface NextServiceInfo {
                         [alt]="evento.titulo"
                         class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                         loading="lazy"
+                        width="400"
+                        height="225"
                       />
                     </div>
                   }

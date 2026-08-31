@@ -292,6 +292,10 @@ export class SouNovoPage {
       description:
         'Primeira vez na IASD Mangueiras? Descubra o que esperar, como são os cultos, espaço para crianças e tire suas principais dúvidas.',
       path: '/sou-novo',
+      breadcrumbs: [
+        { name: 'Início', url: 'https://iasdmangueiras.org.br/' },
+        { name: 'Sou Novo Aqui', url: 'https://iasdmangueiras.org.br/sou-novo' },
+      ],
       faqs: this.faqs.map((f) => ({ question: f.pergunta, answer: f.resposta })),
     });
   }

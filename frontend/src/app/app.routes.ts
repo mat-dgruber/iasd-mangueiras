@@ -89,6 +89,12 @@ export const routes: Routes = [
         title: 'Caixa de Oração — IASD Mangueiras',
       },
       {
+        path: 'contatos',
+        loadComponent: () =>
+          import('./features/admin/contatos/admin-contatos.page').then((m) => m.AdminContatosPage),
+        title: 'Mensagens de Contato — IASD Mangueiras',
+      },
+      {
         path: 'horarios',
         loadComponent: () =>
           import('./features/admin/horarios/admin-horarios.page').then((m) => m.AdminHorariosPage),

@@ -668,6 +668,10 @@ export class HorariosPage {
       description:
         'Conheça os horários dos cultos de sábado e quarta-feira da Igreja Adventista do Sétimo Dia das Mangueiras em Tatuí-SP e saiba como chegar.',
       path: '/horarios',
+      breadcrumbs: [
+        { name: 'Início', url: 'https://iasdmangueiras.org.br/' },
+        { name: 'Horários e Localização', url: 'https://iasdmangueiras.org.br/horarios' },
+      ],
       faqs: this.faqs,
     });
   }

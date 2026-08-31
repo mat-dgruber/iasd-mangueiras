@@ -19,6 +19,8 @@ import { Ministerio } from '../../core/models/content.models';
               [alt]="ministerio().nome"
               class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
               loading="lazy"
+              width="400"
+              height="225"
             />
           </div>
         } @else {

@@ -255,6 +255,10 @@ export class MinisteriosPage {
       description:
         'Conheça os ministérios e áreas de serviço da Igreja Adventista do Sétimo Dia das Mangueiras em Tatuí-SP e descubra como participar.',
       path: '/ministerios',
+      breadcrumbs: [
+        { name: 'Início', url: 'https://iasdmangueiras.org.br/' },
+        { name: 'Ministérios', url: 'https://iasdmangueiras.org.br/ministerios' },
+      ],
     });
 
     // ponytail: simula carregamento async do Firestore; substituir por signal real quando ContentService expor loading

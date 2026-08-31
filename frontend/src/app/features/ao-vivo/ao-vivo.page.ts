@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
   computed,
+  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -389,6 +390,9 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                         [src]="featuredVideo()!.thumbnail_url"
                         [alt]="featuredVideo()!.title"
                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                        width="480"
+                        height="270"
                       />
                       <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                         <button
@@ -612,6 +616,8 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                       [alt]="ep.title"
                       class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
+                      width="320"
+                      height="180"
                     />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     <button
@@ -1049,6 +1055,40 @@ export class AoVivoPage implements OnInit, OnDestroy {
       description:
         'Assista aos cultos ao vivo e mensagens gravadas da Igreja Adventista do Sétimo Dia das Mangueiras em Tatuí-SP e acompanhe a série Presente 7.',
       path: '/ao-vivo',
+      breadcrumbs: [
+        { name: 'Início', url: 'https://iasdmangueiras.org.br/' },
+        { name: 'Ao Vivo & Mensagens', url: 'https://iasdmangueiras.org.br/ao-vivo' },
+      ],
+      video: {
+        name: 'Transmissões e Mensagens — IASD Mangueiras',
+        description: 'Cultos ao vivo e mensagens bíblicas gravadas da IASD Mangueiras em Tatuí-SP.',
+        thumbnailUrl: 'https://iasdmangueiras.org.br/og-image.png',
+        uploadDate: '2026-08-31T10:00:00-03:00',
+        embedUrl: 'https://www.youtube-nocookie.com/embed/c/IASDMangueiras',
+      },
+    });
+
+    effect(() => {
+      const feat = this.featuredVideo();
+      if (feat && feat.id) {
+        this.seo.apply({
+          title: 'Transmissões Ao Vivo e Mensagens — IASD Mangueiras',
+          description:
+            'Assista aos cultos ao vivo e mensagens gravadas da Igreja Adventista do Sétimo Dia das Mangueiras em Tatuí-SP e acompanhe a série Presente 7.',
+          path: '/ao-vivo',
+          breadcrumbs: [
+            { name: 'Início', url: 'https://iasdmangueiras.org.br/' },
+            { name: 'Ao Vivo & Mensagens', url: 'https://iasdmangueiras.org.br/ao-vivo' },
+          ],
+          video: {
+            name: feat.title,
+            description: feat.description || 'Mensagem bíblica da IASD Mangueiras',
+            thumbnailUrl: feat.thumbnail_url || 'https://iasdmangueiras.org.br/og-image.png',
+            uploadDate: feat.published_at || '2026-08-31T10:00:00-03:00',
+            embedUrl: `https://www.youtube-nocookie.com/embed/${feat.id}`,
+          },
+        });
+      }
     });
   }
 
@@ -1221,6 +1261,7 @@ export class AoVivoPage implements OnInit, OnDestroy {
   getPrayerWhatsAppUrl(): string {
     const text =
       'Olá! Gostaria de pedir uma oração para a equipe de intercessão da IASD Mangueiras.';
-    return `https://api.whatsapp.com/send?phone=5515997864835&text=${encodeURIComponent(text)}`;
+    const phone = this.site.contact?.phoneClean || '5515997864835';
+    return `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
   }
 }

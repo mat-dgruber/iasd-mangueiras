@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SeoService } from '../../core/seo/seo.service';
@@ -137,6 +137,9 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
                     [src]="destaque.banner_url || destaque.imagem_url"
                     [alt]="destaque.titulo"
                     class="h-full w-full object-cover"
+                    loading="lazy"
+                    width="384"
+                    height="288"
                   />
                 </div>
               }
@@ -296,6 +299,8 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
                             [alt]="evento.titulo"
                             class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                             loading="lazy"
+                            width="400"
+                            height="225"
                           />
                         </div>
                       }
@@ -550,6 +555,35 @@ export class EventosPage {
       description:
         'Confira a agenda de eventos especiais, semanas de oração e comunicados da Igreja Adventista do Sétimo Dia das Mangueiras em Tatuí-SP.',
       path: '/eventos',
+      breadcrumbs: [
+        { name: 'Início', url: 'https://iasdmangueiras.org.br/' },
+        { name: 'Eventos e Comunicados', url: 'https://iasdmangueiras.org.br/eventos' },
+      ],
+    });
+
+    effect(() => {
+      const eventos = this.upcomingEventos();
+      if (eventos.length > 0) {
+        this.seo.apply({
+          title: 'Eventos e Comunicados — IASD Mangueiras',
+          description:
+            'Confira a agenda de eventos especiais, semanas de oração e comunicados da Igreja Adventista do Sétimo Dia das Mangueiras em Tatuí-SP.',
+          path: '/eventos',
+          breadcrumbs: [
+            { name: 'Início', url: 'https://iasdmangueiras.org.br/' },
+            { name: 'Eventos e Comunicados', url: 'https://iasdmangueiras.org.br/eventos' },
+          ],
+          events: eventos.slice(0, 10).map((e) => ({
+            name: e.titulo,
+            description: e.descricao || 'Evento na IASD Mangueiras em Tatuí-SP',
+            startDate: e.data_inicio ? `${e.data_inicio}T${e.horario || '09:00'}:00` : '2026-08-31T09:00:00',
+            endDate: e.data_fim ? `${e.data_fim}T12:00:00` : undefined,
+            locationName: e.local || 'IASD Mangueiras',
+            locationAddress: e.endereco || 'Av. Cônego João Clímaco, 195 - Centro, Tatuí - SP',
+            image: e.banner_url || e.imagem_url,
+          })),
+        });
+      }
     });
   }
 

@@ -46,6 +46,9 @@ import { Ministerio } from '../../core/models/content.models';
               [src]="ministerio().banner_url || ministerio().imagem_url"
               [alt]="ministerio().nome"
               class="h-full w-full object-cover"
+              loading="lazy"
+              width="600"
+              height="338"
             />
           </div>
         }

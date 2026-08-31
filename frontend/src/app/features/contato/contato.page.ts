@@ -566,6 +566,10 @@ export class ContatoPage {
       description:
         'Fale com a equipe da IASD Mangueiras em Tatuí-SP, tire dúvidas sobre programações, solicite um estudo bíblico gratuito ou envie seu pedido de oração.',
       path: '/contato',
+      breadcrumbs: [
+        { name: 'Início', url: 'https://iasdmangueiras.org.br/' },
+        { name: 'Contato', url: 'https://iasdmangueiras.org.br/contato' },
+      ],
     });
   }
 
