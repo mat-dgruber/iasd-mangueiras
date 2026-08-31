@@ -3,12 +3,22 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AdminCmsService } from '../../../core/services/admin-cms.service';
 import { Evento } from '../../../core/models/content.models';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
+import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confirm-dialog.component';
+import { ImagePickerComponent } from '../../../shared/ui/image-picker/image-picker.component';
+import { ModalComponent } from '../../../shared/ui/modal/modal.component';
+import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import defaultEventos from '../../../../content/eventos.json';
 
 @Component({
   selector: 'app-admin-eventos-page',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [
+    ReactiveFormsModule,
+    ConfirmDialogComponent,
+    ImagePickerComponent,
+    ModalComponent,
+    SkeletonComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div>
@@ -37,10 +47,46 @@ import defaultEventos from '../../../../content/eventos.json';
       <!-- Listagem de Eventos -->
       <div class="mt-8 space-y-4">
         @if (isLoading()) {
-          <div class="p-8 text-center text-sm text-advent-muted">Carregando eventos…</div>
+          <div class="grid gap-4">
+            @for (i of [1, 2, 3]; track i) {
+              <div class="rounded-2xl border border-advent-border bg-white p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-5">
+                <div class="flex items-start gap-4 flex-1">
+                  <div class="h-20 w-28 shrink-0 hidden sm:block">
+                    <app-ui-skeleton width="100%" height="100%" rounded="lg" />
+                  </div>
+                  <div class="space-y-2 flex-1">
+                    <div class="flex gap-2">
+                      <app-ui-skeleton width="120px" height="20px" rounded="sm" />
+                      <app-ui-skeleton width="80px" height="20px" rounded="sm" />
+                    </div>
+                    <app-ui-skeleton width="50%" height="22px" rounded="md" />
+                    <app-ui-skeleton width="90%" height="16px" rounded="sm" />
+                  </div>
+                </div>
+                <div class="flex gap-2 shrink-0">
+                  <app-ui-skeleton width="70px" height="36px" rounded="md" />
+                  <app-ui-skeleton width="70px" height="36px" rounded="md" />
+                </div>
+              </div>
+            }
+          </div>
         } @else if (eventos().length === 0) {
-          <div class="rounded-2xl border border-dashed border-advent-border p-12 text-center text-advent-muted">
-            Nenhum evento cadastrado no momento. Clique em "+ Novo Evento" para adicionar.
+          <div class="rounded-2xl border border-dashed border-advent-border bg-white p-12 text-center text-advent-muted flex flex-col items-center justify-center">
+            <svg class="h-12 w-12 text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 9v7.5" />
+            </svg>
+            <p class="font-medium text-advent-text mb-1">Nenhum evento cadastrado no momento</p>
+            <p class="text-xs text-advent-muted mb-4 max-w-sm">Cadastre eventos e programações especiais da congregação para visualização dos membros.</p>
+            <button
+              type="button"
+              (click)="openModal()"
+              class="rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[40px] inline-flex items-center gap-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              <span>+ Novo Evento</span>
+            </button>
           </div>
         } @else {
           <div class="grid gap-4">
@@ -85,7 +131,7 @@ import defaultEventos from '../../../../content/eventos.json';
                     </div>
 
                     <h2 class="text-lg font-bold text-advent-text">{{ evento.titulo }}</h2>
-                    
+
                     @if (evento.palestrante) {
                       <p class="text-xs font-semibold text-advent-blue">
                         🎙️ Orador/Convidado: {{ evento.palestrante }}
@@ -117,7 +163,7 @@ import defaultEventos from '../../../../content/eventos.json';
                   </button>
                   <button
                     type="button"
-                    (click)="deleteEvento(evento)"
+                    (click)="confirmDelete(evento)"
                     class="rounded-lg px-3.5 py-2 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[36px] flex items-center"
                     aria-label="Excluir evento {{ evento.titulo }}"
                   >
@@ -131,263 +177,313 @@ import defaultEventos from '../../../../content/eventos.json';
       </div>
 
       <!-- Modal de Criação / Edição -->
-      @if (isModalOpen()) {
-        <div
-          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modal-evento-title"
-        >
-          <div class="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
-            <div class="flex items-center justify-between pb-4 border-b border-advent-border">
-              <h3 id="modal-evento-title" class="text-lg font-bold text-advent-text">
-                {{ editingId() ? 'Editar Evento' : 'Novo Evento' }}
-              </h3>
-              <button
-                type="button"
-                (click)="closeModal()"
-                class="text-advent-muted hover:text-advent-text cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg"
-                aria-label="Fechar modal"
+      <app-ui-modal
+        [isOpen]="isModalOpen()"
+        [title]="editingId() ? 'Editar Evento' : 'Novo Evento'"
+        [size]="'lg'"
+        (close)="closeModal()"
+      >
+        <form [formGroup]="eventoForm" (ngSubmit)="saveEvento()" class="space-y-4">
+          <!-- Título e Departamento -->
+          <div class="grid gap-3 sm:grid-cols-3">
+            <div class="sm:col-span-2">
+              <label for="evento-titulo" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Título do Evento *
+              </label>
+              <input
+                id="evento-titulo"
+                type="text"
+                formControlName="titulo"
+                class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:outline-none transition-colors"
+                [class.border-red-500]="eventoForm.get('titulo')?.invalid && eventoForm.get('titulo')?.touched"
+                [class.border-advent-border]="!eventoForm.get('titulo')?.invalid || !eventoForm.get('titulo')?.touched"
+                [class.focus:border-advent-blue]="!eventoForm.get('titulo')?.invalid || !eventoForm.get('titulo')?.touched"
+                [class.focus:border-red-500]="eventoForm.get('titulo')?.invalid && eventoForm.get('titulo')?.touched"
+                placeholder="Ex: Semana de Oração da Família"
+              />
+              @if (eventoForm.get('titulo')?.invalid && eventoForm.get('titulo')?.touched) {
+                <p class="mt-1 text-xs text-red-600">
+                  @if (eventoForm.get('titulo')?.errors?.['required']) {
+                    O título é obrigatório.
+                  } @else if (eventoForm.get('titulo')?.errors?.['minlength']) {
+                    O título deve ter no mínimo 3 caracteres.
+                  }
+                </p>
+              }
+            </div>
+            <div>
+              <label for="evento-departamento" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Departamento
+              </label>
+              <select
+                id="evento-departamento"
+                formControlName="departamento"
+                class="w-full rounded-card border border-advent-border px-3 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none bg-white transition-colors"
               >
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+                <option value="">Geral / Igreja</option>
+                <option value="Jovens (JA)">Jovens (JA)</option>
+                <option value="Ministério da Mulher">Ministério da Mulher</option>
+                <option value="Desbravadores & Aventureiros">Desbravadores & Aventureiros</option>
+                <option value="Família">Família</option>
+                <option value="Música & Louvor">Música & Louvor</option>
+                <option value="Ministério Infantil">Ministério Infantil</option>
+                <option value="Evangelismo">Evangelismo</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Data, Horário e Local -->
+          <div class="grid gap-3 sm:grid-cols-3">
+            <div>
+              <label for="evento-data" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Data / Período *
+              </label>
+              <input
+                id="evento-data"
+                type="text"
+                formControlName="data"
+                class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:outline-none transition-colors"
+                [class.border-red-500]="eventoForm.get('data')?.invalid && eventoForm.get('data')?.touched"
+                [class.border-advent-border]="!eventoForm.get('data')?.invalid || !eventoForm.get('data')?.touched"
+                [class.focus:border-advent-blue]="!eventoForm.get('data')?.invalid || !eventoForm.get('data')?.touched"
+                [class.focus:border-red-500]="eventoForm.get('data')?.invalid && eventoForm.get('data')?.touched"
+                placeholder="Ex: 15 a 22 de Março"
+              />
+              @if (eventoForm.get('data')?.invalid && eventoForm.get('data')?.touched) {
+                <p class="mt-1 text-xs text-red-600">A data ou período é obrigatório.</p>
+              }
             </div>
 
-            <form [formGroup]="eventoForm" (ngSubmit)="saveEvento()" class="mt-5 space-y-4">
-              <!-- Título e Departamento -->
-              <div class="grid gap-3 sm:grid-cols-3">
-                <div class="sm:col-span-2">
-                  <label for="titulo" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Título do Evento *</label>
-                  <input
-                    id="titulo"
-                    type="text"
-                    formControlName="titulo"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: Semana de Oração da Família"
-                  />
-                </div>
-                <div>
-                  <label for="departamento" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Departamento</label>
-                  <select
-                    id="departamento"
-                    formControlName="departamento"
-                    class="w-full rounded-card border border-advent-border px-3 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden bg-white"
-                  >
-                    <option value="">Geral / Igreja</option>
-                    <option value="Jovens (JA)">Jovens (JA)</option>
-                    <option value="Ministério da Mulher">Ministério da Mulher</option>
-                    <option value="Desbravadores & Aventureiros">Desbravadores & Aventureiros</option>
-                    <option value="Família">Família</option>
-                    <option value="Música & Louvor">Música & Louvor</option>
-                    <option value="Ministério Infantil">Ministério Infantil</option>
-                    <option value="Evangelismo">Evangelismo</option>
-                  </select>
-                </div>
-              </div>
+            <div>
+              <label for="evento-horario" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Horário *
+              </label>
+              <input
+                id="evento-horario"
+                type="text"
+                formControlName="horario"
+                class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:outline-none transition-colors"
+                [class.border-red-500]="eventoForm.get('horario')?.invalid && eventoForm.get('horario')?.touched"
+                [class.border-advent-border]="!eventoForm.get('horario')?.invalid || !eventoForm.get('horario')?.touched"
+                [class.focus:border-advent-blue]="!eventoForm.get('horario')?.invalid || !eventoForm.get('horario')?.touched"
+                [class.focus:border-red-500]="eventoForm.get('horario')?.invalid && eventoForm.get('horario')?.touched"
+                placeholder="Ex: 19:30"
+              />
+              @if (eventoForm.get('horario')?.invalid && eventoForm.get('horario')?.touched) {
+                <p class="mt-1 text-xs text-red-600">O horário é obrigatório.</p>
+              }
+            </div>
 
-              <!-- Data, Horário e Local -->
-              <div class="grid gap-3 sm:grid-cols-3">
-                <div>
-                  <label for="data" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Data / Período *</label>
-                  <input
-                    id="data"
-                    type="text"
-                    formControlName="data"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: 15 a 22 de Março"
-                  />
-                </div>
-
-                <div>
-                  <label for="horario" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Horário *</label>
-                  <input
-                    id="horario"
-                    type="text"
-                    formControlName="horario"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: 19:30"
-                  />
-                </div>
-
-                <div>
-                  <label for="local" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Local</label>
-                  <input
-                    id="local"
-                    type="text"
-                    formControlName="local"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: Templo Principal"
-                  />
-                </div>
-              </div>
-
-              <!-- Datas Estruturadas (Início e Fim) -->
-              <div class="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label for="data_inicio" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Data Início</label>
-                  <input
-                    id="data_inicio"
-                    type="date"
-                    formControlName="data_inicio"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                  />
-                </div>
-
-                <div>
-                  <label for="data_fim" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Data Fim</label>
-                  <input
-                    id="data_fim"
-                    type="date"
-                    formControlName="data_fim"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                  />
-                </div>
-              </div>
-
-              <!-- Endereço Completo e WhatsApp de Contato -->
-              <div class="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label for="endereco" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Endereço</label>
-                  <input
-                    id="endereco"
-                    type="text"
-                    formControlName="endereco"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: Rua Chiquinha Rodrigues, 1005 - Tatuí, SP"
-                  />
-                </div>
-
-                <div>
-                  <label for="whatsapp_contato" class="block text-xs font-semibold uppercase text-advent-muted mb-1">WhatsApp de Contato</label>
-                  <input
-                    id="whatsapp_contato"
-                    type="text"
-                    formControlName="whatsapp_contato"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: 5515999999999"
-                  />
-                </div>
-              </div>
-
-              <!-- Palestrante, Entrada e Público -->
-              <div class="grid gap-3 sm:grid-cols-3">
-                <div>
-                  <label for="palestrante" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Orador / Palestrante</label>
-                  <input
-                    id="palestrante"
-                    type="text"
-                    formControlName="palestrante"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: Pr. Luís Gonçalves"
-                  />
-                </div>
-
-                <div>
-                  <label for="valor_entrada" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Entrada / Valor</label>
-                  <input
-                    id="valor_entrada"
-                    type="text"
-                    formControlName="valor_entrada"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: Gratuito / 1kg de Alimento"
-                  />
-                </div>
-
-                <div>
-                  <label for="publico_alvo" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Público-Alvo</label>
-                  <input
-                    id="publico_alvo"
-                    type="text"
-                    formControlName="publico_alvo"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: Toda a Igreja / Casais"
-                  />
-                </div>
-              </div>
-
-              <!-- Link de Inscrição / Banner -->
-              <div class="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label for="link_inscricao" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Link de Inscrição / Ingressos</label>
-                  <input
-                    id="link_inscricao"
-                    type="text"
-                    formControlName="link_inscricao"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="https://forms.gle/... ou https://wa.me/..."
-                  />
-                </div>
-
-                <div>
-                  <label for="banner_url" class="block text-xs font-semibold uppercase text-advent-muted mb-1">URL da Imagem / Banner (ou upload)</label>
-                  <input
-                    id="banner_url"
-                    type="text"
-                    formControlName="banner_url"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="https://.../banner.jpg"
-                  />
-                </div>
-              </div>
-
-              <!-- Upload de Imagem de Cartaz / Banner -->
-              <div>
-                <label for="banner-upload" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Upload do Cartaz / Banner</label>
-                <input
-                  id="banner-upload"
-                  type="file"
-                  accept="image/*"
-                  (change)="onFileSelected($event)"
-                  class="w-full text-xs text-advent-muted file:mr-3 file:py-1.5 file:px-3 file:rounded-card file:border-0 file:text-xs file:font-semibold file:bg-advent-blue/10 file:text-advent-blue hover:file:bg-advent-blue/20 cursor-pointer"
-                />
-              </div>
-
-              <div>
-                <label for="descricao" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Descrição do Evento *</label>
-                <textarea
-                  id="descricao"
-                  rows="3"
-                  formControlName="descricao"
-                  class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                  placeholder="Informações completas sobre o evento, cronograma e orientações aos participantes..."
-                ></textarea>
-              </div>
-
-              <!-- Checkbox de Destaque -->
-              <div class="flex items-center gap-2 pt-1">
-                <input
-                  id="destaque"
-                  type="checkbox"
-                  formControlName="destaque"
-                  class="h-4 w-4 rounded border-advent-border text-advent-blue focus:ring-advent-blue"
-                />
-                <label for="destaque" class="text-xs font-semibold text-advent-text cursor-pointer">
-                  ⭐ Destacar este evento no topo da página e na Home
-                </label>
-              </div>
-
-              <div class="mt-6 flex justify-end gap-2 pt-3 border-t border-advent-border">
-                <button
-                  type="button"
-                  (click)="closeModal()"
-                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[36px]"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  [disabled]="eventoForm.invalid || isSaving()"
-                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[36px]"
-                >
-                  {{ isSaving() ? 'Salvando...' : 'Salvar Evento' }}
-                </button>
-              </div>
-            </form>
+            <div>
+              <label for="evento-local" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Local
+              </label>
+              <input
+                id="evento-local"
+                type="text"
+                formControlName="local"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+                placeholder="Ex: Templo Principal"
+              />
+            </div>
           </div>
-        </div>
-      }
+
+          <!-- Datas Estruturadas (Início e Fim) -->
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label for="evento-data-inicio" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Data Início
+              </label>
+              <input
+                id="evento-data-inicio"
+                type="date"
+                formControlName="data_inicio"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+              />
+            </div>
+
+            <div>
+              <label for="evento-data-fim" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Data Fim
+              </label>
+              <input
+                id="evento-data-fim"
+                type="date"
+                formControlName="data_fim"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+              />
+            </div>
+          </div>
+
+          <!-- Endereço Completo e WhatsApp de Contato -->
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label for="evento-endereco" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Endereço
+              </label>
+              <input
+                id="evento-endereco"
+                type="text"
+                formControlName="endereco"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+                placeholder="Ex: Rua Chiquinha Rodrigues, 1005 - Tatuí, SP"
+              />
+            </div>
+
+            <div>
+              <label for="evento-whatsapp" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                WhatsApp de Contato
+              </label>
+              <input
+                id="evento-whatsapp"
+                type="text"
+                formControlName="whatsapp_contato"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+                placeholder="Ex: 5515999999999"
+              />
+            </div>
+          </div>
+
+          <!-- Palestrante, Entrada e Público -->
+          <div class="grid gap-3 sm:grid-cols-3">
+            <div>
+              <label for="evento-palestrante" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Orador / Palestrante
+              </label>
+              <input
+                id="evento-palestrante"
+                type="text"
+                formControlName="palestrante"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+                placeholder="Ex: Pr. Luís Gonçalves"
+              />
+            </div>
+
+            <div>
+              <label for="evento-valor" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Entrada / Valor
+              </label>
+              <input
+                id="evento-valor"
+                type="text"
+                formControlName="valor_entrada"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+                placeholder="Ex: Gratuito / 1kg de Alimento"
+              />
+            </div>
+
+            <div>
+              <label for="evento-publico" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Público-Alvo
+              </label>
+              <input
+                id="evento-publico"
+                type="text"
+                formControlName="publico_alvo"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+                placeholder="Ex: Toda a Igreja / Casais"
+              />
+            </div>
+          </div>
+
+          <!-- Link de Inscrição -->
+          <div>
+            <label for="evento-link" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+              Link de Inscrição / Ingressos
+            </label>
+            <input
+                id="evento-link"
+                type="text"
+                formControlName="link_inscricao"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+                placeholder="https://forms.gle/... ou https://wa.me/..."
+            />
+          </div>
+
+          <!-- Image Picker para Banner / Imagem do Evento -->
+          <div>
+            <app-ui-image-picker
+              [value]="eventoForm.get('banner_url')?.value || ''"
+              label="Banner / Imagem do Evento"
+              helpText="Recomendado JPG, PNG ou WebP até 5MB"
+              (imageSelected)="onImageSelected($event)"
+              (imageRemoved)="onImageRemoved()"
+              (urlChanged)="onUrlChanged($event)"
+            />
+          </div>
+
+          <!-- Descrição do Evento -->
+          <div>
+            <label for="evento-descricao" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+              Descrição do Evento *
+            </label>
+            <textarea
+              id="evento-descricao"
+              rows="3"
+              formControlName="descricao"
+              class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:outline-none transition-colors"
+              [class.border-red-500]="eventoForm.get('descricao')?.invalid && eventoForm.get('descricao')?.touched"
+              [class.border-advent-border]="!eventoForm.get('descricao')?.invalid || !eventoForm.get('descricao')?.touched"
+              [class.focus:border-advent-blue]="!eventoForm.get('descricao')?.invalid || !eventoForm.get('descricao')?.touched"
+              [class.focus:border-red-500]="eventoForm.get('descricao')?.invalid && eventoForm.get('descricao')?.touched"
+              placeholder="Informações completas sobre o evento, cronograma e orientações aos participantes..."
+            ></textarea>
+            @if (eventoForm.get('descricao')?.invalid && eventoForm.get('descricao')?.touched) {
+              <p class="mt-1 text-xs text-red-600">
+                @if (eventoForm.get('descricao')?.errors?.['required']) {
+                  A descrição é obrigatória.
+                } @else if (eventoForm.get('descricao')?.errors?.['minlength']) {
+                  A descrição deve ter no mínimo 5 caracteres.
+                }
+              </p>
+            }
+          </div>
+
+          <!-- Checkbox de Destaque -->
+          <div class="flex items-center gap-2 pt-1">
+            <input
+              id="evento-destaque"
+              type="checkbox"
+              formControlName="destaque"
+              class="h-4 w-4 rounded border-advent-border text-advent-blue focus:ring-advent-blue"
+            />
+            <label for="evento-destaque" class="text-xs font-semibold text-advent-text cursor-pointer">
+              ⭐ Destacar este evento no topo da página e na Home
+            </label>
+          </div>
+
+          <!-- Ações do Modal -->
+          <div class="mt-6 flex justify-end gap-2 pt-3 border-t border-advent-border">
+            <button
+              type="button"
+              (click)="closeModal()"
+              class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 transition-colors cursor-pointer min-h-[36px]"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="eventoForm.invalid || isSaving()"
+              class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 transition-all cursor-pointer min-h-[36px]"
+            >
+              {{ isSaving() ? 'Salvando...' : 'Salvar Evento' }}
+            </button>
+          </div>
+        </form>
+      </app-ui-modal>
+
+      <!-- Diálogo de Confirmação de Exclusão -->
+      <app-ui-confirm-dialog
+        [isOpen]="!!eventoToDelete()"
+        title="Excluir Evento"
+        [message]="'Tem certeza que deseja excluir o evento &quot;' + (eventoToDelete()?.titulo || '') + '&quot;? Esta ação não pode ser desfeita.'"
+        confirmText="Excluir"
+        cancelText="Cancelar"
+        variant="danger"
+        [isLoading]="isDeleting()"
+        (confirmed)="executeDeleteEvento()"
+        (cancelled)="eventoToDelete.set(null)"
+      />
     </div>
   `,
 })
@@ -398,8 +494,10 @@ export class AdminEventosPage implements OnInit {
   readonly eventos = signal<Evento[]>([]);
   readonly isLoading = signal<boolean>(true);
   readonly isSaving = signal<boolean>(false);
+  readonly isDeleting = signal<boolean>(false);
   readonly isModalOpen = signal<boolean>(false);
   readonly editingId = signal<string | null>(null);
+  readonly eventoToDelete = signal<Evento | null>(null);
   private selectedFile: File | null = null;
 
   readonly eventoForm = new FormGroup({
@@ -448,6 +546,7 @@ export class AdminEventosPage implements OnInit {
       data_fim: '',
       endereco: '',
       whatsapp_contato: '',
+      banner_url: '',
     });
     this.selectedFile = null;
     this.isModalOpen.set(true);
@@ -459,6 +558,7 @@ export class AdminEventosPage implements OnInit {
 
   editEvento(evento: Evento): void {
     this.editingId.set(evento.id || null);
+    this.selectedFile = null;
     this.eventoForm.patchValue({
       titulo: evento.titulo,
       data: evento.data,
@@ -480,15 +580,26 @@ export class AdminEventosPage implements OnInit {
     this.isModalOpen.set(true);
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
-      this.selectedFile = input.files[0];
-    }
+  onImageSelected(file: File): void {
+    this.selectedFile = file;
+  }
+
+  onImageRemoved(): void {
+    this.selectedFile = null;
+    this.eventoForm.patchValue({ banner_url: '' });
+  }
+
+  onUrlChanged(url: string): void {
+    this.selectedFile = null;
+    this.eventoForm.patchValue({ banner_url: url });
   }
 
   async saveEvento(): Promise<void> {
-    if (this.eventoForm.invalid) return;
+    if (this.eventoForm.invalid) {
+      this.eventoForm.markAllAsTouched();
+      return;
+    }
+
     this.isSaving.set(true);
     try {
       let uploadedBanner = '';
@@ -526,6 +637,7 @@ export class AdminEventosPage implements OnInit {
       await this.loadEventos();
     } catch {
       // Fallback local se Firestore não estiver com chaves ativas
+      const formVal = this.eventoForm.value;
       const newEv = this.eventoForm.value as unknown as Evento;
       this.eventos.update((prev) => [newEv, ...prev]);
       this.toastService.info('Evento salvo na pré-visualização local.');
@@ -535,16 +647,27 @@ export class AdminEventosPage implements OnInit {
     }
   }
 
-  async deleteEvento(evento: Evento): Promise<void> {
-    if (!confirm(`Deseja realmente excluir o evento "${evento.titulo}"?`)) return;
+  confirmDelete(evento: Evento): void {
+    this.eventoToDelete.set(evento);
+  }
+
+  async executeDeleteEvento(): Promise<void> {
+    const evento = this.eventoToDelete();
+    if (!evento) return;
+
+    this.isDeleting.set(true);
     try {
       if (evento.id) {
         await this.cmsService.deleteEvento(evento.id);
       }
       this.eventos.update((prev) => prev.filter((e) => e !== evento && e.id !== evento.id));
-      this.toastService.info(`Evento "${evento.titulo}" excluído.`);
+      this.toastService.success(`Evento "${evento.titulo}" excluído.`);
     } catch {
       this.eventos.update((prev) => prev.filter((e) => e !== evento));
+      this.toastService.info(`Evento "${evento.titulo}" removido da pré-visualização local.`);
+    } finally {
+      this.isDeleting.set(false);
+      this.eventoToDelete.set(null);
     }
   }
 }

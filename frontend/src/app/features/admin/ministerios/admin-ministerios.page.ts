@@ -3,12 +3,22 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AdminCmsService } from '../../../core/services/admin-cms.service';
 import { Ministerio } from '../../../core/models/content.models';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
+import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confirm-dialog.component';
+import { ImagePickerComponent } from '../../../shared/ui/image-picker/image-picker.component';
+import { ModalComponent } from '../../../shared/ui/modal/modal.component';
+import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import defaultMinisterios from '../../../../content/ministerios.json';
 
 @Component({
   selector: 'app-admin-ministerios-page',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [
+    ReactiveFormsModule,
+    ConfirmDialogComponent,
+    ImagePickerComponent,
+    ModalComponent,
+    SkeletonComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div>
@@ -37,10 +47,46 @@ import defaultMinisterios from '../../../../content/ministerios.json';
       <!-- Listagem de Ministérios -->
       <div class="mt-8 space-y-4">
         @if (isLoading()) {
-          <div class="p-8 text-center text-sm text-advent-muted">Carregando ministérios…</div>
+          <div class="grid gap-4">
+            @for (i of [1, 2, 3]; track i) {
+              <div class="rounded-2xl border border-advent-border bg-white p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-5">
+                <div class="flex items-start gap-4 flex-1">
+                  <div class="h-20 w-28 shrink-0 hidden sm:block">
+                    <app-ui-skeleton width="100%" height="100%" rounded="lg" />
+                  </div>
+                  <div class="space-y-2 flex-1">
+                    <div class="flex gap-2">
+                      <app-ui-skeleton width="100px" height="20px" rounded="sm" />
+                      <app-ui-skeleton width="70px" height="20px" rounded="sm" />
+                    </div>
+                    <app-ui-skeleton width="45%" height="22px" rounded="md" />
+                    <app-ui-skeleton width="85%" height="16px" rounded="sm" />
+                  </div>
+                </div>
+                <div class="flex gap-2 shrink-0">
+                  <app-ui-skeleton width="70px" height="36px" rounded="md" />
+                  <app-ui-skeleton width="70px" height="36px" rounded="md" />
+                </div>
+              </div>
+            }
+          </div>
         } @else if (ministerios().length === 0) {
-          <div class="rounded-2xl border border-dashed border-advent-border p-12 text-center text-advent-muted">
-            Nenhum ministério cadastrado no momento. Clique em "+ Novo Ministério" para adicionar.
+          <div class="rounded-2xl border border-dashed border-advent-border bg-white p-12 text-center text-advent-muted flex flex-col items-center justify-center">
+            <svg class="h-12 w-12 text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.199l-.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+            </svg>
+            <p class="font-medium text-advent-text mb-1">Nenhum ministério cadastrado</p>
+            <p class="text-xs text-advent-muted mb-4 max-w-sm">Cadastre os departamentos e ministérios da igreja para que os membros e visitantes conheçam seus trabalhos.</p>
+            <button
+              type="button"
+              (click)="openModal()"
+              class="rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[40px] inline-flex items-center gap-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              <span>+ Novo Ministério</span>
+            </button>
           </div>
         } @else {
           <div class="grid gap-4">
@@ -112,7 +158,7 @@ import defaultMinisterios from '../../../../content/ministerios.json';
                   </button>
                   <button
                     type="button"
-                    (click)="deleteMinisterio(ministerio)"
+                    (click)="confirmDelete(ministerio)"
                     class="rounded-lg px-3.5 py-2 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[44px] flex items-center"
                     aria-label="Excluir ministério {{ ministerio.nome }}"
                   >
@@ -126,203 +172,226 @@ import defaultMinisterios from '../../../../content/ministerios.json';
       </div>
 
       <!-- Modal de Criação / Edição -->
-      @if (isModalOpen()) {
-        <div
-          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modal-ministerio-title"
-        >
-          <div class="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
-            <div class="flex items-center justify-between pb-4 border-b border-advent-border">
-              <h3 id="modal-ministerio-title" class="text-lg font-bold text-advent-text">
-                {{ editingId() ? 'Editar Ministério' : 'Novo Ministério' }}
-              </h3>
-              <button
-                type="button"
-                (click)="closeModal()"
-                class="text-advent-muted hover:text-advent-text cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg"
-                aria-label="Fechar modal"
-              >
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+      <app-ui-modal
+        [isOpen]="isModalOpen()"
+        [title]="editingId() ? 'Editar Ministério' : 'Novo Ministério'"
+        [size]="'lg'"
+        (close)="closeModal()"
+      >
+        <form [formGroup]="ministerioForm" (ngSubmit)="saveMinisterio()" class="space-y-4">
+          <!-- Nome e Categoria -->
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label for="min-nome" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Nome do Ministério *
+              </label>
+              <input
+                id="min-nome"
+                type="text"
+                formControlName="nome"
+                class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:outline-none transition-colors"
+                [class.border-red-500]="ministerioForm.get('nome')?.invalid && ministerioForm.get('nome')?.touched"
+                [class.border-advent-border]="!ministerioForm.get('nome')?.invalid || !ministerioForm.get('nome')?.touched"
+                [class.focus:border-advent-blue]="!ministerioForm.get('nome')?.invalid || !ministerioForm.get('nome')?.touched"
+                [class.focus:border-red-500]="ministerioForm.get('nome')?.invalid && ministerioForm.get('nome')?.touched"
+                placeholder="Ex: Música e Louvor"
+              />
+              @if (ministerioForm.get('nome')?.invalid && ministerioForm.get('nome')?.touched) {
+                <p class="mt-1 text-xs text-red-600">
+                  @if (ministerioForm.get('nome')?.errors?.['required']) {
+                    O nome do ministério é obrigatório.
+                  } @else if (ministerioForm.get('nome')?.errors?.['minlength']) {
+                    O nome deve ter no mínimo 2 caracteres.
+                  }
+                </p>
+              }
             </div>
-
-            <form [formGroup]="ministerioForm" (ngSubmit)="saveMinisterio()" class="mt-5 space-y-4">
-              <!-- Nome e Categoria -->
-              <div class="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label for="nome" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Nome do Ministério *</label>
-                  <input
-                    id="nome"
-                    type="text"
-                    formControlName="nome"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: Música e Louvor"
-                  />
-                </div>
-                <div>
-                  <label for="categoria" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Categoria</label>
-                  <input
-                    id="categoria"
-                    type="text"
-                    formControlName="categoria"
-                    list="categorias-list"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: Louvor & Adoração"
-                  />
-                  <datalist id="categorias-list">
-                    @for (cat of categorias(); track cat) {
-                      <option [value]="cat"></option>
-                    }
-                  </datalist>
-                </div>
-              </div>
-
-              <!-- Descrição -->
-              <div>
-                <label for="descricao" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Descrição *</label>
-                <textarea
-                  id="descricao"
-                  rows="3"
-                  formControlName="descricao"
-                  class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                  placeholder="Descreva o ministério, sua missão e atuação..."
-                ></textarea>
-              </div>
-
-              <!-- Líderes e Reuniões -->
-              <div class="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label for="lideres" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Líderes</label>
-                  <input
-                    id="lideres"
-                    type="text"
-                    formControlName="lideres"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: Equipe de Música"
-                  />
-                </div>
-                <div>
-                  <label for="reunioes_horario" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Horário das Reuniões</label>
-                  <input
-                    id="reunioes_horario"
-                    type="text"
-                    formControlName="reunioes_horario"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: Sábados às 09:00"
-                  />
-                </div>
-              </div>
-
-              <!-- WhatsApp e Público-Alvo -->
-              <div class="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label for="contato_whatsapp" class="block text-xs font-semibold uppercase text-advent-muted mb-1">WhatsApp de Contato</label>
-                  <input
-                    id="contato_whatsapp"
-                    type="text"
-                    formControlName="contato_whatsapp"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: 5515999999999"
-                  />
-                </div>
-                <div>
-                  <label for="publico_alvo" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Público-Alvo</label>
-                  <input
-                    id="publico_alvo"
-                    type="text"
-                    formControlName="publico_alvo"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="Ex: Jovens e Universitários"
-                  />
-                </div>
-              </div>
-
-              <!-- Banner URL + Upload -->
-              <div class="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label for="banner_url" class="block text-xs font-semibold uppercase text-advent-muted mb-1">URL da Imagem / Banner</label>
-                  <input
-                    id="banner_url"
-                    type="text"
-                    formControlName="banner_url"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                    placeholder="https://.../banner.jpg"
-                  />
-                </div>
-                <div>
-                  <label for="banner-upload" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Upload da Imagem</label>
-                  <input
-                    id="banner-upload"
-                    type="file"
-                    accept="image/*"
-                    (change)="onFileSelected($event)"
-                    class="w-full text-xs text-advent-muted file:mr-3 file:py-1.5 file:px-3 file:rounded-card file:border-0 file:text-xs file:font-semibold file:bg-advent-blue/10 file:text-advent-blue hover:file:bg-advent-blue/20 cursor-pointer"
-                  />
-                </div>
-              </div>
-
-              <!-- Atividades -->
-              <div>
-                <label for="atividades" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Atividades (uma por linha)</label>
-                <textarea
-                  id="atividades"
-                  rows="4"
-                  formControlName="atividades"
-                  class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden"
-                  placeholder="Boas-vindas na entrada do templo&#10;Orientação de visitantes&#10;Distribuição de materiais"
-                ></textarea>
-              </div>
-
-              <!-- Checkboxes -->
-              <div class="flex flex-wrap gap-4 pt-1">
-                <div class="flex items-center gap-2">
-                  <input
-                    id="destaque"
-                    type="checkbox"
-                    formControlName="destaque"
-                    class="h-4 w-4 rounded border-advent-border text-advent-blue focus:ring-advent-blue"
-                  />
-                  <label for="destaque" class="text-xs font-semibold text-advent-text cursor-pointer">
-                    Destacar este ministério
-                  </label>
-                </div>
-                <div class="flex items-center gap-2">
-                  <input
-                    id="ativo"
-                    type="checkbox"
-                    formControlName="ativo"
-                    class="h-4 w-4 rounded border-advent-border text-advent-blue focus:ring-advent-blue"
-                  />
-                  <label for="ativo" class="text-xs font-semibold text-advent-text cursor-pointer">
-                    Ministério ativo
-                  </label>
-                </div>
-              </div>
-
-              <div class="mt-6 flex justify-end gap-2 pt-3 border-t border-advent-border">
-                <button
-                  type="button"
-                  (click)="closeModal()"
-                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[44px]"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  [disabled]="ministerioForm.invalid || isSaving()"
-                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[44px]"
-                >
-                  {{ isSaving() ? 'Salvando...' : 'Salvar Ministério' }}
-                </button>
-              </div>
-            </form>
+            <div>
+              <label for="min-categoria" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Categoria
+              </label>
+              <input
+                id="min-categoria"
+                type="text"
+                formControlName="categoria"
+                list="categorias-list"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+                placeholder="Ex: Louvor & Adoração"
+              />
+              <datalist id="categorias-list">
+                @for (cat of categorias(); track cat) {
+                  <option [value]="cat"></option>
+                }
+              </datalist>
+            </div>
           </div>
-        </div>
-      }
+
+          <!-- Descrição -->
+          <div>
+            <label for="min-descricao" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+              Descrição *
+            </label>
+            <textarea
+              id="min-descricao"
+              rows="3"
+              formControlName="descricao"
+              class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:outline-none transition-colors"
+              [class.border-red-500]="ministerioForm.get('descricao')?.invalid && ministerioForm.get('descricao')?.touched"
+              [class.border-advent-border]="!ministerioForm.get('descricao')?.invalid || !ministerioForm.get('descricao')?.touched"
+              [class.focus:border-advent-blue]="!ministerioForm.get('descricao')?.invalid || !ministerioForm.get('descricao')?.touched"
+              [class.focus:border-red-500]="ministerioForm.get('descricao')?.invalid && ministerioForm.get('descricao')?.touched"
+              placeholder="Descreva o ministério, sua missão e atuação..."
+            ></textarea>
+            @if (ministerioForm.get('descricao')?.invalid && ministerioForm.get('descricao')?.touched) {
+              <p class="mt-1 text-xs text-red-600">
+                @if (ministerioForm.get('descricao')?.errors?.['required']) {
+                  A descrição é obrigatória.
+                } @else if (ministerioForm.get('descricao')?.errors?.['minlength']) {
+                  A descrição deve ter no mínimo 5 caracteres.
+                }
+              </p>
+            }
+          </div>
+
+          <!-- Líderes e Reuniões -->
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label for="min-lideres" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Líderes
+              </label>
+              <input
+                id="min-lideres"
+                type="text"
+                formControlName="lideres"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+                placeholder="Ex: Equipe de Música"
+              />
+            </div>
+            <div>
+              <label for="min-reunioes" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Horário das Reuniões
+              </label>
+              <input
+                id="min-reunioes"
+                type="text"
+                formControlName="reunioes_horario"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+                placeholder="Ex: Sábados às 09:00"
+              />
+            </div>
+          </div>
+
+          <!-- WhatsApp e Público-Alvo -->
+          <div class="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label for="min-whatsapp" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                WhatsApp de Contato
+              </label>
+              <input
+                id="min-whatsapp"
+                type="text"
+                formControlName="contato_whatsapp"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+                placeholder="Ex: 5515999999999"
+              />
+            </div>
+            <div>
+              <label for="min-publico" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                Público-Alvo
+              </label>
+              <input
+                id="min-publico"
+                type="text"
+                formControlName="publico_alvo"
+                class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+                placeholder="Ex: Jovens e Universitários"
+              />
+            </div>
+          </div>
+
+          <!-- Image Picker para Banner do Ministério -->
+          <div>
+            <app-ui-image-picker
+              [value]="ministerioForm.get('banner_url')?.value || ''"
+              label="Banner / Imagem do Ministério"
+              helpText="Recomendado JPG, PNG ou WebP até 5MB"
+              (imageSelected)="onImageSelected($event)"
+              (imageRemoved)="onImageRemoved()"
+              (urlChanged)="onUrlChanged($event)"
+            />
+          </div>
+
+          <!-- Atividades -->
+          <div>
+            <label for="min-atividades" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+              Atividades (uma por linha)
+            </label>
+            <textarea
+              id="min-atividades"
+              rows="4"
+              formControlName="atividades"
+              class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+              placeholder="Boas-vindas na entrada do templo&#10;Orientação de visitantes&#10;Distribuição de materiais"
+            ></textarea>
+          </div>
+
+          <!-- Checkboxes -->
+          <div class="flex flex-wrap gap-4 pt-1">
+            <div class="flex items-center gap-2">
+              <input
+                id="min-destaque"
+                type="checkbox"
+                formControlName="destaque"
+                class="h-4 w-4 rounded border-advent-border text-advent-blue focus:ring-advent-blue"
+              />
+              <label for="min-destaque" class="text-xs font-semibold text-advent-text cursor-pointer">
+                Destacar este ministério
+              </label>
+            </div>
+            <div class="flex items-center gap-2">
+              <input
+                id="min-ativo"
+                type="checkbox"
+                formControlName="ativo"
+                class="h-4 w-4 rounded border-advent-border text-advent-blue focus:ring-advent-blue"
+              />
+              <label for="min-ativo" class="text-xs font-semibold text-advent-text cursor-pointer">
+                Ministério ativo
+              </label>
+            </div>
+          </div>
+
+          <div class="mt-6 flex justify-end gap-2 pt-3 border-t border-advent-border">
+            <button
+              type="button"
+              (click)="closeModal()"
+              class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 transition-colors cursor-pointer min-h-[44px]"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="ministerioForm.invalid || isSaving()"
+              class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 transition-all cursor-pointer min-h-[44px]"
+            >
+              {{ isSaving() ? 'Salvando...' : 'Salvar Ministério' }}
+            </button>
+          </div>
+        </form>
+      </app-ui-modal>
+
+      <!-- Diálogo de Confirmação de Exclusão -->
+      <app-ui-confirm-dialog
+        [isOpen]="!!ministerioToDelete()"
+        title="Excluir Ministério"
+        [message]="'Tem certeza que deseja excluir o ministério &quot;' + (ministerioToDelete()?.nome || '') + '&quot;? Esta ação não pode ser desfeita.'"
+        confirmText="Excluir"
+        cancelText="Cancelar"
+        variant="danger"
+        [isLoading]="isDeleting()"
+        (confirmed)="executeDeleteMinisterio()"
+        (cancelled)="ministerioToDelete.set(null)"
+      />
     </div>
   `,
 })
@@ -334,8 +403,10 @@ export class AdminMinisteriosPage implements OnInit {
   readonly categorias = signal<string[]>([]);
   readonly isLoading = signal<boolean>(true);
   readonly isSaving = signal<boolean>(false);
+  readonly isDeleting = signal<boolean>(false);
   readonly isModalOpen = signal<boolean>(false);
   readonly editingId = signal<string | null>(null);
+  readonly ministerioToDelete = signal<Ministerio | null>(null);
   private selectedFile: File | null = null;
 
   readonly ministerioForm = new FormGroup({
@@ -383,6 +454,7 @@ export class AdminMinisteriosPage implements OnInit {
       categoria: '',
       destaque: false,
       ativo: true,
+      banner_url: '',
     });
     this.selectedFile = null;
     this.isModalOpen.set(true);
@@ -394,6 +466,7 @@ export class AdminMinisteriosPage implements OnInit {
 
   editMinisterio(ministerio: Ministerio): void {
     this.editingId.set(ministerio.id || null);
+    this.selectedFile = null;
     this.ministerioForm.patchValue({
       nome: ministerio.nome,
       descricao: ministerio.descricao,
@@ -410,15 +483,26 @@ export class AdminMinisteriosPage implements OnInit {
     this.isModalOpen.set(true);
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
-      this.selectedFile = input.files[0];
-    }
+  onImageSelected(file: File): void {
+    this.selectedFile = file;
+  }
+
+  onImageRemoved(): void {
+    this.selectedFile = null;
+    this.ministerioForm.patchValue({ banner_url: '' });
+  }
+
+  onUrlChanged(url: string): void {
+    this.selectedFile = null;
+    this.ministerioForm.patchValue({ banner_url: url });
   }
 
   async saveMinisterio(): Promise<void> {
-    if (this.ministerioForm.invalid) return;
+    if (this.ministerioForm.invalid) {
+      this.ministerioForm.markAllAsTouched();
+      return;
+    }
+
     this.isSaving.set(true);
     try {
       let uploadedBanner = '';
@@ -479,17 +563,29 @@ export class AdminMinisteriosPage implements OnInit {
     }
   }
 
-  async deleteMinisterio(ministerio: Ministerio): Promise<void> {
-    if (!confirm(`Deseja realmente excluir o ministério "${ministerio.nome}"?`)) return;
+  confirmDelete(ministerio: Ministerio): void {
+    this.ministerioToDelete.set(ministerio);
+  }
+
+  async executeDeleteMinisterio(): Promise<void> {
+    const ministerio = this.ministerioToDelete();
+    if (!ministerio) return;
+
+    this.isDeleting.set(true);
     try {
       if (ministerio.id) {
         await this.cmsService.deleteMinisterio(ministerio.id);
       }
       this.ministerios.update((prev) => prev.filter((m) => m !== ministerio && m.id !== ministerio.id));
       this.updateCategorias();
-      this.toastService.info(`Ministério "${ministerio.nome}" excluído.`);
+      this.toastService.success(`Ministério "${ministerio.nome}" excluído.`);
     } catch {
-      this.toastService.error(`Erro ao excluir "${ministerio.nome}". Tente novamente.`);
+      this.ministerios.update((prev) => prev.filter((m) => m !== ministerio));
+      this.updateCategorias();
+      this.toastService.info(`Ministério "${ministerio.nome}" removido da pré-visualização local.`);
+    } finally {
+      this.isDeleting.set(false);
+      this.ministerioToDelete.set(null);
     }
   }
 }
