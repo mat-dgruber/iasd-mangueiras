@@ -73,7 +73,7 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
           <button
             type="button"
             (click)="selectedDept.set(dep)"
-            class="rounded-full px-3 py-1 text-xs font-semibold transition-all cursor-pointer"
+            class="rounded-full px-3.5 py-1.5 min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center text-xs font-semibold transition-all cursor-pointer"
             [class.bg-advent-blue]="selectedDept() === dep"
             [class.text-white]="selectedDept() === dep"
             [class.bg-white]="selectedDept() !== dep"

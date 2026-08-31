@@ -31,7 +31,7 @@ import { ToastService } from '../../../shared/ui/toast/toast.service';
             <button
               type="button"
               (click)="selectedFilter.set(f)"
-              class="rounded-full px-3 py-1 text-xs font-semibold transition-colors cursor-pointer"
+              class="rounded-full px-3.5 py-1.5 min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center text-xs font-semibold transition-colors cursor-pointer"
               [class.bg-advent-blue]="selectedFilter() === f"
               [class.text-white]="selectedFilter() === f"
               [class.bg-white]="selectedFilter() !== f"
