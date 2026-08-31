@@ -120,7 +120,8 @@ functions/node_modules/
 .playwright-mcp/
 .trunk/
 .remember/
-.superpowers/sdd/
+.superpowers/
+.superpowers/*
 continue-*.md
 graphify-out/
 *-command-message*.md
