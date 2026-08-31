@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { AdminEscalasPage } from './admin-escalas.page';
 import { AdminCmsService } from '../../../core/services/admin-cms.service';
 import { FirebaseService } from '../../../core/firebase/firebase.service';
@@ -15,6 +16,7 @@ describe('AdminEscalasPage', () => {
     await TestBed.configureTestingModule({
       imports: [AdminEscalasPage],
       providers: [
+        provideRouter([]),
         AdminCmsService,
         ToastService,
         {
@@ -142,5 +144,56 @@ describe('AdminEscalasPage', () => {
 
     component.copySingleEscalaWhatsApp(mockEscala);
     expect(toastService.success).toHaveBeenCalledWith('Escala copiada para a área de transferência!');
+  });
+
+  it('extrai lista ordenada e única de oficiais para sugestão', () => {
+    component.escalas.set([
+      {
+        id: '1',
+        departamento: 'Diaconato',
+        data: '2026-09-05',
+        dia_semana: 'Sábado',
+        oficiais: ['Matheus Diniz', 'Paulo Roberto'],
+      },
+      {
+        id: '2',
+        departamento: 'Recepção',
+        data: '2026-09-05',
+        dia_semana: 'Sábado',
+        oficiais: ['Paulo Roberto', 'Ana Lima'],
+      },
+    ]);
+
+    expect(component.uniqueOficiais()).toEqual(['Ana Lima', 'Matheus Diniz', 'Paulo Roberto']);
+  });
+
+  it('atualiza automaticamente dia da semana ao selecionar uma data no formulário', () => {
+    component.escalaForm.get('data')?.setValue('2026-09-05'); // 2026-09-05 é Sábado
+    expect(component.escalaForm.get('dia_semana')?.value).toBe('Sábado');
+
+    component.escalaForm.get('data')?.setValue('2026-09-06'); // 2026-09-06 é Domingo
+    expect(component.escalaForm.get('dia_semana')?.value).toBe('Domingo');
+
+    component.escalaForm.get('data')?.setValue('2026-09-09'); // 2026-09-09 é Quarta
+    expect(component.escalaForm.get('dia_semana')?.value).toBe('Quarta');
+  });
+
+  it('adiciona oficial via método appendOficial sem duplicar', () => {
+    component.escalaForm.get('oficiaisStr')?.setValue('');
+    component.appendOficial('Matheus Diniz');
+    expect(component.escalaForm.get('oficiaisStr')?.value).toBe('Matheus Diniz');
+
+    component.appendOficial('Lucas Oliveira');
+    expect(component.escalaForm.get('oficiaisStr')?.value).toBe('Matheus Diniz, Lucas Oliveira');
+
+    // Não deve duplicar se já existir
+    component.appendOficial('Matheus Diniz');
+    expect(component.escalaForm.get('oficiaisStr')?.value).toBe('Matheus Diniz, Lucas Oliveira');
+  });
+
+  it('renderiza o botão com link para o portal público de escalas', () => {
+    const link = fixture.nativeElement.querySelector('a[href="/escalas"]');
+    expect(link).toBeDefined();
+    expect(fixture.nativeElement.textContent).toContain('Ver Portal Público');
   });
 });

@@ -9,6 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { EscalaItem } from '../../../core/models/content.models';
 import { AdminCmsService } from '../../../core/services/admin-cms.service';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
@@ -19,7 +20,7 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
 @Component({
   selector: 'app-admin-escalas-page',
   standalone: true,
-  imports: [ReactiveFormsModule, ModalComponent, SkeletonComponent, ConfirmDialogComponent],
+  imports: [ReactiveFormsModule, RouterLink, ModalComponent, SkeletonComponent, ConfirmDialogComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div>
@@ -35,6 +36,16 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
         </div>
 
         <div class="flex flex-wrap items-center gap-2.5">
+          <a
+            routerLink="/escalas"
+            target="_blank"
+            class="inline-flex items-center gap-1.5 rounded-card border border-advent-border bg-white px-4 py-2.5 text-xs font-semibold text-advent-text shadow-sm hover:bg-slate-50 active:scale-[0.98] transition-all cursor-pointer min-h-[40px]"
+            title="Visualizar portal público de escalas"
+          >
+            <span class="material-symbols-outlined text-[16px] text-advent-blue">open_in_new</span>
+            <span>Ver Portal Público</span>
+          </a>
+
           <button
             type="button"
             (click)="copyFullEscalaWhatsApp()"
@@ -311,6 +322,21 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
             @if (escalaForm.get('oficiaisStr')?.invalid && escalaForm.get('oficiaisStr')?.touched) {
               <p class="mt-1 text-xs text-red-600">Informe pelo menos um oficial.</p>
             }
+
+            @if (uniqueOficiais().length > 0) {
+              <div class="mt-2 flex flex-wrap items-center gap-1">
+                <span class="text-[11px] font-semibold text-advent-muted mr-1">Sugestões:</span>
+                @for (oficial of uniqueOficiais(); track oficial) {
+                  <button
+                    type="button"
+                    (click)="appendOficial(oficial)"
+                    class="rounded-md border border-advent-border bg-slate-50 px-2 py-0.5 text-[11px] text-slate-700 hover:bg-advent-blue hover:text-white transition-colors cursor-pointer"
+                  >
+                    + {{ oficial }}
+                  </button>
+                }
+              </div>
+            }
           </div>
 
           <div>
@@ -406,6 +432,17 @@ export class AdminEscalasPage implements OnInit {
     return list.filter((e) => e.departamento === dept);
   });
 
+  readonly uniqueOficiais = computed(() => {
+    const set = new Set<string>();
+    for (const esc of this.escalas()) {
+      for (const ofc of esc.oficiais || []) {
+        const trimmed = ofc.trim();
+        if (trimmed) set.add(trimmed);
+      }
+    }
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  });
+
   readonly escalaForm = new FormGroup({
     departamento: new FormControl('Sonorização & Transmissão', Validators.required),
     data: new FormControl('', Validators.required),
@@ -414,6 +451,32 @@ export class AdminEscalasPage implements OnInit {
     horario: new FormControl(''),
     observacoes: new FormControl(''),
   });
+
+  constructor() {
+    this.escalaForm.get('data')?.valueChanges.subscribe((dataVal) => {
+      if (dataVal) {
+        const [year, month, day] = dataVal.split('-').map(Number);
+        if (year && month && day) {
+          const date = new Date(year, month - 1, day);
+          const daysOfWeek = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+          const dia = daysOfWeek[date.getDay()];
+          this.escalaForm.get('dia_semana')?.setValue(dia, { emitEvent: false });
+        }
+      }
+    });
+  }
+
+  appendOficial(nome: string): void {
+    const current = this.escalaForm.get('oficiaisStr')?.value?.trim() || '';
+    if (!current) {
+      this.escalaForm.get('oficiaisStr')?.setValue(nome);
+    } else {
+      const list = current.split(',').map((s) => s.trim());
+      if (!list.includes(nome)) {
+        this.escalaForm.get('oficiaisStr')?.setValue(`${current}, ${nome}`);
+      }
+    }
+  }
 
   async ngOnInit(): Promise<void> {
     await this.loadEscalas();
