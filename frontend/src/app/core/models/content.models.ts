@@ -90,3 +90,13 @@ export interface EscalaItem {
   observacoes?: string;
   horario?: string; // Ex: '09:00 e 10:15'
 }
+
+export interface CultoEscalaGroup {
+  data: string; // YYYY-MM-DD
+  dataFormatada: string; // Ex: '05 de Setembro de 2026'
+  diaSemana: string; // Ex: 'Sábado'
+  isHoje: boolean;
+  isProximoCulto: boolean;
+  isPassado: boolean;
+  escalas: EscalaItem[];
+}
