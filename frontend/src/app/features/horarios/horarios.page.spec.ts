@@ -126,4 +126,15 @@ describe('HorariosPage', () => {
     component.toggleFaq(firstFaq);
     expect(component.isExpanded(firstFaq)).toBe(true);
   });
+
+  it('formata corretamente a data de avisos especiais (ISO com hora, sem hora, livre e vazio)', () => {
+    expect(component.formatAvisoDate(undefined)).toBe('Alteração Temporária');
+    expect(component.formatAvisoDate('')).toBe('Alteração Temporária');
+    expect(component.formatAvisoDate('   ')).toBe('Alteração Temporária');
+    expect(component.formatAvisoDate('2026-12-31T20:00:00')).toBe('31/12/2026 às 20:00');
+    expect(component.formatAvisoDate('2026-12-31T20:00')).toBe('31/12/2026 às 20:00');
+    expect(component.formatAvisoDate('2026-12-31')).toBe('31/12/2026');
+    expect(component.formatAvisoDate('31/12 às 20h')).toBe('31/12 às 20h');
+    expect(component.formatAvisoDate('Culto Especial de Natal')).toBe('Culto Especial de Natal');
+  });
 });

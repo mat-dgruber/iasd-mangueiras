@@ -114,7 +114,7 @@ import {
                     <span
                       class="inline-flex items-center rounded-full bg-amber-600 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white"
                     >
-                      {{ aviso.data_evento || 'Alteração Temporária' }}
+                      {{ formatAvisoDate(aviso.data_evento) }}
                     </span>
                     <h2 class="text-sm font-bold text-amber-950">{{ aviso.titulo }}</h2>
                   </div>
@@ -725,6 +725,24 @@ export class HorariosPage {
     } catch {
       this.toastService.info(this.fullAddress(), 'Endereço');
     }
+  }
+
+  formatAvisoDate(dateStr?: string): string {
+    if (!dateStr || !dateStr.trim()) {
+      return 'Alteração Temporária';
+    }
+
+    const trimmed = dateStr.trim();
+    const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2})(?::\d{2})?)?/);
+    if (isoMatch) {
+      const [, y, m, d, hh, mm] = isoMatch;
+      if (hh !== undefined && mm !== undefined) {
+        return `${d}/${m}/${y} às ${hh}:${mm}`;
+      }
+      return `${d}/${m}/${y}`;
+    }
+
+    return trimmed;
   }
 
   getDayOfWeek(dia: string): number {
