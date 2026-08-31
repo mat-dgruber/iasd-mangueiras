@@ -3,10 +3,13 @@ import { AdminEscalasPage } from './admin-escalas.page';
 import { AdminCmsService } from '../../../core/services/admin-cms.service';
 import { FirebaseService } from '../../../core/firebase/firebase.service';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
+import { EscalaItem } from '../../../core/models/content.models';
 
 describe('AdminEscalasPage', () => {
   let fixture: ComponentFixture<AdminEscalasPage>;
   let component: AdminEscalasPage;
+  let cmsService: AdminCmsService;
+  let toastService: ToastService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -23,6 +26,8 @@ describe('AdminEscalasPage', () => {
 
     fixture = TestBed.createComponent(AdminEscalasPage);
     component = fixture.componentInstance;
+    cmsService = TestBed.inject(AdminCmsService);
+    toastService = TestBed.inject(ToastService);
     fixture.detectChanges();
   });
 
@@ -30,7 +35,7 @@ describe('AdminEscalasPage', () => {
     const el = fixture.nativeElement as HTMLElement;
     expect(el.querySelector('h1')?.textContent).toContain('Escalas dos Departamentos');
     expect(el.textContent).toContain('Copiar Escala WhatsApp');
-    expect(el.textContent).toContain('+ Nova Escala');
+    expect(el.textContent).toContain('Nova Escala');
   });
 
   it('abre e fecha o modal de cadastro de escala', () => {
@@ -39,5 +44,103 @@ describe('AdminEscalasPage', () => {
     expect(component.isModalOpen()).toBe(true);
     component.closeModal();
     expect(component.isModalOpen()).toBe(false);
+  });
+
+  it('abre modal em modo de edição com dados pré-preenchidos', () => {
+    const mockEscala: EscalaItem = {
+      id: 'escala-test',
+      departamento: 'Diaconato',
+      data: '2026-09-05',
+      dia_semana: 'Sábado',
+      oficiais: ['Paulo', 'Gabriel'],
+      horario: '08:30',
+      observacoes: 'Chegar antes',
+    };
+
+    component.openEditModal(mockEscala);
+    expect(component.isModalOpen()).toBe(true);
+    expect(component.editingEscala()).toEqual(mockEscala);
+    expect(component.escalaForm.get('departamento')?.value).toBe('Diaconato');
+    expect(component.escalaForm.get('oficiaisStr')?.value).toBe('Paulo, Gabriel');
+  });
+
+  it('exibe skeletons durante o carregamento', () => {
+    component.isLoading.set(true);
+    fixture.detectChanges();
+
+    const skeletons = fixture.nativeElement.querySelectorAll('app-ui-skeleton');
+    expect(skeletons.length).toBeGreaterThan(0);
+  });
+
+  it('exibe empty state com botão de ação quando a lista está vazia', () => {
+    component.isLoading.set(false);
+    component.escalas.set([]);
+    fixture.detectChanges();
+
+    const text = fixture.nativeElement.textContent;
+    expect(text).toContain('Nenhuma escala cadastrada');
+    expect(text).toContain('+ Nova Escala');
+  });
+
+  it('filtra escalas por departamento', () => {
+    component.escalas.set([
+      {
+        id: '1',
+        departamento: 'Diaconato',
+        data: '2026-09-05',
+        dia_semana: 'Sábado',
+        oficiais: ['Oficial A'],
+      },
+      {
+        id: '2',
+        departamento: 'Recepção',
+        data: '2026-09-05',
+        dia_semana: 'Sábado',
+        oficiais: ['Oficial B'],
+      },
+    ]);
+
+    component.selectedDept.set('Diaconato');
+    fixture.detectChanges();
+
+    expect(component.filteredEscalas().length).toBe(1);
+    expect(component.filteredEscalas()[0].departamento).toBe('Diaconato');
+  });
+
+  it('abre diálogo de confirmação de exclusão e remove a escala', async () => {
+    const mockEscala: EscalaItem = {
+      id: 'escala-del',
+      departamento: 'Sonorização & Transmissão',
+      data: '2026-09-05',
+      dia_semana: 'Sábado',
+      oficiais: ['Lucas'],
+    };
+    component.escalas.set([mockEscala]);
+    vi.spyOn(cmsService, 'deleteEscala').mockResolvedValue();
+    vi.spyOn(toastService, 'success');
+
+    component.confirmDelete(mockEscala);
+    expect(component.escalaToDelete()).toEqual(mockEscala);
+
+    await component.executeDeleteEscala();
+    expect(cmsService.deleteEscala).toHaveBeenCalledWith('escala-del');
+    expect(component.escalas().length).toBe(0);
+    expect(component.escalaToDelete()).toBeNull();
+    expect(toastService.success).toHaveBeenCalledWith('Escala de Sonorização & Transmissão excluída.');
+  });
+
+  it('copia escala individual para o WhatsApp via ToastService', () => {
+    vi.spyOn(toastService, 'success');
+    const mockEscala: EscalaItem = {
+      id: 'escala-wpp',
+      departamento: 'Música & Louvor',
+      data: '2026-09-05',
+      dia_semana: 'Sábado',
+      oficiais: ['Maria', 'João'],
+      horario: '10:00',
+    };
+
+    component.copySingleEscalaWhatsApp(mockEscala);
+    expect(toastService.success).toHaveBeenCalledWith('Escala copiada para a área de transferência!');
   });
 });

@@ -13,11 +13,13 @@ import { EscalaItem } from '../../../core/models/content.models';
 import { AdminCmsService } from '../../../core/services/admin-cms.service';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
 import { ModalComponent } from '../../../shared/ui/modal/modal.component';
+import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
+import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-admin-escalas-page',
   standalone: true,
-  imports: [ReactiveFormsModule, ModalComponent],
+  imports: [ReactiveFormsModule, ModalComponent, SkeletonComponent, ConfirmDialogComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div>
@@ -36,33 +38,36 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
           <button
             type="button"
             (click)="copyFullEscalaWhatsApp()"
-            class="inline-flex items-center gap-1.5 rounded-card bg-green-700 px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-green-800 transition-colors cursor-pointer"
+            class="inline-flex items-center gap-1.5 rounded-card bg-green-700 px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-green-800 active:scale-[0.98] transition-all cursor-pointer min-h-[40px]"
             aria-label="Copiar escala completa para WhatsApp"
           >
             <svg class="h-4 w-4 shrink-0 fill-current" viewBox="0 0 24 24">
               <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
             </svg>
-            Copiar Escala WhatsApp
+            <span>Copiar Escala WhatsApp</span>
           </button>
 
           <button
             type="button"
             (click)="generateAndDownloadStory()"
-            class="inline-flex items-center gap-1.5 rounded-card border border-advent-border bg-white px-4 py-2.5 text-xs font-semibold text-advent-text shadow-sm hover:bg-slate-50 transition-colors cursor-pointer"
+            class="inline-flex items-center gap-1.5 rounded-card border border-advent-border bg-white px-4 py-2.5 text-xs font-semibold text-advent-text shadow-sm hover:bg-slate-50 active:scale-[0.98] transition-all cursor-pointer min-h-[40px]"
             aria-label="Gerar card visual da escala para stories"
           >
             <svg class="h-4 w-4 shrink-0 text-advent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
             </svg>
-            Gerar Card (.PNG)
+            <span>Gerar Card (.PNG)</span>
           </button>
 
           <button
             type="button"
             (click)="openCreateModal()"
-            class="inline-flex items-center gap-1.5 rounded-card bg-advent-blue px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-advent-blue-dark transition-colors cursor-pointer"
+            class="inline-flex items-center gap-1.5 rounded-card bg-advent-blue px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[40px]"
           >
-            + Nova Escala
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            <span>Nova Escala</span>
           </button>
         </div>
       </header>
@@ -89,10 +94,50 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
       <!-- Grid de Escalas -->
       <div class="mt-8">
         @if (isLoading()) {
-          <div class="p-12 text-center text-sm text-advent-muted">Carregando escalas…</div>
+          <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            @for (i of [1, 2, 3]; track i) {
+              <div class="rounded-2xl border border-advent-border bg-white p-5 shadow-xs space-y-4">
+                <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                  <app-ui-skeleton width="120px" height="22px" rounded="full" />
+                  <app-ui-skeleton width="90px" height="16px" rounded="sm" />
+                </div>
+                <div class="space-y-2">
+                  <app-ui-skeleton width="80px" height="12px" rounded="sm" />
+                  <app-ui-skeleton width="100%" height="32px" rounded="md" />
+                  <app-ui-skeleton width="100%" height="32px" rounded="md" />
+                </div>
+                <app-ui-skeleton width="60%" height="16px" rounded="sm" />
+                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <app-ui-skeleton width="100px" height="16px" rounded="sm" />
+                  <div class="flex gap-2">
+                    <app-ui-skeleton width="45px" height="24px" rounded="sm" />
+                    <app-ui-skeleton width="45px" height="24px" rounded="sm" />
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
         } @else if (filteredEscalas().length === 0) {
-          <div class="rounded-2xl border border-dashed border-advent-border bg-white p-12 text-center text-advent-muted">
-            Nenhuma escala encontrada para o departamento selecionado.
+          <div class="rounded-2xl border border-dashed border-advent-border bg-white p-12 text-center text-advent-muted flex flex-col items-center justify-center">
+            <svg class="h-12 w-12 text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+            </svg>
+            <p class="font-medium text-advent-text mb-1">
+              {{ selectedDept() === 'Todos' ? 'Nenhuma escala cadastrada' : 'Nenhuma escala para ' + selectedDept() }}
+            </p>
+            <p class="text-xs text-advent-muted mb-4 max-w-sm">
+              Organize as equipes e voluntários cadastrando as escalas dos cultos e eventos.
+            </p>
+            <button
+              type="button"
+              (click)="openCreateModal()"
+              class="rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[38px] inline-flex items-center gap-1.5"
+            >
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              <span>+ Nova Escala</span>
+            </button>
           </div>
         } @else {
           <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -162,7 +207,7 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
                     </button>
                     <button
                       type="button"
-                      (click)="deleteEscala(escala)"
+                      (click)="confirmDelete(escala)"
                       class="rounded-lg px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                     >
                       Excluir
@@ -193,12 +238,19 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
             <select
               id="escala-departamento"
               formControlName="departamento"
-              class="w-full rounded-card border border-advent-border px-3 py-2 text-xs text-advent-text focus:border-advent-blue focus:outline-none"
+              class="w-full rounded-card border px-3 py-2 text-xs text-advent-text focus:outline-none transition-colors"
+              [class.border-red-500]="escalaForm.get('departamento')?.invalid && escalaForm.get('departamento')?.touched"
+              [class.border-advent-border]="!escalaForm.get('departamento')?.invalid || !escalaForm.get('departamento')?.touched"
+              [class.focus:border-advent-blue]="!escalaForm.get('departamento')?.invalid || !escalaForm.get('departamento')?.touched"
+              [class.focus:border-red-500]="escalaForm.get('departamento')?.invalid && escalaForm.get('departamento')?.touched"
             >
               @for (d of departamentos; track d) {
                 <option [value]="d">{{ d }}</option>
               }
             </select>
+            @if (escalaForm.get('departamento')?.invalid && escalaForm.get('departamento')?.touched) {
+              <p class="mt-1 text-xs text-red-600">Selecione o departamento.</p>
+            }
           </div>
 
           <div class="grid gap-3 sm:grid-cols-2">
@@ -210,8 +262,15 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
                 id="escala-data"
                 type="date"
                 formControlName="data"
-                class="w-full rounded-card border border-advent-border px-3 py-2 text-xs text-advent-text focus:border-advent-blue focus:outline-none"
+                class="w-full rounded-card border px-3 py-2 text-xs text-advent-text focus:outline-none transition-colors"
+                [class.border-red-500]="escalaForm.get('data')?.invalid && escalaForm.get('data')?.touched"
+                [class.border-advent-border]="!escalaForm.get('data')?.invalid || !escalaForm.get('data')?.touched"
+                [class.focus:border-advent-blue]="!escalaForm.get('data')?.invalid || !escalaForm.get('data')?.touched"
+                [class.focus:border-red-500]="escalaForm.get('data')?.invalid && escalaForm.get('data')?.touched"
               />
+              @if (escalaForm.get('data')?.invalid && escalaForm.get('data')?.touched) {
+                <p class="mt-1 text-xs text-red-600">A data é obrigatória.</p>
+              }
             </div>
             <div>
               <label for="escala-dia-semana" class="block text-xs font-bold text-advent-text mb-1">
@@ -222,8 +281,15 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
                 type="text"
                 formControlName="dia_semana"
                 placeholder="Ex: Sábado"
-                class="w-full rounded-card border border-advent-border px-3 py-2 text-xs text-advent-text focus:border-advent-blue focus:outline-none"
+                class="w-full rounded-card border px-3 py-2 text-xs text-advent-text focus:outline-none transition-colors"
+                [class.border-red-500]="escalaForm.get('dia_semana')?.invalid && escalaForm.get('dia_semana')?.touched"
+                [class.border-advent-border]="!escalaForm.get('dia_semana')?.invalid || !escalaForm.get('dia_semana')?.touched"
+                [class.focus:border-advent-blue]="!escalaForm.get('dia_semana')?.invalid || !escalaForm.get('dia_semana')?.touched"
+                [class.focus:border-red-500]="escalaForm.get('dia_semana')?.invalid && escalaForm.get('dia_semana')?.touched"
               />
+              @if (escalaForm.get('dia_semana')?.invalid && escalaForm.get('dia_semana')?.touched) {
+                <p class="mt-1 text-xs text-red-600">O dia da semana é obrigatório.</p>
+              }
             </div>
           </div>
 
@@ -236,8 +302,15 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
               type="text"
               formControlName="oficiaisStr"
               placeholder="Ex: Carlos Silva, Lucas Oliveira, Matheus Diniz"
-              class="w-full rounded-card border border-advent-border px-3 py-2 text-xs text-advent-text focus:border-advent-blue focus:outline-none"
+              class="w-full rounded-card border px-3 py-2 text-xs text-advent-text focus:outline-none transition-colors"
+              [class.border-red-500]="escalaForm.get('oficiaisStr')?.invalid && escalaForm.get('oficiaisStr')?.touched"
+              [class.border-advent-border]="!escalaForm.get('oficiaisStr')?.invalid || !escalaForm.get('oficiaisStr')?.touched"
+              [class.focus:border-advent-blue]="!escalaForm.get('oficiaisStr')?.invalid || !escalaForm.get('oficiaisStr')?.touched"
+              [class.focus:border-red-500]="escalaForm.get('oficiaisStr')?.invalid && escalaForm.get('oficiaisStr')?.touched"
             />
+            @if (escalaForm.get('oficiaisStr')?.invalid && escalaForm.get('oficiaisStr')?.touched) {
+              <p class="mt-1 text-xs text-red-600">Informe pelo menos um oficial.</p>
+            }
           </div>
 
           <div>
@@ -249,7 +322,7 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
               type="text"
               formControlName="horario"
               placeholder="Ex: 08:45 às 12:00"
-              class="w-full rounded-card border border-advent-border px-3 py-2 text-xs text-advent-text focus:border-advent-blue focus:outline-none"
+              class="w-full rounded-card border border-advent-border px-3 py-2 text-xs text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
             />
           </div>
 
@@ -262,7 +335,7 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
               rows="2"
               formControlName="observacoes"
               placeholder="Ex: Chegar 15 min antes para conferência de equipamentos."
-              class="w-full rounded-card border border-advent-border px-3 py-2 text-xs text-advent-text focus:border-advent-blue focus:outline-none"
+              class="w-full rounded-card border border-advent-border px-3 py-2 text-xs text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
             ></textarea>
           </div>
 
@@ -284,6 +357,19 @@ import { ModalComponent } from '../../../shared/ui/modal/modal.component';
           </div>
         </form>
       </app-ui-modal>
+
+      <!-- Diálogo de Confirmação de Exclusão -->
+      <app-ui-confirm-dialog
+        [isOpen]="!!escalaToDelete()"
+        title="Excluir Escala"
+        [message]="'Tem certeza que deseja excluir a escala de &quot;' + (escalaToDelete()?.departamento || '') + '&quot;? Esta ação não pode ser desfeita.'"
+        confirmText="Excluir"
+        cancelText="Cancelar"
+        variant="danger"
+        [isLoading]="isDeleting()"
+        (confirmed)="executeDeleteEscala()"
+        (cancelled)="escalaToDelete.set(null)"
+      />
     </div>
   `,
 })
@@ -298,7 +384,9 @@ export class AdminEscalasPage implements OnInit {
   readonly isLoading = signal<boolean>(true);
   readonly isModalOpen = signal<boolean>(false);
   readonly isSaving = signal<boolean>(false);
+  readonly isDeleting = signal<boolean>(false);
   readonly editingEscala = signal<EscalaItem | null>(null);
+  readonly escalaToDelete = signal<EscalaItem | null>(null);
 
   readonly departamentos = [
     'Sonorização & Transmissão',
@@ -404,7 +492,10 @@ export class AdminEscalasPage implements OnInit {
   }
 
   async saveEscala(): Promise<void> {
-    if (this.escalaForm.invalid) return;
+    if (this.escalaForm.invalid) {
+      this.escalaForm.markAllAsTouched();
+      return;
+    }
     this.isSaving.set(true);
     const formVal = this.escalaForm.value;
 
@@ -450,16 +541,27 @@ export class AdminEscalasPage implements OnInit {
     }
   }
 
-  async deleteEscala(escala: EscalaItem): Promise<void> {
-    if (!confirm(`Excluir a escala de "${escala.departamento}"?`)) return;
+  confirmDelete(escala: EscalaItem): void {
+    this.escalaToDelete.set(escala);
+  }
+
+  async executeDeleteEscala(): Promise<void> {
+    const escala = this.escalaToDelete();
+    if (!escala) return;
+
+    this.isDeleting.set(true);
     try {
       if (escala.id) {
         await this.cmsService.deleteEscala(escala.id);
       }
       this.escalas.update((prev) => prev.filter((e) => e !== escala && e.id !== escala.id));
-      this.toastService.info(`Escala de ${escala.departamento} excluída.`);
+      this.toastService.success(`Escala de ${escala.departamento} excluída.`);
     } catch {
       this.escalas.update((prev) => prev.filter((e) => e !== escala));
+      this.toastService.success(`Escala de ${escala.departamento} excluída localmente.`);
+    } finally {
+      this.isDeleting.set(false);
+      this.escalaToDelete.set(null);
     }
   }
 
@@ -473,13 +575,20 @@ export class AdminEscalasPage implements OnInit {
       (escala.observacoes ? `💡 *Obs:* ${escala.observacoes}\n` : '') +
       `\n_Deus abençoe a dedicação de todos no ministério!_`;
 
-    navigator.clipboard?.writeText(text);
-    this.toastService.success('Escala copiada para a área de transferência!');
+    try {
+      navigator.clipboard?.writeText(text);
+      this.toastService.success('Escala copiada para a área de transferência!');
+    } catch {
+      this.toastService.error('Não foi possível copiar para a área de transferência.');
+    }
   }
 
   copyFullEscalaWhatsApp(): void {
     const list = this.escalas();
-    if (list.length === 0) return;
+    if (list.length === 0) {
+      this.toastService.warning('Nenhuma escala disponível para copiar.');
+      return;
+    }
 
     let text = `⛪ *ESCALA GERAL DOS DEPARTAMENTOS — IASD MANGUEIRAS*\n`;
     text += `📅 *Próximo Sábado*\n\n`;
@@ -494,15 +603,25 @@ export class AdminEscalasPage implements OnInit {
     text += `_"Tudo o que fizerem, façam de todo o coração, como para o Senhor." (Colossenses 3:23)_\n`;
     text += `https://iasdmangueiras.org.br`;
 
-    navigator.clipboard?.writeText(text);
-    this.toastService.success('Escala geral copiada com sucesso para o WhatsApp!');
+    try {
+      navigator.clipboard?.writeText(text);
+      this.toastService.success('Escala geral copiada com sucesso para o WhatsApp!');
+    } catch {
+      this.toastService.error('Não foi possível copiar para a área de transferência.');
+    }
   }
 
   generateAndDownloadStory(): void {
     const canvas = this.canvasRef?.nativeElement;
-    if (!canvas) return;
+    if (!canvas) {
+      this.toastService.error('Erro ao acessar o canvas para gerar imagem.');
+      return;
+    }
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      this.toastService.error('Erro ao processar renderização da imagem.');
+      return;
+    }
 
     const width = 1080;
     const height = 1920;
@@ -578,11 +697,15 @@ export class AdminEscalasPage implements OnInit {
     ctx.fillText('iasdmangueiras.org.br', width / 2, height - 120);
 
     // Download
-    const dataUrl = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.download = `escala-iasd-mangueiras.png`;
-    link.href = dataUrl;
-    link.click();
-    this.toastService.success('Card da escala gerado e baixado com sucesso!');
+    try {
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `escala-iasd-mangueiras.png`;
+      link.href = dataUrl;
+      link.click();
+      this.toastService.success('Card da escala gerado e baixado com sucesso!');
+    } catch {
+      this.toastService.error('Erro ao gerar arquivo de imagem.');
+    }
   }
 }
