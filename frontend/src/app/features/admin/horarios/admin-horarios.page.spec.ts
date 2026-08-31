@@ -169,4 +169,20 @@ describe('AdminHorariosPage', () => {
     expect(text).toContain('Nenhum culto regular cadastrado');
     expect(text).toContain('Nenhuma alteração temporária ativa');
   });
+
+  it('formata data ISO e preserva texto livre em formatDisplayDate', () => {
+    expect(component.formatDisplayDate('2026-12-31T20:00:00')).toBe('31/12/2026 às 20:00');
+    expect(component.formatDisplayDate('2026-12-31')).toBe('31/12/2026');
+    expect(component.formatDisplayDate('31/12 às 20h')).toBe('31/12 às 20h');
+    expect(component.formatDisplayDate('')).toBe('');
+    expect(component.formatDisplayDate(undefined)).toBe('');
+  });
+
+  it('renderiza DateTimePickerComponent no modal de aviso especial', () => {
+    component.openAvisoModal();
+    fixture.detectChanges();
+
+    const pickers = fixture.nativeElement.querySelectorAll('app-ui-datetime-picker');
+    expect(pickers.length).toBe(2);
+  });
 });

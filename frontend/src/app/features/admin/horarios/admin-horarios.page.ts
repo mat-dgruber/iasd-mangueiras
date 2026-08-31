@@ -12,12 +12,18 @@ import { ToastService } from '../../../shared/ui/toast/toast.service';
 import { Horario, AvisoHorarioEspecial } from '../../../core/models/content.models';
 import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
+import { DateTimePickerComponent } from '../../../shared/ui/datetime-picker/datetime-picker.component';
 import defaultHorarios from '../../../../content/horarios.json';
 
 @Component({
   selector: 'app-admin-horarios-page',
   standalone: true,
-  imports: [ReactiveFormsModule, ConfirmDialogComponent, SkeletonComponent],
+  imports: [
+    ReactiveFormsModule,
+    ConfirmDialogComponent,
+    SkeletonComponent,
+    DateTimePickerComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-10">
@@ -252,7 +258,7 @@ import defaultHorarios from '../../../../content/horarios.json';
                       [class.bg-slate-200]="aviso.ativo === false"
                       [class.text-slate-700]="aviso.ativo === false"
                     >
-                      {{ aviso.data_evento || 'Horário Especial' }}
+                      {{ formatDisplayDate(aviso.data_evento) || 'Horário Especial' }}
                     </span>
 
                     @if (aviso.ativo !== false) {
@@ -267,7 +273,7 @@ import defaultHorarios from '../../../../content/horarios.json';
 
                     @if (aviso.expira_em) {
                       <span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600">
-                        Expira em: {{ aviso.expira_em }}
+                        Expira em: {{ formatDisplayDate(aviso.expira_em) }}
                       </span>
                     }
                   </div>
@@ -512,27 +518,23 @@ import defaultHorarios from '../../../../content/horarios.json';
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label for="aviso-data" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
-                    Data / Ocasional
-                  </label>
-                  <input
-                    id="aviso-data"
-                    type="text"
+                  <app-ui-datetime-picker
                     formControlName="data_evento"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
-                    placeholder="Ex: 31/12 às 20h"
+                    [label]="'Data / Ocasional *'"
+                    [placeholder]="'Selecione a data e hora do evento...'"
+                    [comHorario]="true"
                   />
+                  @if (avisoForm.get('data_evento')?.invalid && avisoForm.get('data_evento')?.touched) {
+                    <span class="text-xs text-red-600 mt-1 block">Data é obrigatória.</span>
+                  }
                 </div>
 
                 <div>
-                  <label for="aviso-expira" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
-                    Expira em (Data)
-                  </label>
-                  <input
-                    id="aviso-expira"
-                    type="date"
+                  <app-ui-datetime-picker
                     formControlName="expira_em"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none bg-white"
+                    [label]="'Expira em (Data)'"
+                    [placeholder]="'Selecione a data de expiração...'"
+                    [comHorario]="true"
                   />
                 </div>
               </div>
@@ -656,6 +658,19 @@ export class AdminHorariosPage implements OnInit {
   async loadAvisos(): Promise<void> {
     const list = await this.cmsService.getAvisosHorarios();
     this.avisos.set(list);
+  }
+
+  formatDisplayDate(val?: string): string {
+    if (!val) return '';
+    const isoMatch = val.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/);
+    if (isoMatch) {
+      const [, y, m, d, hh, mm] = isoMatch;
+      if (hh !== undefined && mm !== undefined) {
+        return `${d}/${m}/${y} às ${hh}:${mm}`;
+      }
+      return `${d}/${m}/${y}`;
+    }
+    return val;
   }
 
   // --- Cultos Regulares ---
