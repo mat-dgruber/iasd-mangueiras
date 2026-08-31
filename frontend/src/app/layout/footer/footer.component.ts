@@ -28,12 +28,21 @@ import { SITE_CONFIG } from '../../core/site/site.config';
             <p>• <strong>Domingos:</strong> 19:30</p>
             <p>• <strong>Quartas:</strong> 19:30</p>
           </div>
-          <a
-            class="mt-3 inline-flex items-center text-xs font-semibold text-white underline hover:text-white/80"
-            routerLink="/horarios"
-          >
-            Ver mapa e como chegar →
-          </a>
+          <div class="mt-3 flex flex-wrap items-center gap-3">
+            <a
+              class="inline-flex items-center text-xs font-semibold text-white underline hover:text-white/80"
+              routerLink="/horarios"
+            >
+              Ver horários e mapa →
+            </a>
+            <span class="text-white/40">•</span>
+            <a
+              class="inline-flex items-center text-xs font-semibold text-white underline hover:text-white/80"
+              routerLink="/escalas"
+            >
+              Escalas de voluntários →
+            </a>
+          </div>
         </section>
         <section>
           <h2 class="text-base font-bold uppercase tracking-wider text-white">Canais Oficiais</h2>
