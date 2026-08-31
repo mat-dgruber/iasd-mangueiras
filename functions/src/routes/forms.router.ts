@@ -13,7 +13,7 @@ formsRouter.post('/contato', async (req: Request, res: Response) => {
 
     await notificationService.saveContato(data);
     await notificationService.sendTelegramAlert(
-      `📩 <b>Novo Contato Recebido</b>\n<b>Nome:</b> ${data.nome}\n<b>E-mail:</b> ${data.email}\n<b>Assunto:</b> ${data.assunto}\n<b>Mensagem:</b> ${data.mensagem}`
+      `📩 <b>Novo Contato Recebido</b>\n<b>Nome:</b> ${notificationService.escapeHtml(data.nome)}\n<b>E-mail:</b> ${notificationService.escapeHtml(data.email)}\n<b>Assunto:</b> ${notificationService.escapeHtml(data.assunto)}\n<b>Mensagem:</b> ${notificationService.escapeHtml(data.mensagem)}`
     );
 
     return res.json({
@@ -34,7 +34,7 @@ formsRouter.post('/oracao', async (req: Request, res: Response) => {
 
     await notificationService.saveOracao(data);
     await notificationService.sendTelegramAlert(
-      `🙏 <b>Novo Pedido de Oração</b>\n<b>Nome:</b> ${data.nome}\n<b>Confidencial:</b> ${data.confidencial ? 'Sim' : 'Não'}\n<b>Pedido:</b> ${data.pedido}`
+      `🙏 <b>Novo Pedido de Oração</b>\n<b>Nome:</b> ${notificationService.escapeHtml(data.nome)}\n<b>Confidencial:</b> ${data.confidencial ? 'Sim' : 'Não'}\n<b>Pedido:</b> ${notificationService.escapeHtml(data.pedido)}`
     );
 
     return res.json({

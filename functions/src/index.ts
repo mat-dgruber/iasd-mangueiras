@@ -17,11 +17,17 @@ const app = express();
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Permite chamadas sem origin (mobile/curl/SSR) ou domínios autorizados
-      if (!origin || config.corsOrigins.includes(origin) || origin.endsWith('.web.app') || origin.endsWith('.firebaseapp.com')) {
+      // Permite chamadas sem origin (mobile/curl/SSR) ou domínios autorizados, ou em dev
+      if (
+        !origin ||
+        config.corsOrigins.includes(origin) ||
+        origin.endsWith('.web.app') ||
+        origin.endsWith('.firebaseapp.com') ||
+        config.appEnv === 'development'
+      ) {
         callback(null, true);
       } else {
-        callback(null, true); // Permissivo para evitar bloqueios em dev
+        callback(new Error('Bloqueado pelo CORS'));
       }
     },
     credentials: true,
@@ -48,6 +54,7 @@ export const api = functions.https.onRequest(
     timeoutSeconds: 30,
     minInstances: 0,
     maxInstances: 10,
+    secrets: ['YOUTUBE_API_KEY', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID'],
   },
   app
 );

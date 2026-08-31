@@ -31,6 +31,21 @@ export class NotificationService {
     }
   }
 
+  /**
+   * Converte caracteres especiais em entidades HTML seguras para evitar quebras de sintaxe
+   * ou injeções indesejadas no parse_mode: 'HTML' da API de bots do Telegram.
+   *
+   * @param text String original de entrada
+   * @returns String sanitizada com entidades HTML correspondentes
+   */
+  escapeHtml(text: string | undefined): string {
+    if (!text) return '';
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
   async sendTelegramAlert(text: string): Promise<void> {
     if (!config.telegram.botToken || !config.telegram.chatId) return;
     try {
