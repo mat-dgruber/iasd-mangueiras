@@ -24,6 +24,19 @@ export interface PedidoOracaoAdmin {
   created_at?: unknown;
 }
 
+export interface MensagemContatoAdmin {
+  id?: string;
+  nome: string;
+  email: string;
+  telefone?: string;
+  mensagem: string;
+  assunto?: string;
+  criadoEm?: unknown;
+  created_at?: unknown;
+  lido?: boolean;
+  respondido?: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AdminCmsService {
   private readonly firebase = inject(FirebaseService);
@@ -340,5 +353,34 @@ export class AdminCmsService {
     const storageRef = ref(this.firebase.storage, `ministerios/${Date.now()}_${file.name}`);
     const snapshot = await uploadBytes(storageRef, file);
     return await getDownloadURL(snapshot.ref);
+  }
+
+  // ----------------------------------------------------
+  // MENSAGENS DE CONTATO
+  // ----------------------------------------------------
+  async getMensagensContato(): Promise<MensagemContatoAdmin[]> {
+    if (!this.firebase.firestore) return [];
+    try {
+      const colRef = collection(this.firebase.firestore, 'mensagens_contato');
+      const snap = await getDocs(colRef);
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as unknown as MensagemContatoAdmin);
+    } catch {
+      return [];
+    }
+  }
+
+  async updateMensagemContatoStatus(
+    id: string,
+    updates: Partial<MensagemContatoAdmin>,
+  ): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'mensagens_contato', id);
+    await updateDoc(docRef, { ...updates, updated_at: serverTimestamp() });
+  }
+
+  async deleteMensagemContato(id: string): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'mensagens_contato', id);
+    await deleteDoc(docRef);
   }
 }

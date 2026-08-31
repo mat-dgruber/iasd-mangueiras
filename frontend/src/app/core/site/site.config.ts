@@ -12,6 +12,11 @@ export const SITE_CONFIG = {
     region: 'SP',
     country: 'BR',
   },
+  contact: {
+    phone: '(15) 99786-4835',
+    phoneClean: '5515997864835',
+    email: 'contato@iasdmangueiras.org.br',
+  },
   primaryCta: {
     label: 'Como chegar',
     href: '/horarios',
@@ -20,7 +25,7 @@ export const SITE_CONFIG = {
     facebook: 'https://www.facebook.com/igrejadasmangueiras/?locale=pt_BR',
     instagram: 'https://www.instagram.com/iasdmangueiras/',
     youtube: 'https://www.youtube.com/c/IASDMangueiras',
-    whatsapp: 'https://api.whatsapp.com/send?phone=5515999999999&text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20a%20IASD%20Mangueiras.',
+    whatsapp: 'https://api.whatsapp.com/send?phone=5515997864835&text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20a%20IASD%20Mangueiras.',
   },
   playlists: {
     presente7: 'https://youtube.com/playlist?list=PLNgTlCgGyS2GLFNcIWz1_CuCYJOhWOe28',
