@@ -276,6 +276,12 @@ export class AdminCmsService {
     await deleteDoc(docRef);
   }
 
+  async togglePgAtivo(id: string, ativo: boolean): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'pequenos_grupos', id);
+    await updateDoc(docRef, { ativo, updated_at: serverTimestamp() });
+  }
+
   // ----------------------------------------------------
   // ESCALAS DOS DEPARTAMENTOS
   // ----------------------------------------------------

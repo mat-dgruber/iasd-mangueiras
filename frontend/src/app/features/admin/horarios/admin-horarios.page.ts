@@ -10,12 +10,14 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AdminCmsService } from '../../../core/services/admin-cms.service';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
 import { Horario, AvisoHorarioEspecial } from '../../../core/models/content.models';
+import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confirm-dialog.component';
+import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import defaultHorarios from '../../../../content/horarios.json';
 
 @Component({
   selector: 'app-admin-horarios-page',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ConfirmDialogComponent, SkeletonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-10">
@@ -55,27 +57,6 @@ import defaultHorarios from '../../../../content/horarios.json';
         </div>
       </header>
 
-      <!-- Feedback Local (se ativo) -->
-      @if (feedbackMsg()) {
-        <div
-          class="rounded-card border border-green-200 bg-green-50 p-3.5 text-xs font-semibold text-green-800 animate-fadeIn flex items-center gap-2"
-          role="status"
-          aria-live="polite"
-        >
-          <svg
-            class="h-4 w-4 shrink-0 text-green-700"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2.5"
-            aria-hidden="true"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-          </svg>
-          <span>{{ feedbackMsg() }}</span>
-        </div>
-      }
-
       <!-- SEÇÃO 1: Grade Regular de Cultos -->
       <section aria-labelledby="section-grade-regular">
         <div class="flex items-center justify-between gap-4 mb-4 pb-2 border-b border-advent-border">
@@ -96,9 +77,40 @@ import defaultHorarios from '../../../../content/horarios.json';
           </button>
         </div>
 
-        @if (regularHorarios().length === 0) {
-          <div class="rounded-2xl border border-dashed border-advent-border p-8 text-center text-xs text-advent-muted">
-            Nenhum culto regular cadastrado.
+        @if (isLoading()) {
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-busy="true" aria-label="Carregando cultos regulares">
+            @for (i of [1, 2, 3, 4]; track i) {
+              <div class="rounded-2xl border border-advent-border bg-white p-4 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <app-ui-skeleton width="100px" height="1.25rem" rounded="sm" />
+                  <app-ui-skeleton width="50px" height="1.25rem" rounded="full" />
+                </div>
+                <app-ui-skeleton width="140px" height="1.25rem" rounded="sm" />
+                <app-ui-skeleton width="100%" height="3rem" rounded="md" />
+                <div class="flex justify-end gap-1.5 pt-3 border-t border-slate-100">
+                  <app-ui-skeleton width="50px" height="2rem" rounded="md" />
+                  <app-ui-skeleton width="50px" height="2rem" rounded="md" />
+                  <app-ui-skeleton width="50px" height="2rem" rounded="md" />
+                </div>
+              </div>
+            }
+          </div>
+        } @else if (regularHorarios().length === 0) {
+          <div class="rounded-2xl border border-dashed border-advent-border bg-white p-10 text-center text-advent-muted">
+            <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-advent-muted mb-2">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p class="text-sm font-semibold text-advent-text">Nenhum culto regular cadastrado</p>
+            <p class="text-xs text-advent-muted mt-0.5">Cadastre os horários das reuniões e cultos semanais da igreja.</p>
+            <button
+              type="button"
+              (click)="openRegularModal()"
+              class="mt-3 inline-flex items-center gap-1 rounded-card bg-advent-blue px-3.5 py-1.5 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark cursor-pointer min-h-[36px]"
+            >
+              + Adicionar Culto Regular
+            </button>
           </div>
         } @else {
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -157,7 +169,7 @@ import defaultHorarios from '../../../../content/horarios.json';
 
                   <button
                     type="button"
-                    (click)="deleteRegularHorario(h)"
+                    (click)="openDeleteRegularDialog(h)"
                     class="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[32px]"
                     [attr.aria-label]="'Excluir culto ' + h.titulo"
                   >
@@ -190,9 +202,35 @@ import defaultHorarios from '../../../../content/horarios.json';
           </button>
         </div>
 
-        @if (avisos().length === 0) {
-          <div class="rounded-2xl border border-dashed border-advent-border p-8 text-center text-xs text-advent-muted">
-            Nenhuma alteração temporária ativa. Os cultos estão seguindo a grade normal.
+        @if (isLoading()) {
+          <div class="grid gap-3" aria-busy="true" aria-label="Carregando avisos de horários">
+            @for (i of [1, 2]; track i) {
+              <div class="rounded-xl border border-advent-border bg-white p-4 shadow-xs space-y-2">
+                <div class="flex gap-2">
+                  <app-ui-skeleton width="120px" height="1.25rem" rounded="sm" />
+                  <app-ui-skeleton width="60px" height="1.25rem" rounded="full" />
+                </div>
+                <app-ui-skeleton width="200px" height="1.25rem" rounded="sm" />
+                <app-ui-skeleton width="100%" height="2rem" rounded="md" />
+              </div>
+            }
+          </div>
+        } @else if (avisos().length === 0) {
+          <div class="rounded-2xl border border-dashed border-advent-border bg-white p-8 text-center text-advent-muted">
+            <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-advent-muted mb-2">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+              </svg>
+            </div>
+            <p class="text-sm font-semibold text-advent-text">Nenhuma alteração temporária ativa</p>
+            <p class="text-xs text-advent-muted mt-0.5">Os cultos estão seguindo normalmente a grade padrão da semana.</p>
+            <button
+              type="button"
+              (click)="openAvisoModal()"
+              class="mt-3 inline-flex items-center gap-1 rounded-card bg-advent-blue px-3.5 py-1.5 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark cursor-pointer min-h-[36px]"
+            >
+              + Novo Aviso Especial
+            </button>
           </div>
         } @else {
           <div class="grid gap-3">
@@ -277,7 +315,7 @@ import defaultHorarios from '../../../../content/horarios.json';
 
                   <button
                     type="button"
-                    (click)="deleteAviso(aviso)"
+                    (click)="openDeleteAvisoDialog(aviso)"
                     class="rounded-lg px-3 py-1.5 text-xs font-semibold text-red-600 bg-white border border-red-200 hover:bg-red-50 transition-colors cursor-pointer min-h-[36px] flex items-center"
                     [attr.aria-label]="'Remover aviso ' + aviso.titulo"
                   >
@@ -300,9 +338,9 @@ import defaultHorarios from '../../../../content/horarios.json';
         >
           <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
             <div class="flex items-center justify-between pb-4 border-b border-advent-border">
-              <h3 id="modal-regular-title" class="text-lg font-bold text-advent-text">
+              <h2 id="modal-regular-title" class="text-lg font-bold text-advent-text">
                 {{ editingRegularId() ? 'Editar Culto Regular' : 'Novo Culto Regular' }}
-              </h3>
+              </h2>
               <button
                 type="button"
                 (click)="closeRegularModal()"
@@ -318,18 +356,23 @@ import defaultHorarios from '../../../../content/horarios.json';
             <form [formGroup]="regularForm" (ngSubmit)="saveRegularHorario()" class="mt-5 space-y-4">
               <div>
                 <label for="regular-titulo" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
-                  Título do Culto *
+                  Título do Culto / Reunião *
                 </label>
                 <input
                   id="regular-titulo"
                   type="text"
                   formControlName="titulo"
-                  class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
-                  placeholder="Ex: Culto Divino / Adoração"
+                  class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                  [class.border-red-500]="regularForm.get('titulo')?.invalid && regularForm.get('titulo')?.touched"
+                  [class.border-advent-border]="!regularForm.get('titulo')?.invalid || !regularForm.get('titulo')?.touched"
+                  placeholder="Ex: Culto Jovem, Escola Sabatina"
                 />
+                @if (regularForm.get('titulo')?.invalid && regularForm.get('titulo')?.touched) {
+                  <span class="text-xs text-red-600 mt-1 block">Título do culto é obrigatório (mínimo 3 caracteres).</span>
+                }
               </div>
 
-              <div class="grid grid-cols-2 gap-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label for="regular-dia" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
                     Dia da Semana *
@@ -337,7 +380,9 @@ import defaultHorarios from '../../../../content/horarios.json';
                   <select
                     id="regular-dia"
                     formControlName="dia"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none bg-white"
+                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none bg-white"
+                    [class.border-red-500]="regularForm.get('dia')?.invalid && regularForm.get('dia')?.touched"
+                    [class.border-advent-border]="!regularForm.get('dia')?.invalid || !regularForm.get('dia')?.touched"
                   >
                     <option value="">Selecione...</option>
                     <option value="Sábado">Sábado</option>
@@ -346,6 +391,9 @@ import defaultHorarios from '../../../../content/horarios.json';
                     <option value="Sexta-feira">Sexta-feira</option>
                     <option value="Segunda a Sexta">Segunda a Sexta</option>
                   </select>
+                  @if (regularForm.get('dia')?.invalid && regularForm.get('dia')?.touched) {
+                    <span class="text-xs text-red-600 mt-1 block">Selecione o dia.</span>
+                  }
                 </div>
 
                 <div>
@@ -356,9 +404,14 @@ import defaultHorarios from '../../../../content/horarios.json';
                     id="regular-horario"
                     type="text"
                     formControlName="horario"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    [class.border-red-500]="regularForm.get('horario')?.invalid && regularForm.get('horario')?.touched"
+                    [class.border-advent-border]="!regularForm.get('horario')?.invalid || !regularForm.get('horario')?.touched"
                     placeholder="Ex: 09:00 ou 19:30"
                   />
+                  @if (regularForm.get('horario')?.invalid && regularForm.get('horario')?.touched) {
+                    <span class="text-xs text-red-600 mt-1 block">Horário é obrigatório.</span>
+                  }
                 </div>
               </div>
 
@@ -370,9 +423,14 @@ import defaultHorarios from '../../../../content/horarios.json';
                   id="regular-descricao"
                   rows="3"
                   formControlName="descricao"
-                  class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                  class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                  [class.border-red-500]="regularForm.get('descricao')?.invalid && regularForm.get('descricao')?.touched"
+                  [class.border-advent-border]="!regularForm.get('descricao')?.invalid || !regularForm.get('descricao')?.touched"
                   placeholder="Ex: Momento solene de louvor, oração e proclamação da mensagem bíblica."
                 ></textarea>
+                @if (regularForm.get('descricao')?.invalid && regularForm.get('descricao')?.touched) {
+                  <span class="text-xs text-red-600 mt-1 block">Descrição é obrigatória (mínimo 5 caracteres).</span>
+                }
               </div>
 
               <div class="flex items-center gap-2 pt-1">
@@ -391,14 +449,14 @@ import defaultHorarios from '../../../../content/horarios.json';
                 <button
                   type="button"
                   (click)="closeRegularModal()"
-                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer"
+                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[38px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   [disabled]="regularForm.invalid || isSaving()"
-                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer"
+                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[38px]"
                 >
                   {{ isSaving() ? 'Salvando...' : (editingRegularId() ? 'Salvar Alterações' : 'Cadastrar Culto') }}
                 </button>
@@ -418,9 +476,9 @@ import defaultHorarios from '../../../../content/horarios.json';
         >
           <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
             <div class="flex items-center justify-between pb-4 border-b border-advent-border">
-              <h3 id="modal-aviso-title" class="text-lg font-bold text-advent-text">
+              <h2 id="modal-aviso-title" class="text-lg font-bold text-advent-text">
                 {{ editingAvisoId() ? 'Editar Aviso de Horário Especial' : 'Novo Aviso de Horário Especial' }}
-              </h3>
+              </h2>
               <button
                 type="button"
                 (click)="closeAvisoModal()"
@@ -442,49 +500,59 @@ import defaultHorarios from '../../../../content/horarios.json';
                   id="aviso-titulo"
                   type="text"
                   formControlName="titulo"
-                  class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                  class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                  [class.border-red-500]="avisoForm.get('titulo')?.invalid && avisoForm.get('titulo')?.touched"
+                  [class.border-advent-border]="!avisoForm.get('titulo')?.invalid || !avisoForm.get('titulo')?.touched"
                   placeholder="Ex: Culto de Ano Novo em Horário Especial"
                 />
+                @if (avisoForm.get('titulo')?.invalid && avisoForm.get('titulo')?.touched) {
+                  <span class="text-xs text-red-600 mt-1 block">Título do aviso é obrigatório (mínimo 3 caracteres).</span>
+                }
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label for="aviso-data" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
-                    Data / Horário do Evento
+                    Data / Ocasional
                   </label>
                   <input
                     id="aviso-data"
                     type="text"
                     formControlName="data_evento"
                     class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
-                    placeholder="Ex: 31/12 às 20:00"
+                    placeholder="Ex: 31/12 às 20h"
                   />
                 </div>
 
                 <div>
                   <label for="aviso-expira" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
-                    Expira em (Auto-remoção)
+                    Expira em (Data)
                   </label>
                   <input
                     id="aviso-expira"
                     type="date"
                     formControlName="expira_em"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none bg-white"
                   />
                 </div>
               </div>
 
               <div>
                 <label for="aviso-mensagem" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
-                  Detalhes do Aviso *
+                  Mensagem Informativa *
                 </label>
                 <textarea
                   id="aviso-mensagem"
                   rows="3"
                   formControlName="mensagem"
-                  class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
-                  placeholder="Ex: Não haverá culto regular pela manhã. Nos reuniremos à noite..."
+                  class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                  [class.border-red-500]="avisoForm.get('mensagem')?.invalid && avisoForm.get('mensagem')?.touched"
+                  [class.border-advent-border]="!avisoForm.get('mensagem')?.invalid || !avisoForm.get('mensagem')?.touched"
+                  placeholder="Ex: Informamos que neste feriado teremos uma única celebração no período da manhã."
                 ></textarea>
+                @if (avisoForm.get('mensagem')?.invalid && avisoForm.get('mensagem')?.touched) {
+                  <span class="text-xs text-red-600 mt-1 block">Mensagem é obrigatória (mínimo 5 caracteres).</span>
+                }
               </div>
 
               <div class="flex items-center gap-2 pt-1">
@@ -495,7 +563,7 @@ import defaultHorarios from '../../../../content/horarios.json';
                   class="h-4 w-4 rounded border-advent-border text-advent-blue focus:ring-advent-blue"
                 />
                 <label for="aviso-ativo" class="text-xs font-medium text-advent-text">
-                  Aviso ativo (visível no alerta da página de horários)
+                  Aviso ativo (destaque no banner e página de horários)
                 </label>
               </div>
 
@@ -503,14 +571,14 @@ import defaultHorarios from '../../../../content/horarios.json';
                 <button
                   type="button"
                   (click)="closeAvisoModal()"
-                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer"
+                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[38px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   [disabled]="avisoForm.invalid || isSaving()"
-                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer"
+                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[38px]"
                 >
                   {{ isSaving() ? 'Salvando...' : (editingAvisoId() ? 'Salvar Alterações' : 'Publicar Aviso') }}
                 </button>
@@ -519,6 +587,19 @@ import defaultHorarios from '../../../../content/horarios.json';
           </div>
         </div>
       }
+
+      <!-- Diálogo de Confirmação de Exclusão -->
+      <app-ui-confirm-dialog
+        [isOpen]="isDeleteDialogOpen()"
+        [title]="deleteTarget()?.type === 'regular' ? 'Excluir Culto Regular' : 'Excluir Aviso de Horário'"
+        [message]="'Tem certeza que deseja excluir ' + (deleteTarget()?.item?.titulo || 'este item') + '? Esta ação não poderá ser desfeita.'"
+        [confirmText]="'Excluir'"
+        [cancelText]="'Cancelar'"
+        [variant]="'danger'"
+        [isLoading]="isDeleting()"
+        (confirmed)="confirmDelete()"
+        (cancelled)="cancelDelete()"
+      />
     </div>
   `,
 })
@@ -528,12 +609,15 @@ export class AdminHorariosPage implements OnInit {
 
   readonly regularHorarios = signal<Horario[]>([]);
   readonly avisos = signal<AvisoHorarioEspecial[]>([]);
+  readonly isLoading = signal<boolean>(true);
   readonly isRegularModalOpen = signal<boolean>(false);
   readonly isAvisoModalOpen = signal<boolean>(false);
   readonly editingRegularId = signal<string | null>(null);
   readonly editingAvisoId = signal<string | null>(null);
   readonly isSaving = signal<boolean>(false);
-  readonly feedbackMsg = signal<string | null>(null);
+  readonly isDeleteDialogOpen = signal<boolean>(false);
+  readonly deleteTarget = signal<{ type: 'regular' | 'aviso'; item: Horario | AvisoHorarioEspecial } | null>(null);
+  readonly isDeleting = signal<boolean>(false);
 
   readonly regularForm = new FormGroup({
     titulo: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -552,7 +636,12 @@ export class AdminHorariosPage implements OnInit {
   });
 
   async ngOnInit(): Promise<void> {
-    await Promise.all([this.loadRegularHorarios(), this.loadAvisos()]);
+    this.isLoading.set(true);
+    try {
+      await Promise.all([this.loadRegularHorarios(), this.loadAvisos()]);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   async loadRegularHorarios(): Promise<void> {
@@ -661,21 +750,14 @@ export class AdminHorariosPage implements OnInit {
     }
   }
 
-  async deleteRegularHorario(horario: Horario): Promise<void> {
-    if (!confirm(`Remover o culto regular "${horario.titulo}"?`)) return;
-    try {
-      if (horario.id) {
-        await this.cmsService.deleteHorarioRegular(horario.id);
-      }
-      this.regularHorarios.update((prev) =>
-        prev.filter((h) => h !== horario && h.id !== horario.id),
-      );
-      this.toastService.success('Culto regular removido com sucesso.');
-    } catch {
-      this.regularHorarios.update((prev) =>
-        prev.filter((h) => h !== horario && h.id !== horario.id),
-      );
-    }
+  openDeleteRegularDialog(horario: Horario): void {
+    this.deleteTarget.set({ type: 'regular', item: horario });
+    this.isDeleteDialogOpen.set(true);
+  }
+
+  // ponytail: backward compatible alias
+  deleteRegularHorario(horario: Horario): void {
+    this.openDeleteRegularDialog(horario);
   }
 
   // --- Avisos de Horários Especiais ---
@@ -773,16 +855,53 @@ export class AdminHorariosPage implements OnInit {
     }
   }
 
-  async deleteAviso(aviso: AvisoHorarioEspecial): Promise<void> {
-    if (!confirm(`Remover o aviso "${aviso.titulo}"?`)) return;
+  openDeleteAvisoDialog(aviso: AvisoHorarioEspecial): void {
+    this.deleteTarget.set({ type: 'aviso', item: aviso });
+    this.isDeleteDialogOpen.set(true);
+  }
+
+  // ponytail: backward compatible alias
+  deleteAviso(aviso: AvisoHorarioEspecial): void {
+    this.openDeleteAvisoDialog(aviso);
+  }
+
+  cancelDelete(): void {
+    this.isDeleteDialogOpen.set(false);
+    this.deleteTarget.set(null);
+  }
+
+  async confirmDelete(): Promise<void> {
+    const target = this.deleteTarget();
+    if (!target) return;
+
+    this.isDeleting.set(true);
     try {
-      if (aviso.id) {
-        await this.cmsService.deleteAvisoHorario(aviso.id);
+      if (target.type === 'regular') {
+        const item = target.item as Horario;
+        if (item.id) {
+          await this.cmsService.deleteHorarioRegular(item.id);
+        }
+        this.regularHorarios.update((prev) => prev.filter((h) => h !== item && h.id !== item.id));
+        this.toastService.success('Culto regular excluído com sucesso.');
+      } else {
+        const item = target.item as AvisoHorarioEspecial;
+        if (item.id) {
+          await this.cmsService.deleteAvisoHorario(item.id);
+        }
+        this.avisos.update((prev) => prev.filter((a) => a !== item && a.id !== item.id));
+        this.toastService.success('Aviso especial excluído com sucesso.');
       }
-      this.avisos.update((prev) => prev.filter((a) => a !== aviso && a.id !== aviso.id));
-      this.toastService.success('Aviso removido com sucesso.');
     } catch {
-      this.avisos.update((prev) => prev.filter((a) => a !== aviso));
+      if (target.type === 'regular') {
+        this.regularHorarios.update((prev) => prev.filter((h) => h !== target.item && h.id !== target.item.id));
+        this.toastService.success('Culto regular removido.');
+      } else {
+        this.avisos.update((prev) => prev.filter((a) => a !== target.item && a.id !== target.item.id));
+        this.toastService.success('Aviso especial removido.');
+      }
+    } finally {
+      this.isDeleting.set(false);
+      this.cancelDelete();
     }
   }
 
@@ -796,4 +915,3 @@ export class AdminHorariosPage implements OnInit {
     }
   }
 }
-

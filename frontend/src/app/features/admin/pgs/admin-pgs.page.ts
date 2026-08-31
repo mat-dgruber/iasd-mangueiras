@@ -2,12 +2,15 @@ import { ChangeDetectionStrategy, Component, HostListener, OnInit, inject, signa
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminCmsService } from '../../../core/services/admin-cms.service';
 import { PequenoGrupo } from '../../../core/models/content.models';
+import { ToastService } from '../../../shared/ui/toast/toast.service';
+import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confirm-dialog.component';
+import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.component';
 import defaultPgs from '../../../../content/pgs.json';
 
 @Component({
   selector: 'app-admin-pgs-page',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ConfirmDialogComponent, SkeletonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div>
@@ -24,81 +27,135 @@ import defaultPgs from '../../../../content/pgs.json';
         <button
           type="button"
           (click)="openModal()"
-          class="rounded-card bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner cursor-pointer min-h-[40px] flex items-center justify-center"
+          class="rounded-card bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner cursor-pointer min-h-[40px] flex items-center justify-center gap-1.5"
         >
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
           + Novo Pequeno Grupo
         </button>
       </header>
 
-      @if (feedbackMsg()) {
-        <div class="mt-4 rounded-card border border-green-200 bg-green-50 p-3.5 text-xs font-semibold text-green-800 animate-fadeIn flex items-center gap-2" role="status" aria-live="polite">
-          <svg class="h-4 w-4 shrink-0 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-          </svg>
-          <span>{{ feedbackMsg() }}</span>
-        </div>
-      }
-
+      <!-- Lista de PGs -->
       <div class="mt-8 space-y-4">
         @if (isLoading()) {
-          <div class="p-8 text-center text-sm text-advent-muted">Carregando Pequenos Grupos…</div>
+          <div class="grid gap-4 sm:grid-cols-2" aria-busy="true" aria-label="Carregando pequenos grupos">
+            @for (i of [1, 2, 3, 4]; track i) {
+              <div class="rounded-2xl border border-advent-border bg-white p-5 shadow-xs space-y-3">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div class="flex items-center gap-2">
+                    <app-ui-skeleton width="140px" height="1.25rem" rounded="sm" />
+                    <app-ui-skeleton width="70px" height="1.25rem" rounded="full" />
+                  </div>
+                  <app-ui-skeleton width="60px" height="1rem" rounded="sm" />
+                </div>
+                <app-ui-skeleton width="180px" height="1rem" rounded="sm" />
+                <app-ui-skeleton width="100%" height="2.5rem" rounded="md" />
+                <div class="flex items-center justify-between pt-2">
+                  <app-ui-skeleton width="120px" height="1.5rem" rounded="sm" />
+                  <div class="flex gap-2">
+                    <app-ui-skeleton width="70px" height="2rem" rounded="md" />
+                    <app-ui-skeleton width="70px" height="2rem" rounded="md" />
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
         } @else if (pgs().length === 0) {
-          <div class="rounded-2xl border border-dashed border-advent-border p-12 text-center text-advent-muted">
-            Nenhum Pequeno Grupo cadastrado. Clique em "+ Novo Pequeno Grupo" para adicionar.
+          <div
+            class="rounded-2xl border border-dashed border-advent-border bg-white p-12 text-center text-advent-muted"
+          >
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-advent-muted mb-3">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+              </svg>
+            </div>
+            <p class="text-sm font-semibold text-advent-text">Nenhum Pequeno Grupo cadastrado</p>
+            <p class="text-xs text-advent-muted mt-1">
+              Cadastre os grupos da igreja nos bairros para que os membros e visitantes encontrem um PG próximo.
+            </p>
+            <button
+              type="button"
+              (click)="openModal()"
+              class="mt-4 inline-flex items-center gap-1.5 rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-advent-blue-dark transition-all cursor-pointer min-h-[38px]"
+            >
+              + Cadastrar Primeiro PG
+            </button>
           </div>
         } @else {
           <div class="grid gap-4 sm:grid-cols-2">
             @for (pg of pgs(); track (pg.id || pg.nome)) {
-              <article class="flex flex-col justify-between rounded-2xl border border-advent-border bg-white p-5 shadow-xs transition-colors hover:border-advent-blue/40">
+              <article
+                class="flex flex-col justify-between rounded-2xl border bg-white p-5 shadow-xs transition-colors"
+                [class.border-advent-border]="pg.ativo !== false"
+                [class.border-slate-200]="pg.ativo === false"
+                [class.opacity-75]="pg.ativo === false"
+              >
                 <div>
                   <div class="flex items-center justify-between gap-2">
-                    <span class="rounded bg-advent-blue/10 px-2 py-0.5 text-[10px] font-bold uppercase text-advent-blue">
-                      {{ pg.perfil }}
-                    </span>
-                    <span class="inline-flex items-center gap-1 text-xs text-advent-muted font-semibold">
-                      <svg class="h-3.5 w-3.5 shrink-0 text-advent-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                      </svg>
-                      {{ pg.bairro }}
-                    </span>
+                    <div class="flex items-center gap-2">
+                      <span class="rounded bg-indigo-50 px-2 py-0.5 text-xs font-bold text-indigo-700">
+                        {{ pg.perfil || 'Geral' }}
+                      </span>
+                      <span class="text-xs font-semibold text-advent-muted">
+                        📍 {{ pg.bairro }}
+                      </span>
+                    </div>
+
+                    @if (pg.ativo !== false) {
+                      <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-green-700">
+                        <span class="h-2 w-2 rounded-full bg-green-500"></span> Ativo
+                      </span>
+                    } @else {
+                      <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400">
+                        <span class="h-2 w-2 rounded-full bg-slate-300"></span> Pausado
+                      </span>
+                    }
                   </div>
 
-                  <h2 class="mt-2 text-lg font-bold text-advent-text">{{ pg.nome }}</h2>
-                  <p class="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-advent-blue">
-                    <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    {{ pg.dia }} às {{ pg.horario }}
-                  </p>
+                  <h2 class="mt-3 text-base font-bold text-advent-text">{{ pg.nome }}</h2>
 
-                  <p class="mt-2 text-xs text-advent-muted leading-relaxed">{{ pg.descricao }}</p>
-
-                  <div class="mt-3 pt-2.5 border-t border-slate-100 text-xs text-advent-text">
-                    <p><strong>Líderes:</strong> {{ pg.lider }}</p>
-                    <p class="text-green-700 font-semibold mt-0.5 inline-flex items-center gap-1">
-                      <svg class="h-3.5 w-3.5 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-                      </svg>
-                      {{ pg.telefone }}
-                    </p>
+                  <div class="mt-2 space-y-1 text-xs text-advent-muted">
+                    <p><strong>Líder(es):</strong> {{ pg.lider }}</p>
+                    <p><strong>Encontros:</strong> {{ pg.dia }} às {{ pg.horario }}</p>
+                    @if (pg.telefone) {
+                      <p><strong>Contato:</strong> {{ pg.telefone }}</p>
+                    }
                   </div>
+
+                  <p class="mt-3 text-xs text-advent-muted leading-relaxed line-clamp-2">{{ pg.descricao }}</p>
                 </div>
 
                 <div class="mt-5 flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
                   <button
                     type="button"
                     (click)="editPg(pg)"
-                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-advent-blue bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer min-h-[36px] flex items-center"
-                    aria-label="Editar PG {{ pg.nome }}"
+                    class="rounded-lg px-3 py-1.5 text-xs font-semibold text-advent-blue bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer min-h-[34px]"
+                    [attr.aria-label]="'Editar ' + pg.nome"
                   >
                     Editar
                   </button>
+
                   <button
                     type="button"
-                    (click)="deletePg(pg)"
-                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[36px] flex items-center"
-                    aria-label="Excluir PG {{ pg.nome }}"
+                    (click)="toggleStatus(pg)"
+                    class="rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer min-h-[34px]"
+                    [class.bg-green-50]="pg.ativo !== false"
+                    [class.text-green-800]="pg.ativo !== false"
+                    [class.hover:bg-green-100]="pg.ativo !== false"
+                    [class.bg-slate-100]="pg.ativo === false"
+                    [class.text-slate-600]="pg.ativo === false"
+                    [class.hover:bg-slate-200]="pg.ativo === false"
+                    [attr.aria-label]="(pg.ativo !== false ? 'Pausar ' : 'Ativar ') + pg.nome"
+                  >
+                    {{ pg.ativo !== false ? 'Pausar' : 'Ativar' }}
+                  </button>
+
+                  <button
+                    type="button"
+                    (click)="openDeleteDialog(pg)"
+                    class="rounded-lg px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[34px]"
+                    [attr.aria-label]="'Excluir ' + pg.nome"
                   >
                     Excluir
                   </button>
@@ -109,19 +166,19 @@ import defaultPgs from '../../../../content/pgs.json';
         }
       </div>
 
-      <!-- Modal de Criação / Edição -->
+      <!-- MODAL DE CADASTRO / EDIÇÃO DE PG -->
       @if (isModalOpen()) {
         <div
           class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
           role="dialog"
           aria-modal="true"
-          aria-labelledby="modal-pg-title"
+          aria-labelledby="modal-title"
         >
-          <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+          <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-4 border-b border-advent-border">
-              <h3 id="modal-pg-title" class="text-lg font-bold text-advent-text">
+              <h2 id="modal-title" class="text-lg font-bold text-advent-text">
                 {{ editingId() ? 'Editar Pequeno Grupo' : 'Novo Pequeno Grupo' }}
-              </h3>
+              </h2>
               <button
                 type="button"
                 (click)="closeModal()"
@@ -136,60 +193,92 @@ import defaultPgs from '../../../../content/pgs.json';
 
             <form [formGroup]="pgForm" (ngSubmit)="savePg()" class="mt-5 space-y-4">
               <div>
-                <label for="pg-nome" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Nome do PG *</label>
+                <label for="pg-nome" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                  Nome do Pequeno Grupo *
+                </label>
                 <input
                   id="pg-nome"
                   type="text"
                   formControlName="nome"
-                  class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
-                  placeholder="Ex: PG Conexão Jovem"
+                  class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                  [class.border-red-500]="pgForm.get('nome')?.invalid && pgForm.get('nome')?.touched"
+                  [class.border-advent-border]="!pgForm.get('nome')?.invalid || !pgForm.get('nome')?.touched"
+                  placeholder="Ex: PG Conexão Jovem, PG Esperança"
                 />
+                @if (pgForm.get('nome')?.invalid && pgForm.get('nome')?.touched) {
+                  <span class="text-xs text-red-600 mt-1 block">Nome do grupo é obrigatório (mínimo 3 caracteres).</span>
+                }
               </div>
 
-              <div class="grid gap-3 sm:grid-cols-2">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label for="pg-lider" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Líder(es) *</label>
+                  <label for="pg-lider" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                    Líder(es) Responsável(is) *
+                  </label>
                   <input
                     id="pg-lider"
                     type="text"
                     formControlName="lider"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    [class.border-red-500]="pgForm.get('lider')?.invalid && pgForm.get('lider')?.touched"
+                    [class.border-advent-border]="!pgForm.get('lider')?.invalid || !pgForm.get('lider')?.touched"
                     placeholder="Ex: Lucas e Beatriz"
                   />
+                  @if (pgForm.get('lider')?.invalid && pgForm.get('lider')?.touched) {
+                    <span class="text-xs text-red-600 mt-1 block">Líder é obrigatório (mínimo 3 caracteres).</span>
+                  }
                 </div>
 
                 <div>
-                  <label for="pg-telefone" class="block text-xs font-semibold uppercase text-advent-muted mb-1">WhatsApp / Telefone *</label>
+                  <label for="pg-telefone" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                    Telefone / WhatsApp *
+                  </label>
                   <input
                     id="pg-telefone"
-                    type="tel"
+                    type="text"
                     formControlName="telefone"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
-                    placeholder="(15) 99999-9999"
+                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    [class.border-red-500]="pgForm.get('telefone')?.invalid && pgForm.get('telefone')?.touched"
+                    [class.border-advent-border]="!pgForm.get('telefone')?.invalid || !pgForm.get('telefone')?.touched"
+                    placeholder="Ex: (15) 99888-7766"
                   />
+                  @if (pgForm.get('telefone')?.invalid && pgForm.get('telefone')?.touched) {
+                    <span class="text-xs text-red-600 mt-1 block">Telefone é obrigatório.</span>
+                  }
                 </div>
               </div>
 
-              <div class="grid gap-3 sm:grid-cols-2">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label for="pg-bairro" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Bairro em Tatuí *</label>
+                  <label for="pg-bairro" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                    Bairro / Região *
+                  </label>
                   <input
                     id="pg-bairro"
                     type="text"
                     formControlName="bairro"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
-                    placeholder="Ex: Centro / Jd. Wanderley"
+                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    [class.border-red-500]="pgForm.get('bairro')?.invalid && pgForm.get('bairro')?.touched"
+                    [class.border-advent-border]="!pgForm.get('bairro')?.invalid || !pgForm.get('bairro')?.touched"
+                    placeholder="Ex: Centro, Vila Dr. Laurindo"
                   />
+                  @if (pgForm.get('bairro')?.invalid && pgForm.get('bairro')?.touched) {
+                    <span class="text-xs text-red-600 mt-1 block">Bairro é obrigatório.</span>
+                  }
                 </div>
 
                 <div>
-                  <label for="pg-perfil" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Perfil / Público *</label>
+                  <label for="pg-perfil" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                    Perfil do Grupo *
+                  </label>
                   <select
                     id="pg-perfil"
                     formControlName="perfil"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none bg-white"
+                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none bg-white"
+                    [class.border-red-500]="pgForm.get('perfil')?.invalid && pgForm.get('perfil')?.touched"
+                    [class.border-advent-border]="!pgForm.get('perfil')?.invalid || !pgForm.get('perfil')?.touched"
                   >
-                    <option value="Geral">Geral (Aberto a todos)</option>
+                    <option value="Geral">Geral (Famílias)</option>
                     <option value="Jovens (JA)">Jovens (JA)</option>
                     <option value="Famílias">Famílias</option>
                     <option value="Casais">Casais</option>
@@ -199,86 +288,136 @@ import defaultPgs from '../../../../content/pgs.json';
                 </div>
               </div>
 
-              <div class="grid gap-3 sm:grid-cols-2">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label for="pg-dia" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Dia da Semana *</label>
-                  <input
+                  <label for="pg-dia" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                    Dia da Semana *
+                  </label>
+                  <select
                     id="pg-dia"
-                    type="text"
                     formControlName="dia"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
-                    placeholder="Ex: Terça-feira"
-                  />
+                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none bg-white"
+                    [class.border-red-500]="pgForm.get('dia')?.invalid && pgForm.get('dia')?.touched"
+                    [class.border-advent-border]="!pgForm.get('dia')?.invalid || !pgForm.get('dia')?.touched"
+                  >
+                    <option value="Segunda-feira">Segunda-feira</option>
+                    <option value="Terça-feira">Terça-feira</option>
+                    <option value="Quarta-feira">Quarta-feira</option>
+                    <option value="Quinta-feira">Quinta-feira</option>
+                    <option value="Sexta-feira">Sexta-feira</option>
+                    <option value="Sábado">Sábado</option>
+                    <option value="Domingo">Domingo</option>
+                  </select>
                 </div>
 
                 <div>
-                  <label for="pg-horario" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Horário *</label>
+                  <label for="pg-horario" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                    Horário de Encontro *
+                  </label>
                   <input
                     id="pg-horario"
                     type="text"
                     formControlName="horario"
-                    class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
-                    placeholder="Ex: 19:30"
+                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    [class.border-red-500]="pgForm.get('horario')?.invalid && pgForm.get('horario')?.touched"
+                    [class.border-advent-border]="!pgForm.get('horario')?.invalid || !pgForm.get('horario')?.touched"
+                    placeholder="Ex: 19:30 ou 20:00"
                   />
+                  @if (pgForm.get('horario')?.invalid && pgForm.get('horario')?.touched) {
+                    <span class="text-xs text-red-600 mt-1 block">Horário é obrigatório.</span>
+                  }
                 </div>
               </div>
 
               <div>
-                <label for="pg-descricao" class="block text-xs font-semibold uppercase text-advent-muted mb-1">Descrição do PG *</label>
+                <label for="pg-descricao" class="block text-xs font-semibold uppercase text-advent-muted mb-1">
+                  Descrição & Dinâmica do Grupo *
+                </label>
                 <textarea
                   id="pg-descricao"
                   rows="3"
                   formControlName="descricao"
-                  class="w-full rounded-card border border-advent-border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
-                  placeholder="Conte um pouco sobre a dinâmica deste Pequeno Grupo..."
+                  class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                  [class.border-red-500]="pgForm.get('descricao')?.invalid && pgForm.get('descricao')?.touched"
+                  [class.border-advent-border]="!pgForm.get('descricao')?.invalid || !pgForm.get('descricao')?.touched"
+                  placeholder="Ex: Encontro focado em comunhão, oração intercessória e estudo bíblico prático para jovens."
                 ></textarea>
+                @if (pgForm.get('descricao')?.invalid && pgForm.get('descricao')?.touched) {
+                  <span class="text-xs text-red-600 mt-1 block">Descrição é obrigatória (mínimo 10 caracteres).</span>
+                }
+              </div>
+
+              <div class="flex items-center gap-2 pt-1">
+                <input
+                  id="pg-ativo"
+                  type="checkbox"
+                  formControlName="ativo"
+                  class="h-4 w-4 rounded border-advent-border text-advent-blue focus:ring-advent-blue"
+                />
+                <label for="pg-ativo" class="text-xs font-medium text-advent-text">
+                  Pequeno Grupo ativo (visível na página pública de Pequenos Grupos)
+                </label>
               </div>
 
               <div class="mt-6 flex justify-end gap-2 pt-3 border-t border-advent-border">
                 <button
                   type="button"
                   (click)="closeModal()"
-                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer"
+                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[38px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   [disabled]="pgForm.invalid || isSaving()"
-                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer"
+                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[38px]"
                 >
-                  {{ isSaving() ? 'Salvando...' : 'Salvar PG' }}
+                  {{ isSaving() ? 'Salvando...' : (editingId() ? 'Salvar Alterações' : 'Cadastrar PG') }}
                 </button>
               </div>
             </form>
           </div>
         </div>
       }
+
+      <!-- Diálogo de Confirmação de Exclusão -->
+      <app-ui-confirm-dialog
+        [isOpen]="isDeleteDialogOpen()"
+        [title]="'Excluir Pequeno Grupo'"
+        [message]="'Tem certeza que deseja excluir o ' + (pgToDelete()?.nome || 'Pequeno Grupo') + '? Esta ação não poderá ser desfeita.'"
+        [confirmText]="'Excluir'"
+        [cancelText]="'Cancelar'"
+        [variant]="'danger'"
+        [isLoading]="isDeleting()"
+        (confirmed)="confirmDelete()"
+        (cancelled)="cancelDelete()"
+      />
     </div>
   `,
 })
 export class AdminPgsPage implements OnInit {
   private readonly cmsService = inject(AdminCmsService);
+  private readonly toastService = inject(ToastService);
 
   readonly pgs = signal<PequenoGrupo[]>([]);
-  readonly isLoading = signal<boolean>(true);
-  readonly isSaving = signal<boolean>(false);
   readonly isModalOpen = signal<boolean>(false);
   readonly editingId = signal<string | null>(null);
-  readonly feedbackMsg = signal<string | null>(null);
+  readonly isSaving = signal<boolean>(false);
+  readonly isLoading = signal<boolean>(true);
+  readonly isDeleteDialogOpen = signal<boolean>(false);
+  readonly pgToDelete = signal<PequenoGrupo | null>(null);
+  readonly isDeleting = signal<boolean>(false);
 
   readonly pgForm = new FormGroup({
     nome: new FormControl('', [Validators.required, Validators.minLength(3)]),
     lider: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    telefone: new FormControl('', [Validators.required, Validators.minLength(10)]),
+    telefone: new FormControl('', [Validators.required]),
     bairro: new FormControl('', [Validators.required]),
     dia: new FormControl('Terça-feira', [Validators.required]),
     horario: new FormControl('19:30', [Validators.required]),
-    perfil: new FormControl<'Geral' | 'Jovens (JA)' | 'Famílias' | 'Casais' | 'Universitários' | 'Melhor Idade'>(
-      'Geral',
-      [Validators.required],
-    ),
-    descricao: new FormControl('', [Validators.required, Validators.minLength(5)]),
+    perfil: new FormControl<PequenoGrupo['perfil']>('Geral', [Validators.required]),
+    descricao: new FormControl('', [Validators.required, Validators.minLength(10)]),
+    ativo: new FormControl(true),
   });
 
   async ngOnInit(): Promise<void> {
@@ -287,23 +426,34 @@ export class AdminPgsPage implements OnInit {
 
   async loadPgs(): Promise<void> {
     this.isLoading.set(true);
-    const firestorePgs = await this.cmsService.getPgs();
-    if (firestorePgs.length > 0) {
-      this.pgs.set(firestorePgs);
-    } else {
-      this.pgs.set(defaultPgs as PequenoGrupo[]);
+    try {
+      const data = await this.cmsService.getPgs();
+      if (data && data.length > 0) {
+        this.pgs.set(data);
+      } else {
+        this.pgs.set(defaultPgs as unknown as PequenoGrupo[]);
+      }
+    } catch {
+      this.pgs.set(defaultPgs as unknown as PequenoGrupo[]);
+    } finally {
+      this.isLoading.set(false);
     }
-    this.isLoading.set(false);
   }
 
   openModal(): void {
     this.editingId.set(null);
-    this.pgForm.reset({ dia: 'Terça-feira', horario: '19:30', perfil: 'Geral' });
+    this.pgForm.reset({
+      nome: '',
+      lider: '',
+      telefone: '',
+      bairro: '',
+      dia: 'Terça-feira',
+      horario: '19:30',
+      perfil: 'Geral',
+      descricao: '',
+      ativo: true,
+    });
     this.isModalOpen.set(true);
-  }
-
-  closeModal(): void {
-    this.isModalOpen.set(false);
   }
 
   editPg(pg: PequenoGrupo): void {
@@ -311,20 +461,29 @@ export class AdminPgsPage implements OnInit {
     this.pgForm.patchValue({
       nome: pg.nome,
       lider: pg.lider,
-      telefone: pg.telefone,
+      telefone: pg.telefone || '',
       bairro: pg.bairro,
       dia: pg.dia,
       horario: pg.horario,
-      perfil: pg.perfil,
+      perfil: pg.perfil || 'Geral',
       descricao: pg.descricao,
+      ativo: pg.ativo !== false,
     });
     this.isModalOpen.set(true);
+  }
+
+  closeModal(): void {
+    this.isModalOpen.set(false);
+    this.editingId.set(null);
   }
 
   async savePg(): Promise<void> {
     if (this.pgForm.invalid) return;
     this.isSaving.set(true);
+
     const formVal = this.pgForm.value;
+    const editingId = this.editingId();
+
     const pgData: Partial<PequenoGrupo> = {
       nome: formVal.nome!,
       lider: formVal.lider!,
@@ -332,38 +491,98 @@ export class AdminPgsPage implements OnInit {
       bairro: formVal.bairro!,
       dia: formVal.dia!,
       horario: formVal.horario!,
-      perfil: formVal.perfil!,
+      perfil: formVal.perfil as PequenoGrupo['perfil'],
       descricao: formVal.descricao!,
-      ativo: true,
+      ativo: formVal.ativo ?? true,
     };
 
     try {
-      await this.cmsService.savePg(pgData, this.editingId() || undefined);
-      this.feedbackMsg.set('Pequeno Grupo salvo com sucesso!');
-      setTimeout(() => this.feedbackMsg.set(null), 4000);
+      if (editingId) {
+        await this.cmsService.savePg(pgData, editingId);
+        this.pgs.update((prev) =>
+          prev.map((p) => (p.id === editingId ? { ...p, ...pgData, id: editingId } : p)),
+        );
+        this.toastService.success(`Pequeno Grupo "${pgData.nome}" atualizado com sucesso!`);
+      } else {
+        const newId = await this.cmsService.savePg(pgData);
+        this.pgs.update((prev) => [...prev, { ...pgData, id: newId } as PequenoGrupo]);
+        this.toastService.success(`Pequeno Grupo "${pgData.nome}" cadastrado com sucesso!`);
+      }
       this.closeModal();
-      await this.loadPgs();
     } catch {
-      this.pgs.update((prev) => [pgData as PequenoGrupo, ...prev]);
-      this.feedbackMsg.set('PG adicionado na visualização local!');
-      setTimeout(() => this.feedbackMsg.set(null), 4000);
+      // Fallback local se Firestore não estiver pronto
+      if (editingId) {
+        this.pgs.update((prev) =>
+          prev.map((p) => (p.id === editingId ? { ...p, ...pgData, id: editingId } : p)),
+        );
+      } else {
+        this.pgs.update((prev) => [...prev, pgData as PequenoGrupo]);
+      }
+      this.toastService.success(`Pequeno Grupo "${pgData.nome}" salvo localmente.`);
       this.closeModal();
     } finally {
       this.isSaving.set(false);
     }
   }
 
-  async deletePg(pg: PequenoGrupo): Promise<void> {
-    if (!confirm(`Deseja excluir o PG "${pg.nome}"?`)) return;
+  async toggleStatus(pg: PequenoGrupo): Promise<void> {
+    const newStatus = !(pg.ativo !== false);
+    try {
+      if (pg.id) {
+        await this.cmsService.savePg({ ativo: newStatus }, pg.id);
+      }
+      this.pgs.update((prev) =>
+        prev.map((p) => (p === pg || p.id === pg.id ? { ...p, ativo: newStatus } : p)),
+      );
+      this.toastService.success(
+        newStatus ? `PG "${pg.nome}" ativado com sucesso.` : `PG "${pg.nome}" pausado.`,
+      );
+    } catch {
+      this.pgs.update((prev) =>
+        prev.map((p) => (p === pg || p.id === pg.id ? { ...p, ativo: newStatus } : p)),
+      );
+    }
+  }
+
+  openDeleteDialog(pg: PequenoGrupo): void {
+    this.pgToDelete.set(pg);
+    this.isDeleteDialogOpen.set(true);
+  }
+
+  cancelDelete(): void {
+    this.isDeleteDialogOpen.set(false);
+    this.pgToDelete.set(null);
+  }
+
+  // ponytail: backward compatible alias
+  deletePg(pg: PequenoGrupo): void {
+    this.openDeleteDialog(pg);
+  }
+
+  async confirmDelete(): Promise<void> {
+    const pg = this.pgToDelete();
+    if (!pg) return;
+
+    this.isDeleting.set(true);
     try {
       if (pg.id) {
         await this.cmsService.deletePg(pg.id);
       }
       this.pgs.update((prev) => prev.filter((p) => p !== pg && p.id !== pg.id));
-      this.feedbackMsg.set('Pequeno Grupo removido.');
-      setTimeout(() => this.feedbackMsg.set(null), 4000);
+      this.toastService.success(`Pequeno Grupo "${pg.nome}" excluído com sucesso.`);
     } catch {
-      this.pgs.update((prev) => prev.filter((p) => p !== pg));
+      this.pgs.update((prev) => prev.filter((p) => p !== pg && p.id !== pg.id));
+      this.toastService.success(`Pequeno Grupo "${pg.nome}" removido.`);
+    } finally {
+      this.isDeleting.set(false);
+      this.cancelDelete();
+    }
+  }
+
+  @HostListener('window:keydown.escape')
+  onEscape(): void {
+    if (this.isModalOpen()) {
+      this.closeModal();
     }
   }
 }
