@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://southamerica-east1-iasd-mangueiras-web.cloudfunctions.net/api/api',
+  apiUrl: 'https://southamerica-east1-iasd-mangueiras-web.cloudfunctions.net/api',
   firebase: {
     projectId: 'iasd-mangueiras-web',
     appId: '1:1001967121181:web:68a4241cd74a42384ce7f4',

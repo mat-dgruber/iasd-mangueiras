@@ -27,6 +27,13 @@
             "styles": [
               "src/styles.css"
             ],
+            "allowedCommonJsDependencies": [
+              "seedrandom",
+              "@grpc/grpc-js",
+              "@grpc/proto-loader",
+              "whatwg-url",
+              "long"
+            ],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {

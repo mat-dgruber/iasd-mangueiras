@@ -1,0 +1,24 @@
+{
+  "name": "IASD Mangueiras — Igreja Adventista em Tatuí",
+  "short_name": "IASD Mangueiras",
+  "description": "Site oficial da Igreja Adventista do Sétimo Dia das Mangueiras em Tatuí-SP.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e40af",
+  "orientation": "portrait-primary",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
