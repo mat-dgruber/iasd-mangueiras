@@ -15,11 +15,11 @@ const checks = [
   },
   {
     file: 'dist/frontend/browser/eventos/index.html',
-    expectedTexts: ['Eventos e Comunicados', 'Próximos Eventos', 'Semana de Oração da Família', 'Comunicados e Avisos Gerais'],
+    expectedTexts: ['Eventos e Comunicados', 'Próximos Eventos', 'Culto Jovem Especial de Louvor', 'Comunicados e Avisos Gerais'],
   },
   {
     file: 'dist/frontend/browser/ministerios/index.html',
-    expectedTexts: ['Ministérios da Igreja', 'Recepção e Acolhimento', 'Ministério da Criança', 'Desbravadores e Aventureiros'],
+    expectedTexts: ['Ministérios da Igreja', 'Serviço e Comunhão', 'Comunicação &amp; Acolhimento', 'Novas Gerações &amp; Família'],
   },
   {
     file: 'dist/frontend/browser/sou-novo/index.html',
@@ -28,6 +28,10 @@ const checks = [
   {
     file: 'dist/frontend/browser/contato/index.html',
     expectedTexts: ['Contato e Pedido de Oração', 'Fale Conosco', 'Pedido de Oração', 'IASD Mangueiras'],
+  },
+  {
+    file: 'dist/frontend/browser/escalas/index.html',
+    expectedTexts: ['Escalas &amp; Voluntários', 'Escalas Ministeriais', 'IASD Mangueiras'],
   },
 ];
 
