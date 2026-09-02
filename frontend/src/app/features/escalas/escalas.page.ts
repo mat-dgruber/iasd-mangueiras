@@ -47,7 +47,8 @@ export class EscalasPage implements OnInit {
   readonly isLoading = signal<boolean>(false);
 
   private readonly filteredEscalas = computed<EscalaItem[]>(() => {
-    const raw = this.contentService.escalas();
+    // ponytail: safe fallback until features/escalas is removed in Task 5
+    const raw = (this.contentService as unknown as { escalas?: () => EscalaItem[] }).escalas?.() ?? [];
     return filterEscalas(raw, this.searchTerm(), this.selectedDepartment());
   });
 

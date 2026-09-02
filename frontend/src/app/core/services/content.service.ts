@@ -6,11 +6,9 @@ import defaultEventos from '../../../content/eventos.json';
 import defaultComunicados from '../../../content/comunicados.json';
 import defaultMinisterios from '../../../content/ministerios.json';
 import defaultPgs from '../../../content/pgs.json';
-import defaultEscalas from '../../../content/escalas.json';
 import {
   AvisoHorarioEspecial,
   Comunicado,
-  EscalaItem,
   Evento,
   Horario,
   Ministerio,
@@ -33,7 +31,6 @@ export class ContentService {
     defaultMinisterios as readonly Ministerio[],
   );
   private readonly _pgs = signal<readonly PequenoGrupo[]>(defaultPgs as readonly PequenoGrupo[]);
-  private readonly _escalas = signal<readonly EscalaItem[]>(defaultEscalas as readonly EscalaItem[]);
 
   constructor() {
     if (isPlatformBrowser(this.platformId) && this.firebase.firestore) {
@@ -123,21 +120,6 @@ export class ContentService {
           () => {},
         );
 
-        // Listener de Escalas dos Departamentos em Tempo Real
-        const escalasCol = collection(this.firebase.firestore, 'escalas');
-        onSnapshot(
-          escalasCol,
-          (snap) => {
-            if (!snap.empty) {
-              const list = snap.docs.map(
-                (doc) => ({ id: doc.id, ...doc.data() }) as unknown as EscalaItem,
-              );
-              this._escalas.set(list);
-            }
-          },
-          () => {},
-        );
-
         // Listener de Ministérios em Tempo Real
         const ministeriosCol = collection(this.firebase.firestore, 'ministerios');
         onSnapshot(
@@ -180,9 +162,5 @@ export class ContentService {
 
   pgs(): readonly PequenoGrupo[] {
     return this._pgs();
-  }
-
-  escalas(): readonly EscalaItem[] {
-    return this._escalas();
   }
 }
