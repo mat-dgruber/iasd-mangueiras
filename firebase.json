@@ -36,7 +36,6 @@
       { "source": "/eventos", "destination": "/index.html" },
       { "source": "/ministerios", "destination": "/index.html" },
       { "source": "/estudos", "destination": "/index.html" },
-      { "source": "/escalas", "destination": "/index.html" },
       { "source": "/sou-novo", "destination": "/index.html" },
       { "source": "/contato", "destination": "/index.html" },
       { "source": "/admin/**", "destination": "/index.html" },

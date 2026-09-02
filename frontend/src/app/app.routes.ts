@@ -28,11 +28,6 @@ export const routes: Routes = [
     title: 'Ministérios — IASD Mangueiras',
   },
   {
-    path: 'escalas',
-    loadComponent: () => import('./features/escalas/escalas.page').then((m) => m.EscalasPage),
-    title: 'Escalas & Voluntários — IASD Mangueiras',
-  },
-  {
     path: 'estudos',
     loadComponent: () => import('./features/estudos/estudos.page').then((m) => m.EstudosPage),
     title: 'Estudos Bíblicos & PGs — IASD Mangueiras',

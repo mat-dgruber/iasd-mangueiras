@@ -29,15 +29,12 @@ const checks = [
     file: 'dist/frontend/browser/contato/index.html',
     expectedTexts: ['Contato e Pedido de Oração', 'Fale Conosco', 'Pedido de Oração', 'IASD Mangueiras'],
   },
-  {
-    file: 'dist/frontend/browser/escalas/index.html',
-    expectedTexts: ['Escalas &amp; Voluntários', 'Escalas Ministeriais', 'IASD Mangueiras'],
-  },
 ];
 
 for (const { file, expectedTexts } of checks) {
-  if (!existsSync(file)) throw new Error(`Missing prerendered file: ${file}`);
-  const html = readFileSync(file, 'utf8');
+  const targetFile = existsSync(file) ? file : `frontend/${file}`;
+  if (!existsSync(targetFile)) throw new Error(`Missing prerendered file: ${file}`);
+  const html = readFileSync(targetFile, 'utf8');
   for (const text of expectedTexts) {
     if (!html.includes(text)) throw new Error(`Missing text "${text}" in ${file}`);
   }

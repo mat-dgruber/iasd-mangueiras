@@ -7,7 +7,6 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'eventos', renderMode: RenderMode.Prerender },
   { path: 'ministerios', renderMode: RenderMode.Prerender },
   { path: 'estudos', renderMode: RenderMode.Prerender },
-  { path: 'escalas', renderMode: RenderMode.Prerender },
   { path: 'sou-novo', renderMode: RenderMode.Prerender },
   { path: 'contato', renderMode: RenderMode.Prerender },
   { path: 'admin/login', renderMode: RenderMode.Client },
