@@ -63,6 +63,15 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    // Cronogramas de Culto e Templates de Liturgia (Admin-Only)
+    match /cronogramas_culto/{document} {
+      allow read, write: if isAdmin();
+    }
+
+    match /cronogramas_templates/{document} {
+      allow read, write: if isAdmin();
+    }
+
     // Mensagens de Contato
     // Criação pública com validação de payload; gestão e leitura restritas a administradores.
     match /mensagens_contato/{document} {
