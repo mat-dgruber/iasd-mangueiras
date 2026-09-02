@@ -35,13 +35,6 @@ import { SITE_CONFIG } from '../../core/site/site.config';
             >
               Ver horários e mapa →
             </a>
-            <span class="text-white/40">•</span>
-            <a
-              class="inline-flex items-center text-xs font-semibold text-white underline hover:text-white/80"
-              routerLink="/escalas"
-            >
-              Escalas de voluntários →
-            </a>
           </div>
         </section>
         <section>

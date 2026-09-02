@@ -25,7 +25,7 @@ describe('HeaderComponent', () => {
     expect(links).toContain('/ao-vivo');
     expect(links).toContain('/eventos');
     expect(links).toContain('/ministerios');
-    expect(links).toContain('/escalas');
+    expect(links).not.toContain('/escalas');
     expect(links).toContain('/contato');
   });
 
