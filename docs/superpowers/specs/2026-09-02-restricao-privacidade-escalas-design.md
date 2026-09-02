@@ -34,6 +34,7 @@ A gestão e visualização das escalas já existem de forma completa no painel a
 ## 3. Detalhamento das Alterações
 
 ### 3.1 Firestore Security Rules (`firestore.rules`)
+
 ```rules
 match /escalas/{document} {
   allow read, write: if isAdmin();
@@ -41,20 +42,24 @@ match /escalas/{document} {
 ```
 
 ### 3.2 Frontend Routes & Navigation
+
 - `frontend/src/app/app.routes.ts`: Remoção do bloco de rota `escalas`.
 - `frontend/src/app/layout/header/header.component.ts`: Remoção de `{ label: 'Escalas', path: '/escalas' }` da lista de navegação.
 - `frontend/src/app/layout/footer/footer.component.ts`: Remoção do link de navegação rápida para `/escalas`.
 
 ### 3.3 Painel Administrativo (`frontend/src/app/features/admin/escalas/`)
+
 - `admin-escalas.page.ts`: Remoção do elemento `<a routerLink="/escalas" ...>`.
 - `admin-escalas.page.spec.ts`: Ajuste nos testes para refletir a ausência do link público.
 
 ### 3.4 Build, SSR e Hosting
+
 - `firebase.json`: Remoção de `{ "source": "/escalas", "destination": "/index.html" }`.
 - `frontend/src/app/app.routes.server.ts`: Remoção do caminho `/escalas` no RenderMode Prerender.
 - `frontend/scripts/verify-prerender-content.mjs`: Remoção da verificação de arquivo pré-renderizado `dist/frontend/browser/escalas/index.html`.
 
 ### 3.5 Limpeza de Serviços e Módulos Órfãos
+
 - `frontend/src/app/core/services/content.service.ts`: Remoção do signal/método público de leitura de escalas.
 - Exclusão completa de `frontend/src/app/features/escalas/`.
 
