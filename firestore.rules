@@ -60,8 +60,7 @@ service cloud.firestore {
     }
 
     match /escalas/{document} {
-      allow read: if true;
-      allow write: if isAdmin();
+      allow read, write: if isAdmin();
     }
 
     // Mensagens de Contato
