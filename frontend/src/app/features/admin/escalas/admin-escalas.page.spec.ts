@@ -191,9 +191,8 @@ describe('AdminEscalasPage', () => {
     expect(component.escalaForm.get('oficiaisStr')?.value).toBe('Matheus Diniz, Lucas Oliveira');
   });
 
-  it('renderiza o botão com link para o portal público de escalas', () => {
+  it('não renderiza link para portal público de escalas', () => {
     const link = fixture.nativeElement.querySelector('a[href="/escalas"]');
-    expect(link).toBeDefined();
-    expect(fixture.nativeElement.textContent).toContain('Ver Portal Público');
+    expect(link).toBeNull();
   });
 });

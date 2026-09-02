@@ -9,7 +9,6 @@ import {
   signal,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { EscalaItem } from '../../../core/models/content.models';
 import { AdminCmsService } from '../../../core/services/admin-cms.service';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
@@ -20,7 +19,7 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
 @Component({
   selector: 'app-admin-escalas-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, ModalComponent, SkeletonComponent, ConfirmDialogComponent],
+  imports: [ReactiveFormsModule, ModalComponent, SkeletonComponent, ConfirmDialogComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div>
@@ -36,16 +35,6 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
         </div>
 
         <div class="flex flex-wrap items-center gap-2.5">
-          <a
-            routerLink="/escalas"
-            target="_blank"
-            class="inline-flex items-center gap-1.5 rounded-card border border-advent-border bg-white px-4 py-2.5 text-xs font-semibold text-advent-text shadow-sm hover:bg-slate-50 active:scale-[0.98] transition-all cursor-pointer min-h-[40px]"
-            title="Visualizar portal público de escalas"
-          >
-            <span class="material-symbols-outlined text-[16px] text-advent-blue">open_in_new</span>
-            <span>Ver Portal Público</span>
-          </a>
-
           <button
             type="button"
             (click)="copyFullEscalaWhatsApp()"
