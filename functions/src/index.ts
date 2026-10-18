@@ -2,7 +2,9 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions/v2';
 import express from 'express';
 import cors from 'cors';
+import { apiReference } from '@scalar/express-api-reference';
 import { config } from './config';
+import { createHealthRouter } from './health';
 import { youtubeRouter } from './routes/youtube.router';
 import { formsRouter } from './routes/forms.router';
 
@@ -36,10 +38,21 @@ app.use(
 
 app.use(express.json());
 
-// Health Check
-app.get('/health', (req, res) => {
+// Health Checks
+app.get('/health', (_req, res) => {
   res.json({ status: 'ok', app: config.appName, env: config.appEnv });
 });
+app.use(createHealthRouter(() => admin.firestore().collection('_health').limit(1).get()));
+
+// API Reference
+app.use(
+  '/scalar',
+  apiReference({
+    url: '/openapi.json',
+    theme: 'kepler',
+    layout: 'modern',
+  })
+);
 
 // Rotas da API
 app.use('/api/youtube', youtubeRouter);

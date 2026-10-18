@@ -7,8 +7,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "test:ci": "ng test --watch=false",
-    "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
+    "test:ci": "ng test --watch=false --coverage",
+    "typecheck": "tsc --noEmit",
+    "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
+    "lint:css": "stylelint \"**/*.{css,scss}\""
   },
   "private": true,
   "packageManager": "npm@11.8.0",
@@ -30,15 +32,20 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@angular-eslint/eslint-plugin-template": "^22.6.0",
     "@angular/build": "^22.1.5",
     "@angular/cli": "^22.1.5",
     "@angular/compiler-cli": "^22.1.0",
+    "@playwright/test": "^1.64.1",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
+    "@vitest/coverage-v8": "^4.0.8",
     "autoprefixer": "^10.5.4",
     "jsdom": "^28.0.0",
     "postcss": "^8.5.26",
     "prettier": "^3.8.1",
+    "stylelint": "^17.16.0",
+    "stylelint-config-standard": "^40.0.0",
     "tailwindcss": "^3.4.17",
     "typescript": "~6.0.2",
     "vitest": "^4.0.8"
