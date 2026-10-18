@@ -114,8 +114,12 @@ functions/node_modules/
 !.vscode/mcp.json
 .history/*
 
-# Agentes, ferramentas e caches temporários
-.gemini/
+# Configuração compartilhada do Antigravity
+.gemini/*
+!.gemini/
+!.gemini/settings.json
+!.gemini/sync-memory.sh
+
 .openclaude/
 .playwright-mcp/
 .trunk/
@@ -126,3 +130,12 @@ continue-*.md
 graphify-out/
 *-command-message*.md
 
+# Worktrees temporários do OpenClaude
+.claude/worktrees/
+
+
+# ai-guides: memória privada local, team/ versionada
+.claude/memory/*
+!.claude/memory/team/
+.gemini/memory/*
+!.gemini/memory/team/

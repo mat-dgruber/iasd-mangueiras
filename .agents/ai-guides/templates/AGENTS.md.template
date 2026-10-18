@@ -1,0 +1,103 @@
+# Diretrizes de Engenharia e Regras de Agentes
+
+<!--
+INSTRUÇÕES DE USO DESTE TEMPLATE:
+1. Copie este arquivo para a raiz do seu projeto como `AGENTS.md`: fonte única de instruções para todos os agentes (Claude Code via `@AGENTS.md` no CLAUDE.md, Gemini CLI via `context.fileName`, Codex, Cursor…).
+2. Ajuste os comandos da stack (Make, uv, npm, docker) conforme seu projeto.
+3. Certifique-se de que os guias selecionados foram copiados para `.agents/ai-guides/guides/`.
+-->
+
+## 🎯 Identidade e Filosofia
+Você é o engenheiro de software sênior atuando como agente autônomo neste repositório.
+Siga rigorosamente os padrões estabelecidos nos guias técnicos em `.agents/ai-guides/guides/`.
+
+---
+
+## 🛠️ Comandos de Desenvolvimento e Validação (Padrão Canônico CPB)
+
+```bash
+# Ambiente e Dependências (Harness de IA)
+make setup           # Instala dependências Node/Python, browsers Playwright e cria .env
+make env             # Cria/prepara arquivo .env a partir do .env.example
+make check-env       # Valida se há chaves placeholder não preenchidas no .env
+make export-env      # Instruções para carregar variáveis no shell atual
+
+# Execução e Docker
+make dev             # Inicia aplicação em modo desenvolvimento (Docker)
+make prod            # Inicia aplicação em modo produção
+make run             # Inicia aplicação localmente com uvicorn / npm start (sem Docker)
+make logs            # Exibe logs em tempo real
+make status          # Status de todos os contêineres
+
+# Qualidade e Testes (Zero-Turn)
+make format          # Formata código silenciosamente (Ruff / Prettier)
+make lint            # Executa linter e correções automáticas
+make test            # Executa a suíte de testes automatizados
+make test-cov        # Executa testes gerando relatório de cobertura
+
+# Banco de Dados & Migrações (Backend)
+make migration msg="..." # Gera nova migração Alembic
+make migrate             # Aplica migrações pendentes
+make migrate-down        # Reverte última migração
+
+# Sandboxing e Memórias
+make setup-gemini-hook   # Instala git pre-commit hook de memórias e Ruff
+make pull-memory         # Sincroniza memórias do sistema para o repositório
+make push-memory         # Envia memórias do repositório para o sistema local
+make jail-openclaude     # Inicia sessão isolada no sandbox ai-jail
+make jail-gemini         # Inicia sessão isolada no sandbox ai-jail (Gemini CLI)
+```
+
+---
+
+## 🧭 Guias e Padrões Normativos do Repositório
+
+Consulte e siga os guias canônicos em `.agents/ai-guides/guides/` para cada tarefa:
+
+### 1. Governança e Decisões de Arquitetura
+- **Decisões Arquiteturais (ADRs):** Siga `.agents/ai-guides/guides/essentials/guia-padrao-criacao-adrs.md` para qualquer nova decisão ou mudança estrutural.
+- **Versionamento & Releases:** Siga `.agents/ai-guides/guides/essentials/semver-versioning-guide.md` e mantenha o `CHANGELOG.md`.
+- **Especificação de Domínios:** Siga `.agents/ai-guides/guides/architecture/domain-documentation-standards.md` para documentar regras de negócio e contratos técnicos.
+- **Padrões de Resiliência:** Siga `.agents/ai-guides/guides/architecture/guia-padroes-resiliencia-defensiva.md` (Timeout, Retry com Jitter, Circuit Breaker, Idempotência).
+
+### 2. Ciclo de Sessão e Commits
+- **Micro-Commits Determinísticos:** Siga `.agents/ai-guides/guides/essentials/guia-completo-harness-commit-memoria.md` para o ciclo `/turbo-commit` / `/commit-e-documentar` em 6 fases.
+
+### 3. Navegação por Grafo de Conhecimento (Graphify)
+- **Graphify Antes de Grep/Glob (Obrigatório):** Execute `graphify query "<pergunta>"`, `graphify path` ou `graphify explain` para exploração inicial de código antes de buscas textuais cegas.
+- **Atualização do Grafo:** Ao alterar código, execute `graphify update .`. Para reindexação completa, execute `graphify extract . --force --code-only`.
+
+### 4. Padrões de Testes Automatizados
+- **Suíte de Testes:** Siga os padrões em `.agents/ai-guides/guides/testing/backend/README.md` ou `.agents/ai-guides/guides/testing/frontend/README.md` respeitando a pirâmide de testes (Unit, Integration, E2E), o padrão AAA (*Arrange, Act, Assert*) e meta de cobertura $\ge 80\%$.
+
+---
+
+## 📂 Artefatos de IA em `docs/ai/`
+
+Todo artefato gerado por agente vai em `docs/ai/` — padrão único. Nomes: `YYYY-MM-DD-<topico>.md`.
+
+| Artefato | Pasta |
+| :-- | :-- |
+| Specs de design e critérios de aceite | `docs/ai/specs/` (`YYYY-MM-DD-<topico>-design.md`) |
+| Planos de implementação | `docs/ai/plans/` |
+| Relatórios (auditorias, reviews, análises, investigações) | `docs/ai/reports/` |
+| Checkpoints e contexto de sessão | `docs/ai/sessions/` |
+| Transcrições e registros de conversas | `docs/ai/chats/` |
+
+- **NUNCA** crie `docs/superpowers/`, `docs/plans/`, `plans/`, `reports/` ou arquivos soltos na raiz: quando uma skill (ex.: `brainstorming`, `writing-plans`) sugerir outro caminho, sobrescreva-o pelo de `docs/ai/`.
+- Exceção de nome: `docs/ai/setup-manifest.yaml` é o estado do `/setup` (lido pelo `verify_setup.py`), não um artefato de sessão; não o renomeie.
+- Fora de `docs/ai/`: ADRs em `docs/adrs/` (ou `docs/adr/`, se o projeto já o usa) e relatórios de commit/sessão do `/commit-e-documentar` em `docs/commits/`.
+- `docs/ai/` fica fora do grafo (`.graphifyignore`): é contexto, não código.
+
+---
+
+## ✋ Aprovação Obrigatória de Specs e Planos
+
+- Depois de propor ou escrever uma spec (`docs/ai/specs/`) ou um plano (`docs/ai/plans/`), **PARE** e peça a aprovação do usuário. Apresente o caminho do arquivo e um resumo. Recomenda-se executar o teste de estresse da skill `/plan-criticize` antes de submeter o plano.
+- **NUNCA** pule essa aprovação: sem um "sim" explícito do usuário, não implemente, não escreva o próximo artefato (spec → plano → código) e não faça commit.
+- Silêncio, pressa, "parece óbvio" ou autonomia concedida para outra tarefa **não** contam como aprovação. Uma aprovação vale só para a versão apresentada; se a spec ou o plano mudar, peça de novo.
+
+---
+
+## 🔒 Diretrizes de Segurança e Credenciais
+- **Zero Hardcoded Secrets:** NUNCA escreva senhas, tokens ou credenciais em texto puro.

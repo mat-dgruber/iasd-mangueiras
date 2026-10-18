@@ -9,3 +9,15 @@ coverage/
 .cache/
 *.log
 .env*
+
+# ai-guides: exclusões canônicas (Regra de Ouro 1)
+docs/
+docs/ai/
+.agents/
+.claude/
+.gemini/
+.superpowers/
+*.md
+.worktrees/
+.venv/
+__pycache__/
