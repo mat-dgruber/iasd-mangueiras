@@ -16,16 +16,10 @@ service firebase.storage {
       );
     }
 
-    match /banners/{allPaths=**} {
+    match /{folder}/{allPaths=**} {
       allow read: if true;
       allow write: if isAdmin()
-                   && request.resource.size < 5 * 1024 * 1024
-                   && request.resource.contentType.matches('image/(jpeg|jpg|png|webp)');
-    }
-
-    match /ministerios/{allPaths=**} {
-      allow read: if true;
-      allow write: if isAdmin()
+                   && folder in ['banners', 'ministerios', 'eventos', 'comunicados', 'pgs']
                    && request.resource.size < 5 * 1024 * 1024
                    && request.resource.contentType.matches('image/(jpeg|jpg|png|webp)');
     }

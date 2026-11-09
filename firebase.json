@@ -31,6 +31,8 @@
     "rewrites": [
       { "source": "/api/**", "function": { "functionId": "api", "region": "southamerica-east1" } },
       { "source": "/health", "function": { "functionId": "api", "region": "southamerica-east1" } },
+      { "source": "/livez", "function": { "functionId": "api", "region": "southamerica-east1" } },
+      { "source": "/readyz", "function": { "functionId": "api", "region": "southamerica-east1" } },
       { "source": "/horarios", "destination": "/index.html" },
       { "source": "/ao-vivo", "destination": "/index.html" },
       { "source": "/eventos", "destination": "/index.html" },
