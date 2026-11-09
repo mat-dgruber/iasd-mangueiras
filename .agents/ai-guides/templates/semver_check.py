@@ -8,6 +8,14 @@ import re
 import sys
 from pathlib import Path
 
+try:
+    import tomllib
+except ImportError:
+    try:
+        import tomli as tomllib
+    except ImportError:
+        tomllib = None
+
 SEMVER = re.compile(r"^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$")
 
 
@@ -15,7 +23,19 @@ def declared_version() -> str | None:
     if Path("package.json").exists():
         return json.loads(Path("package.json").read_text(encoding="utf-8")).get("version")
     if Path("pyproject.toml").exists():
-        m = re.search(r'^version\s*=\s*"([^"]+)"', Path("pyproject.toml").read_text(encoding="utf-8"), re.M)
+        if tomllib is not None:
+            try:
+                data = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
+                ver = (
+                    data.get("project", {}).get("version")
+                    or data.get("tool", {}).get("poetry", {}).get("version")
+                    or data.get("version")
+                )
+                if ver:
+                    return str(ver)
+            except Exception:
+                pass
+        m = re.search(r'^\s*version\s*=\s*"([^"]+)"', Path("pyproject.toml").read_text(encoding="utf-8"), re.MULTILINE)
         return m.group(1) if m else None
     if Path("VERSION").exists():
         return Path("VERSION").read_text(encoding="utf-8").strip()

@@ -196,7 +196,13 @@ flowchart TD
 - **Ação do agente:** O agente assume uma postura socrática e hostil, sabatinando o arquiteto/desenvolvedor sobre consistência eventual, pontos únicos de falha (SPOF), locks de banco, concorrência, latência e custos de nuvem.
 - **Critério de Saída:** Registro de defesas arquiteturais e vulnerabilidades de design corrigidas.
 
-##### 6. `architecture-review`
+##### 6. `plan-criticize` (Etapa Obrigatória no Fluxo de Specs e Planos)
+
+- **Quando usar:** Obrigatoriamente por padrão após redigir ou atualizar qualquer especificação (`docs/ai/specs/`) ou plano de implementação (`docs/ai/plans/`), antes do gate de aprovação do usuário.
+- **Ação do agente:** Executa o motor determinístico `plan_critic.py` e aplica sabatina adversária pré-mortem, exigindo matriz de trade-offs (2 a 3 alternativas), casos de borda/invariantes, plano de rollback, governança de ADRs e critérios verificáveis (Risk Score $\le 15$).
+- **Critério de Saída:** Spec e Plano auditados com Risk Score Baixo (`🟢`) prontos para aprovação explícita do usuário.
+
+##### 7. `architecture-review`
 
 - **Quando usar:** Após superar a sabatina.
 - **Ação do agente:** Consolida a especificação arquitetural formal: fronteiras de bounded contexts (DDD), diagramas C4 (Context, Container, Component), padrões aplicados (Ports & Adapters, Clean Architecture) e gera as **ADRs (Architecture Decision Records)** numeradas em `docs/adrs/`.

@@ -5,7 +5,7 @@
 # (monorepos: apps/web, backend/, services/api, packages/*). Exit 0 = encontrado.
 # Com --list, imprime um diretório por linha (a raiz de cada subprojeto que casou).
 #
-# Alvos: python node php go rust java backend frontend api mobile docker ci legacy
+# Alvos: python node php go rust java backend frontend api mobile game desktop docker ci legacy
 #   java   = build da JVM (Maven ou Gradle) fora do Android; Android e Xcode são mobile.
 #   legacy = stack que o /setup só configura com os guias de harness e Graphify: JVM até o Java 8 ou sem versão
 #            declarada (nem no build pai), Ant, PHP até o 7 no composer.json ou sem Composer, Delphi. Diretório
@@ -29,6 +29,12 @@ find_manifest() {  # $1 = nome do arquivo (aceita glob: '*.dpr')
 match() {
   find_manifest "$1" | while read -r f; do
     if [ -z "${2:-}" ] || grep -Eq "$2" "$f" 2>/dev/null; then dirname "$f"; fi
+  done
+}
+
+node_proj() {  # package.json que é só `{"type": "…"}` (mods/ do MODS-02) marca ESM, não é projeto
+  find_manifest package.json | while read -r f; do
+    tr -d '[:space:]' < "$f" | grep -Eqx '\{"type":"[a-z]+"\}' || dirname "$f"
   done
 }
 
@@ -88,7 +94,7 @@ legado() {
 
 case "$alvo" in
   python)   dirs=$(match pyproject.toml; match requirements.txt; match setup.py) ;;
-  node)     dirs=$(match package.json) ;;
+  node)     dirs=$(node_proj) ;;
   php)      dirs=$(match composer.json) ;;
   go)       dirs=$(match go.mod) ;;
   rust)     dirs=$(match Cargo.toml) ;;
@@ -97,6 +103,8 @@ case "$alvo" in
   frontend) dirs=$(match package.json "$NODE_UI") ;;
   api)      dirs=$(match pyproject.toml 'fastapi'; match requirements.txt 'fastapi'; match package.json "$NODE_API"; match composer.json 'laravel/framework'; jvm_com "$JVM_API") ;;
   mobile)   dirs=$(match pubspec.yaml; match package.json '"(react-native|expo)"'; match Package.swift; match build.gradle "$ANDROID"; match build.gradle.kts "$ANDROID"; match project.pbxproj | sed 's#/[^/]*\.xcodeproj$##') ;;
+  game)     dirs=$(match project.godot; match ProjectVersion.txt; match '*.uproject') ;;
+  desktop)  dirs=$(match electron-builder.yml; match electron-builder.json; match electron.vite.config.ts; match electron.vite.config.js; match tauri.conf.json; match wails.json; match package.json '"(electron|@tauri-apps/api|tauri)"') ;;
   docker)   dirs=$(match Dockerfile; match docker-compose.yml; match compose.yaml) ;;
   ci)       dirs=$(find . -maxdepth 4 \( $PRUNE \) -prune -o -type d -name workflows -path '*/.github/*' -print 2>/dev/null) ;;
   legacy)   dirs=$(legado) ;;

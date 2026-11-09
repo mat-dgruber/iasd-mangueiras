@@ -1,8 +1,8 @@
 ---
 title: Guia Corporativo de Padrões de Resiliência Defensiva: Frontend e Backend
 description: Diretriz normativa corporativa de resiliência e estabilidade defensiva, estabelecendo separação canônica entre Frontend e Backend, tolerância a falhas, Circuit Breaker, Retry com Jitter, Idempotência e observabilidade.
-version: 1.2.3
-date: 2026-09-28
+version: 1.3.0
+date: 2026-10-27
 author: Comitê Corporativo de Arquitetura & Engenharia de Software
 ---
 
@@ -29,6 +29,7 @@ LOG DE MANUTENÇÃO E ALTERAÇÕES DO DOCUMENTO
 | 2026-09-28    | Eduardo Batista                                            | v1.2.3 — RESIL-02 faz pre-flight (ruff check --select); com violação e lint verde no    |
 |               |                                                            | baseline, não liga a regra (⚠️ com motivo): o setup não quebra CI que passava.         |
 | 2026-10-14    | Eduardo Batista                                            | AGENTS.md como instrução única: referência RESIL-05 passa a ser verificada no AGENTS.md. Bloco na versão 5. |
+| 2026-10-27    | Matheus Diniz                                              | v1.3.0 — RESIL-06 e §4.2 estabelecem RFC 9457 (sucessora oficial da RFC 7807) por padrão em projetos novos/sem RFC e sugerem evolução não-destrutiva quando já existir RFC 7807 ou contrato próprio. Bloco na versão 6. |
 
 =================================================================================
 -->
@@ -47,7 +48,7 @@ Bloco lido pelo `/setup` e por `skills/setup/scripts/verify_setup.py`. `when`/`v
 
 ```yaml heuristics
 guide: resiliencia-defensiva
-version: 5
+version: 6
 requires: []
 heuristics:
   - id: RESIL-01
@@ -61,7 +62,7 @@ heuristics:
   - id: RESIL-02
     title: "Ruff fiscaliza requisições sem timeout (§I Timeout: S113)"
     when: |
-      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --any python "! python3 "$AI_GUIDES_RUNTIME/templates/architecture/check_ruff_rules.py" S113 >/dev/null 2>&1"
+      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --any python "! python3 "$AI_GUIDES_RUNTIME/templates/architecture/check_ruff_rules.py" --declared S113 >/dev/null 2>&1"
     do: |
       agent: Pre-flight antes de ligar, pelo runner do projeto (`uv run --frozen ruff`, `poetry run ruff` ou `ruff`):
       ruff check --no-fix --select S113 . — sem violação, ligue. Com violação e o lint do projeto verde no baseline da Fase 4
@@ -73,7 +74,7 @@ heuristics:
       crie [tool.ruff.lint] extend-select = ["S113"] e adicione ruff às dependências de desenvolvimento.
       Valide o TOML com: python3 "$AI_GUIDES_RUNTIME/templates/testing/check_toml.py" pyproject.toml
     verify: |
-      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all python "python3 "$AI_GUIDES_RUNTIME/templates/architecture/check_ruff_rules.py" S113"
+      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all python "python3 "$AI_GUIDES_RUNTIME/templates/architecture/check_ruff_rules.py" --declared S113"
     optional: true
 
   - id: RESIL-03
@@ -111,9 +112,22 @@ heuristics:
     when: "! grep -q 'guia-padroes-resiliencia-defensiva' AGENTS.md 2>/dev/null"
     do: |
       agent: Acrescente ao AGENTS.md, na seção de guias normativos, a linha:
-      "- **Resiliência:** Siga `.agents/ai-guides/guides/architecture/guia-padroes-resiliencia-defensiva.md` (timeouts em todo cliente, retry só em 5xx com jitter, circuit breaker por dependência, Idempotency-Key, Outbox, /livez e /readyz; checklist em `.agents/rules/resiliencia-defensiva.md`)." Se a linha da categoria já existir, complete-a com este guia em vez de duplicá-la.
+      "- **Resiliência:** Siga `.agents/ai-guides/guides/architecture/guia-padroes-resiliencia-defensiva.md` (timeouts em todo cliente, retry só em 5xx com jitter, circuit breaker por dependência, Idempotency-Key, Outbox, /livez e /readyz, e respostas de erro RFC 9457 Problem Details; checklist em `.agents/rules/resiliencia-defensiva.md`)." Se a linha da categoria já existir, complete-a com este guia em vez de duplicá-la.
       Se AGENTS.md não existir, aplique antes o guia harness-commit-memoria.
     verify: "grep -q 'guia-padroes-resiliencia-defensiva' AGENTS.md"
+
+  - id: RESIL-06
+    title: "Respostas de erro padronizadas em RFC 9457 (application/problem+json) por padrão em projetos novos ou evolução sugerida de RFC 7807 (§4.2)"
+    when: |
+      sh "$AI_GUIDES_RUNTIME/templates/detect_stack.sh" backend && ! git grep -Eq --untracked 'application/problem\+json|RFC[ -]?9457|ProblemDetails|problem_details' -- ':!.agents' ':!docs' ':!*.md'
+    do: |
+      agent: Conforme §4.2, inspecione como a API backend formata respostas HTTP de erro (4xx/5xx):
+      1. **Projeto novo ou sem tratamento padronizado de erro / sem RFC:** implemente **por padrão a RFC 9457 (Problem Details for HTTP APIs)** (`Content-Type: application/problem+json`) em um exception handler centralizado da stack, retornando os campos canônicos `type` (URI/identificador estável do erro; use `"about:blank"` apenas quando `title` for idêntico à razão HTTP padrão), `title`, `status`, `detail`, `instance` e a extensão `errors` (array de falhas por campo em erros 400/422), sem jamais expor stack traces ou exceções de banco, e escreva teste automatizado provando o retorno `application/problem+json`.
+      2. **Projeto existente que já possui RFC 7807 ou envelope próprio de erro em produção:** **NÃO force a troca destrutiva** para não quebrar consumidores ativos.
+         - Se o projeto já usa **RFC 7807** (formalmente obsoletada pela RFC 9457 em jul/2023): sugira ao usuário atualizar para a **RFC 9457** (100% retrocompatível no media type `application/problem+json`, adicionando a extensão `errors[]` para múltiplos problemas e disciplina de `type: "about:blank"`) e anote a referência `RFC 9457` no handler de erros.
+         - Se o projeto usa envelope legado próprio: sugira adotar a **RFC 9457** em novas rotas/versões (`/api/v2`) ou via negociação `Accept: application/problem+json` e documente a diretriz `RFC 9457` no handler central ou ADR de contrato para satisfazer o verify sem quebrar clientes legados.
+    verify: "git grep -Eq --untracked 'application/problem\\+json|RFC[ -]?9457|ProblemDetails|problem_details' -- ':!.agents' ':!docs' ':!*.md'"
+    optional: true
 ```
 
 ---
@@ -279,8 +293,9 @@ No lado do servidor e infraestrutura de execução, a resiliência concentra-se 
      - `/startupz`: Valida inicialização preliminar e migrações;
      - `/livez`: Avalia estritamente a saúde do processo e loop de eventos (sem dependências externas);
      - `/readyz`: Avalia prontidão para receber tráfego com base em dependências vitais.
-8. **Normalização de Erros Padronizada (RFC 7807 / RFC 9457):**
-   - Todas as respostas de erro de APIs REST devem retornar o MIME type `application/problem+json` com corpo estruturado contendo: `type`, `title`, `status`, `detail`, `instance`, além de extensões semânticas corporativas como `code`, `correlation_id` e `retry_after_ms`.
+8. **Normalização de Erros Padronizada — RFC 9457 por Padrão (Evolução da RFC 7807):**
+   - **Projetos novos ou ainda sem padronização de erros:** devem adotar **por padrão a RFC 9457 (*Problem Details for HTTP APIs*, que obsoletou a RFC 7807)**, retornando `Content-Type: application/problem+json` com corpo estruturado contendo `type`, `title`, `status`, `detail`, `instance` e extensões semânticas (`errors[]`, `code`, `correlation_id`, `retry_after_ms`).
+   - **Projetos existentes (com RFC 7807 ou contrato próprio):** não forçar substituição destrutiva que quebre clientes em produção; sugerir evolução compatível para a **RFC 9457** (especialmente quando já utilizam a RFC 7807) ou adoção progressiva em novas rotas.
 
 ---
 
@@ -1651,7 +1666,28 @@ async def readiness_probe(response: Response):
 
 #### 4.2. Respostas de Erro Padronizadas (RFC 7807 / RFC 9457 Problem Details)
 
-Para que clientes automatizados e frontends tratem falhas de resiliência determinísticamente, todas as respostas de erro devem adotar o formato **`application/problem+json`**:
+A **IETF RFC 9457 (*Problem Details for HTTP APIs*, julho de 2023)** é a sucessora oficial que tornou obsoleta a **RFC 7807**, padronizando o media type **`application/problem+json`** para que clientes automatizados, BFFs e frontends tratem falhas de negócio e de resiliência de forma determinística.
+
+##### 🧭 Política Corporativa de Adoção (Projetos Novos vs. Projetos Existentes)
+
+1. **Projetos Novos ou Sem Padronização de Erros (Greenfield / Sem RFC):**
+   - Adote **obrigatoriamente a RFC 9457 por padrão** desde o primeiro endpoint, através de um *Exception Handler* global na aplicação.
+   - Campos canônicos da RFC 9457:
+     - `type` (URI ou identificador estável do tipo de problema; se omitido ou `"about:blank"`, o `title` **deve** ser idêntico à razão oficial do status HTTP, como `"Not Found"` ou `"Unprocessable Content"`);
+     - `title` (resumo curto e legível da categoria do problema — invariante entre ocorrências do mesmo `type`);
+     - `status` (inteiro idêntico ao código HTTP da resposta);
+     - `detail` (explicação legível e específica desta ocorrência, **sem jamais vazar stack traces, queries SQL ou caminhos internos**);
+     - `instance` (URI que identifica a requisição ou ocorrência específica);
+     - **Extensões recomendadas pela RFC 9457:** `errors` (array de objetos `{ "field": "...", "pointer": "#/campo", "detail": "...", "code": "..." }` para agregar múltiplas falhas de validação em uma única resposta `400`/`422`), `code`, `correlation_id` e `retry_after_ms`.
+2. **Projetos Existentes que já utilizam a RFC 7807:**
+   - **Não force reescrita destrutiva**, mas **sugira proativamente a atualização para a RFC 9457**. Como a RFC 9457 mantém o mesmo `Content-Type: application/problem+json` e os mesmos 5 membros base da RFC 7807, a evolução é **100% retrocompatível** para consumidores existentes e agrega:
+     - Padronização de múltiplos erros simultâneos via membro de extensão `errors[]`;
+     - Disciplina estrita sobre `type: "about:blank"` vs. URIs de domínio;
+     - Alinhamento com o registro oficial *IANA HTTP Problem Types Registry*.
+3. **Projetos Legados com Envelope Próprio em Produção:**
+   - **Nunca force a substituição abrupta** de um envelope já consumido por apps móveis ou clientes externos ativos. Sugira introduzir a **RFC 9457** em novas versões de rota (`/api/v2/`) ou mediante negociação de conteúdo (`Accept: application/problem+json`).
+
+##### Exemplo Canônico RFC 9457 (Rate Limit / Resiliência — HTTP 429)
 
 ```json
 {
@@ -1662,7 +1698,29 @@ Para que clientes automatizados e frontends tratem falhas de resiliência determ
   "instance": "/api/v1/itens/busca",
   "retry_after_ms": 5000,
   "code": "RATE_LIMIT_EXCEEDED",
+  "correlation_id": "req-9f8c7b6a",
   "timestamp": "2026-09-01T15:20:00Z"
+}
+```
+
+##### Exemplo Canônico RFC 9457 com Extensão `errors[]` (Validação — HTTP 422)
+
+```json
+{
+  "type": "https://api.empresa.com/errors/validation-error",
+  "title": "Falha de Validação nos Dados Enviados",
+  "status": 422,
+  "detail": "Um ou mais campos da requisição contêm valores inválidos.",
+  "instance": "/api/v1/pedidos",
+  "code": "VALIDATION_ERROR",
+  "errors": [
+    {
+      "pointer": "#/itens/0/quantidade",
+      "field": "itens[0].quantidade",
+      "code": "MIN_VALUE",
+      "detail": "A quantidade mínima permitida por item é 1."
+    }
+  ]
 }
 ```
 
@@ -1747,6 +1805,7 @@ Em uma requisição de produção, os padrões de resiliência compõem uma cade
 7. ❌ **Gravar Idempotência só no Final:** Se a gravação da chave ocorrer após o efeito colateral, duas requisições simultâneas passarão pelo teste inicial e duplicarão a transação.
 8. ❌ **Circuit Breaker com Limiar Global:** Usar um único disjuntor para todas as APIs externas. Se o serviço de SMS falhar, o serviço de Pagamentos não deve ser desligado.
 9. ❌ **Requisições e Streams sem Cancelamento no Cliente:** Disparar requisições ou assinar fluxos assíncronos sem gerenciamento de ciclo de vida (`AbortController`, descarte de observadores/subscrições), retendo conexões HTTP obsoletas e gerando vazamentos de memória.
+10. ❌ **Erros HTTP Ad-Hoc em Projetos Novos ou Vazamento de Exceção Bruta:** Criar novos projetos retornando strings soltas (`{"err": msg}`) ou stack traces de banco/framework em vez de adotar a **RFC 9457 (`application/problem+json`)** por padrão, ou forçar migração quebrando consumidores existentes sem estratégia de compatibilidade.
 
 ---
 
@@ -1761,6 +1820,7 @@ Antes de aprovar Pull Requests ou subir novas rotas de integração para produç
 - [ ] **Outbox Pattern:** Eventos de mensageria críticos são persistidos na mesma transação atômica do banco de dados?
 - [ ] **Graceful Shutdown:** Servidores web e workers escutam `SIGTERM` e drenam tarefas pendentes antes do término?
 - [ ] **Probes Corretas:** `/livez` verifica apenas o processo interno e `/readyz` verifica conectividade com infraestrutura crítica?
+- [ ] **Respostas de Erro Padronizadas (RFC 9457):** Projetos novos ou sem padronização retornam `application/problem+json` seguindo a **RFC 9457** (`type`, `title`, `status`, `detail`, `instance`, `errors[]`)? Projetos existentes (especialmente com RFC 7807) receberam sugestão de evolução compatível para a RFC 9457 sem quebrar clientes ativos?
 - [ ] **Observabilidade:** Métricas e logs estruturados são emitidos na abertura de disjuntores, quedas para DLQ e ativação de fallbacks?
 
 ---

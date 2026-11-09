@@ -25,12 +25,12 @@ heuristics:
   - id: TESTF-01
     title: Script npm "test" definido no package.json
     when: |
-      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --any frontend "! python3 \"$AI_GUIDES_RUNTIME/templates/testing/npm_script.py\" test"
+      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --any node "! python3 \"$AI_GUIDES_RUNTIME/templates/testing/npm_script.py\" test"
     do: |
       agent: Adicione em package.json → scripts o comando "test" do runner do projeto: Angular CLI → "ng test";
       Vitest → "vitest"; Jest → "jest". Não altere outros scripts.
     verify: |
-      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all frontend "python3 "$AI_GUIDES_RUNTIME/templates/testing/npm_script.py" test"
+      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all node "python3 "$AI_GUIDES_RUNTIME/templates/testing/npm_script.py" test"
 
   - id: TESTF-02
     title: Script "test:ci" headless de disparo único com cobertura
@@ -76,19 +76,19 @@ heuristics:
   - id: TESTF-05
     title: Playwright E2E configurado (playwright.config.ts + e2e/)
     when: |
-      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --any frontend "! ls playwright.config.* >/dev/null 2>&1"
+      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --any node "! ls playwright.config.* >/dev/null 2>&1"
     do: |
-      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all frontend 'npm install --save-dev @playwright/test
+      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all node 'npm install --save-dev @playwright/test
         cp "$AI_GUIDES_RUNTIME/templates/testing/playwright.config.ts" playwright.config.ts
         mkdir -p e2e && { test -n "$(ls -A e2e)" || touch e2e/.gitkeep; }'
     verify: |
-      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all frontend "ls playwright.config.* >/dev/null 2>&1 && grep -q '@playwright/test' package.json"
+      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all node "ls playwright.config.* >/dev/null 2>&1 && grep -q '@playwright/test' package.json"
     optional: true
 
   - id: TESTF-06
     title: Makefile com alvos test, test-cov e test-e2e
     when: |
-      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --any frontend true && ! grep -qs '^test-e2e:' Makefile
+      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --any node true && ! grep -qs '^test-e2e:' Makefile
     do: |
       # shortcut: monorepo com vários apps node usa o primeiro; mais de um → o agente acrescenta os outros à mão
       d=$(sh "$AI_GUIDES_RUNTIME/templates/detect_stack.sh" node --list | head -n 1); c=; [ "$d" = . ] || c="cd $d && "
@@ -104,7 +104,7 @@ heuristics:
   - id: TESTF-07
     title: CI executa typecheck, suíte headless e E2E (GitHub Actions)
     when: |
-      test -d .github/workflows && sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --any frontend true && ! grep -qs 'test:ci' .github/workflows/*.yml .github/workflows/*.yaml
+      test -d .github/workflows && sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --any node true && ! grep -qs 'test:ci' .github/workflows/*.yml .github/workflows/*.yaml
     do: 'cp "$AI_GUIDES_RUNTIME/templates/testing/frontend-ci.yml" .github/workflows/tests-frontend.yml'
     verify: "grep -qs 'test:ci' .github/workflows/*.yml .github/workflows/*.yaml"
     depends_on: [TESTF-02]

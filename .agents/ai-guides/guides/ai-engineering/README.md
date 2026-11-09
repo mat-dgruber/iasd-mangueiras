@@ -17,7 +17,8 @@
 
 ```text
 guides/ai-engineering/
-├── guia-orquestracao-ciclo-de-vida-skills.md        ──> Orquestração do ciclo de vida das 65 skills (Do Zero ao Release)
+├── guia-orquestracao-ciclo-de-vida-agentes.md       ──> Orquestração do ciclo de vida e despacho dos 40 subagentes (Do Zero ao Release)
+├── guia-orquestracao-ciclo-de-vida-skills.md        ──> Orquestração do ciclo de vida das 80 skills (Do Zero ao Release)
 ├── guia-construcao-harness.md                     ──> Arquitetura e os 7 Pilares de Harness Nível 3
 ├── guia-ai-jail-sandbox.md                        ──> Isolamento e contenção segura em sandbox (ai-jail)
 ├── guia-configuracao-notificacoes-openclaude.md   ──> Notificações desktop diretas via terminal-notifier
@@ -30,12 +31,13 @@ guides/ai-engineering/
 
 ## 📋 Detalhamento dos Guias
 
-> ⚙️ Os 5 guias deste diretório têm **Heurísticas Executáveis** aplicadas pelo `/setup`: `construcao-harness` (HN3-01..12, requer `harness-commit-memoria`, `graph-engineering` e `semver-versioning` — abre com a tabela do que já é coberto por eles), `ai-jail-sandbox` (JAIL-01..05), `notificacoes-openclaude` (NOTIF-01..02, só macOS), `1password-credentials` (OP-01..05) e `orquestracao-ciclo-de-vida-skills` (LIFE-01..02).
+> ⚙️ Os 6 guias deste diretório têm **Heurísticas Executáveis** aplicadas pelo `/setup`: `construcao-harness` (HN3-01..12, requer `harness-commit-memoria`, `graph-engineering` e `semver-versioning` — abre com a tabela do que já é coberto por eles), `ai-jail-sandbox` (JAIL-01..05), `notificacoes-openclaude` (NOTIF-01..02, só macOS), `1password-credentials` (OP-01..05), `orquestracao-ciclo-de-vida-skills` (LIFE-01..02) e `orquestracao-ciclo-de-vida-agentes` (AGNT-01..02).
 
 
 | Guia Técnico | Descrição & Propósito |
 | :--- | :--- |
-| [`guia-orquestracao-ciclo-de-vida-skills.md`](guia-orquestracao-ciclo-de-vida-skills.md) ⚙️ `orquestracao-ciclo-de-vida-skills` | **Guia Mestre de Orquestração**: Ordem canônica de execução das 65 skills do zero absoluto ao release, dividida em 6 fases cronológicas, gates de transição, cenários de adoção e camada contínua de economia de tokens. |
+| [`guia-orquestracao-ciclo-de-vida-agentes.md`](guia-orquestracao-ciclo-de-vida-agentes.md) ⚙️ `orquestracao-ciclo-de-vida-agentes` | **Guia Mestre de Orquestração de Agentes**: Ciclo de vida, padrões topológicos de despacho, isolamento em Git Worktrees, Fresh Context e matriz canônica dos 40 subagentes do zero ao release. |
+| [`guia-orquestracao-ciclo-de-vida-skills.md`](guia-orquestracao-ciclo-de-vida-skills.md) ⚙️ `orquestracao-ciclo-de-vida-skills` | **Guia Mestre de Orquestração**: Ordem canônica de execução das 80 skills do zero absoluto ao release, dividida em 6 fases cronológicas, gates de transição, cenários de adoção e camada contínua de economia de tokens. |
 | [`guia-construcao-harness.md`](guia-construcao-harness.md) ⚙️ `construcao-harness` | Guia mestre sobre a arquitetura de **Harness de Nível 3** (Maduro/Robusto): Filosofia Dual-Harness (Claude Code ↔ Antigravity), os 7 Pilares de sustentação, hooks de ciclo de vida zero-turn, taxonomia de skills e ciclo em 5 fases. |
 | [`guia-ai-jail-sandbox.md`](guia-ai-jail-sandbox.md) ⚙️ `ai-jail-sandbox` | Especificação técnica de contenção em sandbox (`ai-jail`) para agentes de IA autônomos, isolando chamadas de sistema, comandos de rede e acessos a arquivos fora do repositório. |
 | [`guia-configuracao-notificacoes-openclaude.md`](guia-configuracao-notificacoes-openclaude.md) ⚙️ `notificacoes-openclaude` | Configuração de alertas visuais no desktop macOS via `terminal-notifier` inline no `settings.json`, com ativação no clique e sem necessidade de scripts externos. |

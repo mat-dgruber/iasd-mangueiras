@@ -17,7 +17,7 @@ NODE_NPX_PACKAGES := \
 	discord-mcp-server \
 	@_davideast/stitch-mcp
 
-.PHONY: help dev build test test-cov test-e2e lint typecheck clean \
+.PHONY: help dev build test test-cov test-e2e lint typecheck clean openapi \
         setup setup-node setup-python install-browsers env check-env clean-env export-env \
         check-node check-python check-pip
 
@@ -62,6 +62,9 @@ typecheck: ## Verificação estática de tipos TypeScript
 
 lint: ## Executar linter CSS do frontend
 	npm --prefix frontend run lint:css
+
+openapi: ## Exportar contrato OpenAPI 3.1 para docs/api/openapi.json
+	@mkdir -p docs/api && npm --prefix functions run build >/dev/null && node -e "const fs = require('fs'); const { openApiSpec } = require('./functions/dist/openapi'); fs.writeFileSync('docs/api/openapi.json', JSON.stringify(openApiSpec, null, 2) + '\n');"
 
 # ==============================================================================
 # TESTES
@@ -160,3 +163,13 @@ push-memory: ## Sincronizar memória local para o sistema global
 
 setup-gemini-hook: ## Instalar pre-commit de auto-staging de memórias
 	@cp ".agents/ai-guides/templates/pre-commit-memory.sh" "$$(git rev-parse --git-path hooks)/pre-commit" && chmod +x "$$(git rev-parse --git-path hooks)/pre-commit"
+
+# ai-guides: sandbox ai-jail (guia-ai-jail-sandbox)
+jail-setup: ## Instalar e configurar o ai-jail
+	@command -v ai-jail >/dev/null || (command -v brew >/dev/null && brew tap akitaonrails/tap && brew trust --formula akitaonrails/tap/ai-jail && brew install ai-jail) || cargo install ai-jail
+
+jail-openclaude: ## Iniciar OpenClaude isolado no sandbox
+	@ai-jail openclaude
+
+jail-gemini: ## Iniciar Gemini CLI isolado no sandbox
+	@ai-jail gemini

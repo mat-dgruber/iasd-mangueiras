@@ -1,16 +1,16 @@
 ---
 title: Guia Completo do Fluxo de Desenvolvimento, Commit, Documentação e Sincronização de Memórias
 description: Manual autossuficiente do ciclo determinístico de desenvolvimento, micro-commits, governança de ADRs, navegação por Graphify e sincronização de memória persistente entre Claude Code e Gemini CLI para projetos modernos.
-version: 1.6.2
-date: 2026-10-14
+version: 1.6.3
+date: 2026-10-21
 ---
 
-<!-- 
-=================================================================================
+<!--
+================================================================================
 LOG DE MANUTENÇÃO E ALTERAÇÕES DO DOCUMENTO
-=================================================================================
+--------------------------------------------------------------------------------
 Data       | Autor          | Descrição da Alteração
------------|----------------|--------------------------------------------------
+--------------------------------------------------------------------------------
 2026-08-06 | Matheus Diniz  | Criação do guia inicial cobrindo o fluxo de 6 fases
            |                | do /commit-e-documentar e Graphify.
 2026-08-18 | Matheus Diniz  | Atualização e governança multi-repo e multi-agente.
@@ -68,7 +68,10 @@ Data       | Autor          | Descrição da Alteração
 2026-10-14 | Eduardo Batista| v1.6.2 — HARNESS-08 silencia o stderr do `when` (settings ausente
            |                | é o estado "a instalar"); --migrate exige o GEMINI.md inteiro quando
            |                | ele não está versionado e idêntico a HEAD. Bloco na versão 7.
-=================================================================================
+2026-10-21 | Eduardo Batista| v1.6.3 — HARNESS-06 reprova o CLAUDE.md stub com seção que só
+           |                | repete o AGENTS.md, e o --migrate a remove (seções com linha
+           |                | exclusiva do Claude ficam inteiras). Bloco segue na versão 7.
+================================================================================
 -->
 
 # 📖 Guia Completo do Fluxo de Desenvolvimento, Commit, Documentação e Sincronização de Memórias
@@ -106,15 +109,15 @@ heuristics:
 
   - id: HARNESS-04
     title: "Skills dos harnesses são symlinks para .agents/skills no padrão canônico <nome>/SKILL.md, sem perder skills locais"
-    when: "! bash \"$AI_GUIDES_RUNTIME/templates/harness/migrate_skills.sh\" --check 2>/dev/null"
+    when: '! bash "$AI_GUIDES_RUNTIME/templates/harness/migrate_skills.sh" --check 2>/dev/null'
     do: |
       bash "$AI_GUIDES_RUNTIME/templates/harness/migrate_skills.sh"
-    verify: "bash \"$AI_GUIDES_RUNTIME/templates/harness/migrate_skills.sh\" --check && test -d .claude/skills/ && test -d .gemini/skills/"
+    verify: 'bash "$AI_GUIDES_RUNTIME/templates/harness/migrate_skills.sh" --check && test -d .claude/skills/ && test -d .gemini/skills/'
     depends_on: [HARNESS-01, HARNESS-02]
 
   - id: HARNESS-05
     title: "AGENTS.md no padrão do template (todas as seções ## de templates/AGENTS.md.template, incluindo docs/ai/) sem perder o conteúdo do projeto"
-    when: "! python3 \"$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py\" --check \"$AI_GUIDES_RUNTIME/templates/AGENTS.md.template\" AGENTS.md || python3 \"$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py\" --migrate --check \"$AI_GUIDES_RUNTIME/templates/CLAUDE.md.template\" AGENTS.md 2>&1 | grep -q 'falta no AGENTS.md'"
+    when: '! python3 "$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py" --check "$AI_GUIDES_RUNTIME/templates/AGENTS.md.template" AGENTS.md || python3 "$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py" --migrate --check "$AI_GUIDES_RUNTIME/templates/CLAUDE.md.template" AGENTS.md 2>&1 | grep -q ''falta no AGENTS.md'''
     do: |
       agent: Rode python3 "$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py" "$AI_GUIDES_RUNTIME/templates/AGENTS.md.template" AGENTS.md.
       Ele cria o AGENTS.md — semeado com o CLAUDE.md (ou, sem ele, o GEMINI.md) verbatim, as seções novas do outro
@@ -149,27 +152,27 @@ heuristics:
       `CLAUDE.md sem a linha @AGENTS.md` e `GEMINI.md ainda existe na raiz` — são o trabalho do HARNESS-06.
       Se o --check listar linhas removidas, restaure-as de `git show HEAD:AGENTS.md`.
       Se listar "comando do template sem alvo no Makefile", apague essa linha: ela veio do template, não do projeto.
-    verify: "python3 \"$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py\" --check \"$AI_GUIDES_RUNTIME/templates/AGENTS.md.template\" AGENTS.md && ! python3 \"$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py\" --migrate --check \"$AI_GUIDES_RUNTIME/templates/CLAUDE.md.template\" AGENTS.md 2>&1 | grep -q 'falta no AGENTS.md'"
+    verify: 'python3 "$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py" --check "$AI_GUIDES_RUNTIME/templates/AGENTS.md.template" AGENTS.md && ! python3 "$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py" --migrate --check "$AI_GUIDES_RUNTIME/templates/CLAUDE.md.template" AGENTS.md 2>&1 | grep -q ''falta no AGENTS.md'''
 
   - id: HARNESS-06
     title: "CLAUDE.md reduzido a @AGENTS.md e GEMINI.md da raiz absorvido, sem perder conteúdo"
-    when: "! python3 \"$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py\" --migrate --check \"$AI_GUIDES_RUNTIME/templates/CLAUDE.md.template\" AGENTS.md 2>/dev/null"
+    when: '! python3 "$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py" --migrate --check "$AI_GUIDES_RUNTIME/templates/CLAUDE.md.template" AGENTS.md 2>/dev/null'
     do: 'python3 "$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py" --migrate "$AI_GUIDES_RUNTIME/templates/CLAUDE.md.template" AGENTS.md'
-    verify: "python3 \"$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py\" --migrate --check \"$AI_GUIDES_RUNTIME/templates/CLAUDE.md.template\" AGENTS.md"
+    verify: 'python3 "$AI_GUIDES_RUNTIME/templates/harness/merge_agent_md.py" --migrate --check "$AI_GUIDES_RUNTIME/templates/CLAUDE.md.template" AGENTS.md'
     depends_on: [HARNESS-05]
 
   - id: HARNESS-07
     title: Hooks mínimos do Claude Code (.claude/settings.json com guardrail do Graphify)
     when: "! test -f .claude/settings.json"
     do: 'cp "$AI_GUIDES_RUNTIME/templates/settings.claude.json" .claude/settings.json'
-    verify: "python3 -c \"import json,sys; d=json.load(open('.claude/settings.json')); sys.exit(0 if 'hooks' in d else 1)\""
+    verify: 'python3 -c "import json,sys; d=json.load(open(''.claude/settings.json'')); sys.exit(0 if ''hooks'' in d else 1)"'
     depends_on: [HARNESS-02]
 
   - id: HARNESS-08
     title: Gemini CLI com hooks mínimos e lendo AGENTS.md (.gemini/settings.json context.fileName)
-    when: "! python3 \"$AI_GUIDES_RUNTIME/templates/harness/gemini_context.py\" --check .gemini/settings.json \"$AI_GUIDES_RUNTIME/templates/settings.gemini.json\" 2>/dev/null"
+    when: '! python3 "$AI_GUIDES_RUNTIME/templates/harness/gemini_context.py" --check .gemini/settings.json "$AI_GUIDES_RUNTIME/templates/settings.gemini.json" 2>/dev/null'
     do: 'python3 "$AI_GUIDES_RUNTIME/templates/harness/gemini_context.py" .gemini/settings.json "$AI_GUIDES_RUNTIME/templates/settings.gemini.json"'
-    verify: "python3 \"$AI_GUIDES_RUNTIME/templates/harness/gemini_context.py\" --check .gemini/settings.json \"$AI_GUIDES_RUNTIME/templates/settings.gemini.json\""
+    verify: 'python3 "$AI_GUIDES_RUNTIME/templates/harness/gemini_context.py" --check .gemini/settings.json "$AI_GUIDES_RUNTIME/templates/settings.gemini.json"'
     depends_on: [HARNESS-02]
 
   - id: HARNESS-09
@@ -184,40 +187,40 @@ heuristics:
 
   - id: HARNESS-10
     title: Pre-commit hook faz auto-staging das memórias
-    when: "git rev-parse --git-path hooks >/dev/null 2>&1 && ! grep -q sync-claude-memory \"$(git rev-parse --git-path hooks)/pre-commit\" 2>/dev/null"
+    when: 'git rev-parse --git-path hooks >/dev/null 2>&1 && ! grep -q sync-claude-memory "$(git rev-parse --git-path hooks)/pre-commit" 2>/dev/null'
     do: |
       H="$(git rev-parse --git-path hooks)"; mkdir -p "$H"
       if test -f "$H/pre-commit"; then tail -n +2 "$AI_GUIDES_RUNTIME/templates/pre-commit-memory.sh" >> "$H/pre-commit"
       else cp "$AI_GUIDES_RUNTIME/templates/pre-commit-memory.sh" "$H/pre-commit"; fi
       chmod +x "$H/pre-commit"
-    verify: "test -x \"$(git rev-parse --git-path hooks)/pre-commit\" && grep -q sync-claude-memory \"$(git rev-parse --git-path hooks)/pre-commit\""
+    verify: 'test -x "$(git rev-parse --git-path hooks)/pre-commit" && grep -q sync-claude-memory "$(git rev-parse --git-path hooks)/pre-commit"'
     depends_on: [HARNESS-09]
 
   - id: HARNESS-11
     title: Estrutura docs/ (adrs — ou adr existente —, ai/{chats,plans,reports,sessions,specs}, commits)
     when: "! test -d docs/adr && ! test -d docs/adrs || ! test -d docs/ai/plans || ! test -d docs/ai/reports || ! test -d docs/ai/sessions || ! test -d docs/ai/specs || ! test -d docs/ai/chats || ! test -d docs/commits"
-    do: "A=docs/adr; test -d $A || A=docs/adrs; mkdir -p $A docs/ai/chats docs/ai/plans docs/ai/reports docs/ai/sessions docs/ai/specs docs/commits && for d in $A docs/ai/chats docs/ai/plans docs/ai/reports docs/ai/sessions docs/ai/specs docs/commits; do touch \"$d/.gitkeep\"; done"
+    do: 'A=docs/adr; test -d $A || A=docs/adrs; mkdir -p $A docs/ai/chats docs/ai/plans docs/ai/reports docs/ai/sessions docs/ai/specs docs/commits && for d in $A docs/ai/chats docs/ai/plans docs/ai/reports docs/ai/sessions docs/ai/specs docs/commits; do touch "$d/.gitkeep"; done'
     verify: "(test -d docs/adr || test -d docs/adrs) && test -d docs/ai/plans && test -d docs/ai/reports && test -d docs/ai/sessions && test -d docs/ai/specs && test -d docs/ai/chats && test -d docs/commits"
 
   - id: HARNESS-12
     title: uv instalado (gerenciador canônico de ferramentas Python — macOS, Linux e Windows)
-    when: "! command -v uv >/dev/null 2>&1 && ! test -x \"$HOME/.local/bin/uv\""
+    when: '! command -v uv >/dev/null 2>&1 && ! test -x "$HOME/.local/bin/uv"'
     do: |
       if [ "${OS:-}" = "Windows_NT" ]; then
         powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
       else
         curl -LsSf https://astral.sh/uv/install.sh | sh || sh "$AI_GUIDES_RUNTIME/templates/install_dep.sh" uv
       fi
-    verify: "command -v uv >/dev/null 2>&1 || test -x \"$HOME/.local/bin/uv\""
+    verify: 'command -v uv >/dev/null 2>&1 || test -x "$HOME/.local/bin/uv"'
 
   - id: HARNESS-13
     title: Graphify (CLI graphifyy) instalado — o harness inteiro depende dele
-    when: "! command -v graphify >/dev/null 2>&1 && ! test -x \"$HOME/.local/bin/graphify\""
+    when: '! command -v graphify >/dev/null 2>&1 && ! test -x "$HOME/.local/bin/graphify"'
     do: |
       PATH="$HOME/.local/bin:$PATH" uv tool install graphifyy \
         || PATH="$HOME/.local/bin:$PATH" pipx install graphifyy \
         || python3 -m pip install --user graphifyy
-    verify: "PATH=\"$HOME/.local/bin:$PATH\" graphify --version >/dev/null 2>&1"
+    verify: 'PATH="$HOME/.local/bin:$PATH" graphify --version >/dev/null 2>&1'
     depends_on: [HARNESS-12]
 
   - id: HARNESS-15
@@ -228,13 +231,13 @@ heuristics:
 
   - id: HARNESS-16
     title: Verificador de hooks instalado e TODOS os hooks configurados rodam sem erro
-    when: "! cmp -s \"$AI_GUIDES_RUNTIME/templates/harness/verify_hooks.py\" .agents/scripts/harness/verify_hooks.py || ! python3 .agents/scripts/harness/verify_hooks.py >/dev/null 2>&1"
+    when: '! cmp -s "$AI_GUIDES_RUNTIME/templates/harness/verify_hooks.py" .agents/scripts/harness/verify_hooks.py || ! python3 .agents/scripts/harness/verify_hooks.py >/dev/null 2>&1'
     do: |
       mkdir -p .agents/scripts/harness
       cp "$AI_GUIDES_RUNTIME/templates/harness/verify_hooks.py" .agents/scripts/harness/verify_hooks.py
       chmod +x .agents/scripts/harness/verify_hooks.py
       python3 .agents/scripts/harness/verify_hooks.py || echo "hooks quebrados acima: NÃO os edite à mão. Hook do Graphify (hook-guard, graphify update): o GRAPH-04/05 o troca pelo formato canônico; rode apply harness-commit-memoria --skip HARNESS-16 e siga. Outro hook: pergunte ao usuário (AskUserQuestion: corrigir o caminho · remover · manter e deixar ❌) antes de tocar."
-    verify: "cmp -s \"$AI_GUIDES_RUNTIME/templates/harness/verify_hooks.py\" .agents/scripts/harness/verify_hooks.py && python3 .agents/scripts/harness/verify_hooks.py"
+    verify: 'cmp -s "$AI_GUIDES_RUNTIME/templates/harness/verify_hooks.py" .agents/scripts/harness/verify_hooks.py && python3 .agents/scripts/harness/verify_hooks.py'
     depends_on: [HARNESS-07, HARNESS-08, HARNESS-13, HARNESS-15]
 
   - id: HARNESS-14
@@ -307,10 +310,10 @@ projeto-raiz/                            # Repositório Raiz (Governança, Códi
 
 > 📂 **Regra de Ouro para Artefatos de IA (`docs/ai/`)**:  
 > Todo artefato gerado por agente vai em `docs/ai/`, com nome `YYYY-MM-DD-<topico>.md`: specs de design em `docs/ai/specs/` (`-design.md`), planos em `docs/ai/plans/`, relatórios (auditorias, reviews, análises, investigações) em `docs/ai/reports/`, checkpoints de sessão em `docs/ai/sessions/` e transcrições em `docs/ai/chats/`. **Nunca** crie `docs/superpowers/`, `docs/plans/`, `plans/`, `reports/` ou arquivos soltos na raiz — quando uma skill sugerir outro caminho (ex.: `brainstorming`, `writing-plans`), sobrescreva-o. Ficam fora de `docs/ai/` apenas os ADRs (`docs/adrs/`) e os relatórios do `/commit-e-documentar` (`docs/commits/`). A regra é instalada na seção ``## 📂 Artefatos de IA em `docs/ai/` `` do `AGENTS.md` (HARNESS-05) e as pastas por HARNESS-11.
-
-> ✋ **Regra de Ouro para Specs e Planos (aprovação obrigatória & `/plan-criticize`)**:  
-> Após propor ou escrever uma spec ou um plano, o agente **PARA** e pede aprovação explícita do usuário. Sem um "sim" explícito não há implementação, próximo artefato nem commit; silêncio ou autonomia concedida para outra tarefa não contam. Se o artefato mudar, a aprovação é pedida de novo. **Recomendação Forte**: Antes de submeter o plano ao usuário, execute ou ofereça o teste de estresse da skill `/plan-criticize` para mapear casos de borda, alternativas e conformidade com os guias. A regra é instalada na seção `## ✋ Aprovação Obrigatória de Specs e Planos` do `AGENTS.md` (HARNESS-05).
-
+>
+> ✋ **Regra de Ouro para Specs e Planos (aprovação obrigatória & `/plan-criticize` compulsório)**:
+> Após propor ou escrever uma spec (`docs/ai/specs/`) ou um plano (`docs/ai/plans/`), execute **obrigatoriamente por padrão** o teste de estresse da skill `/plan-criticize` (`plan_critic.py`, meta Risk Score <= 15) para eliminar pontos cegos, modos de falha e lacunas de rollback. Em seguida, o agente **PARA** e pede aprovação explícita do usuário apresentando o caminho do arquivo e o veredito do `/plan-criticize`. Sem um "sim" explícito não há implementação, próximo artefato nem commit; silêncio ou autonomia concedida para outra tarefa não contam. Se o artefato mudar, rode `/plan-criticize` novamente e peça nova aprovação. A regra é instalada na seção `## ✋ Aprovação Obrigatória de Specs e Planos` do `AGENTS.md` (HARNESS-05).
+>
 > 💡 **Regra de Ouro para Skills (Single Source of Truth)**:  
 > Todas as skills são **compulsoriamente criadas em `.agents/skills/<nome-da-skill>/`** e consumidas pelos harnesses específicos (`.claude/skills/` e `.gemini/skills/`) através de links simbólicos (`ln -s ../../.agents/skills/<nome-da-skill> .claude/skills/<nome-da-skill>`). Nunca duplique arquivos de skills entre pastas.
 
@@ -337,13 +340,16 @@ graph TD
 #### 🔹 Fase 1: Stage e Agrupamento Lógico por Afinidade
 
 1. **Inspeção de Estado**: Obtenha o status completo e higienizado:
+
    ```bash
    git status --porcelain
    ```
+
 2. **Agrupamento por Contexto Lógico**: Separe as alterações por componente funcional. Nunca misture escopos distintos no mesmo commit.
-   - *Exemplo*: Arquivos de template HTML, componente TypeScript e seu model formam um único grupo de UI.
-   - *Exemplo*: Migração de banco DDL, endpoint FastAPI e schemas Pydantic formam outro grupo no backend.
+   - _Exemplo_: Arquivos de template HTML, componente TypeScript e seu model formam um único grupo de UI.
+   - _Exemplo_: Migração de banco DDL, endpoint FastAPI e schemas Pydantic formam outro grupo no backend.
 3. **Adição Seletiva**: Adicione ao staging area estritamente o grupo selecionado:
+
    ```bash
    git add caminho/do/arquivo1.ts caminho/do/arquivo2.html
    ```
@@ -354,24 +360,33 @@ graph TD
 
 Antes de gerar o commit, execute o checklist triplo:
 
-##### 1. Documentação Inline & Externa
-- **Inline**: Funções, componentes e serviços novos devem possuir comentários explicativos em **pt-BR** (Docstrings/JSDoc) detalhando parâmetros, retornos e decisões técnicas.
-- **Externa (`docs/` / `docs/ai/`)**: Recursos estruturais devem atualizar os guias ou especificações correspondentes (ex: `docs/ai/specs/` para especificações de IA).
+##### 1. Documentação Reversa Inline & Externa Estrita CPB (`reversa-sync`)
+
+- **Inline**: Funções, componentes, modelos de dados e serviços novos ou alterados devem possuir comentários explicativos em **pt-BR** (Docstrings/JSDoc/divisores `MARK:`) detalhando parâmetros, retornos, invariantes de negócio (`RN-XXX`/`RF-XXX`) e escala de confiança (`🟢 CONFIRMADO`, `🟡 INFERIDO`, `🔴 LACUNA`).
+- **Externa Estrita nos Diretórios CPB (`docs/domains/`, `docs/database/`, `docs/ai/specs/`, `docs/adrs/`)**: Recursos estruturais e alterações de regras ou schema devem atualizar os artefatos correspondentes (`docs/domains/<dominio>/{overview,business-rules,tech-design}.md` via `/code-documentar`, `docs/database/database-schema.md` via `/db-documentar`, `docs/ai/specs/` para especificações de IA).
+
+##### 1.1 Radar de Topologia de Branches, Provisionamento e Watchdog de CI/CD (`git_branch_ci_radar.py`)
+
+- Utilize `python3 skills/software-engineering/commit-e-documentar/scripts/git_branch_ci_radar.py --markdown` para inspecionar divergências (`ahead`/`behind`) de todas as branches locais/worktrees em relação ao upstream e à branch base (`origin/main`).
+- Se o projeto não possuir esteira de CI/CD (`has_ci: false`), ofereça ou execute `--scaffold-ci` para provisionar `.github/workflows/ci.yml` adaptado às stacks detectadas.
+- Após confirmação do push remoto, monitore ativamente a execução da esteira (`gh run watch --exit-status` / `gh pr checks --watch`) e reporte o status consolidado ao usuário.
 
 ##### 2. Avaliação Compulsória dos 6 Gatilhos de ADR (Architecture Decision Records)
+
 Avalie se o grupo de alterações ativa qualquer um dos **6 Gatilhos Arquiteturais Canônicos**:
 
-| # | Gatilho Arquitetural | Critérios Práticos de Disparo |
-| :---: | :--- | :--- |
-| **1** | **Comunicação / Protocolos** | Criação ou alteração em Gateways, WebSockets, gRPC, APIs REST públicas, BFF, mensageria (Kafka/RabbitMQ) ou webhooks. |
-| **2** | **Modelagem de Dados & Persistência** | Novas tabelas SQL, alterações de DDL, índices críticos, tabelas Append-Only, estratégias de particionamento ou migrações complexas. |
-| **3** | **Segurança & Identidade** | Mecanismos de autenticação, RBAC/ABAC, cookies `httpOnly`, criptografia em repouso/trânsito, proteção anti-IDOR ou políticas CORS/CSP. |
-| **4** | **Conformidade Regulatória & Privacidade** | Tratamento de dados sensíveis (LGPD/GDPR), conformidade fiscal, prazos de retenção/guarda de logs ou assinaturas eletrônicas. |
-| **5** | **Resiliência & Engenharia Distribuída** | Implementação de Circuit Breakers, chaves de Idempotência, retentativas com Jitter exponencial, Dead Letter Queues (DLQs) ou cache distribuído. |
-| **6** | **Adoção/Descontinuação de Tecnologias** | Adição ou remoção de frameworks, ORMs, drivers de banco, bibliotecas estruturais de estado ou infraestrutura base. |
+|   #   | Gatilho Arquitetural                       | Critérios Práticos de Disparo                                                                                                                   |
+| :---: | :----------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1** | **Comunicação / Protocolos**               | Criação ou alteração em Gateways, WebSockets, gRPC, APIs REST públicas, BFF, mensageria (Kafka/RabbitMQ) ou webhooks.                           |
+| **2** | **Modelagem de Dados & Persistência**      | Novas tabelas SQL, alterações de DDL, índices críticos, tabelas Append-Only, estratégias de particionamento ou migrações complexas.             |
+| **3** | **Segurança & Identidade**                 | Mecanismos de autenticação, RBAC/ABAC, cookies `httpOnly`, criptografia em repouso/trânsito, proteção anti-IDOR ou políticas CORS/CSP.          |
+| **4** | **Conformidade Regulatória & Privacidade** | Tratamento de dados sensíveis (LGPD/GDPR), conformidade fiscal, prazos de retenção/guarda de logs ou assinaturas eletrônicas.                   |
+| **5** | **Resiliência & Engenharia Distribuída**   | Implementação de Circuit Breakers, chaves de Idempotência, retentativas com Jitter exponencial, Dead Letter Queues (DLQs) ou cache distribuído. |
+| **6** | **Adoção/Descontinuação de Tecnologias**   | Adição ou remoção de frameworks, ORMs, drivers de banco, bibliotecas estruturais de estado ou infraestrutura base.                              |
 
 **Se algum gatilho for disparado:**
 Crie imediatamente a ADR em `docs/adrs/[NUMERO_4_DIGITOS]-[slug-kebab-case].md` (ex: `docs/adrs/0005-autenticacao-jwt-httponly.md`; em projeto que já usa `docs/adr/`, grave nele) contendo a estrutura essencial em 8 seções:
+
 1. **Cabeçalho/Metadados**: Título, Data, Autor, Status (`Aceito`/`Proposto`), Versão.
 2. **Contexto & Problema**: Descreva a motivação técnica e os riscos mapeados.
 3. **Fundamentação & Normas**: Requisitos de negócio ou conformidades aplicáveis.
@@ -382,20 +397,26 @@ Crie imediatamente a ADR em `docs/adrs/[NUMERO_4_DIGITOS]-[slug-kebab-case].md` 
 8. **Consequências & Resultados**: Benefícios obtidos e compromissos assumidos.
 
 Adicione a nova ADR ao stage:
+
 ```bash
 git add docs/adrs/0005-slug-da-decisao.md
 ```
 
 ##### 3. Checagem Estática de Tipos, Lint e Testes
+
 - **Frontend**:
+
   ```bash
   cd frontend && npx tsc --noEmit
   ```
+
 - **Backend**:
+
   ```bash
   cd backend && pytest -v
   ```
-*Se houver qualquer falha ou quebra de tipos, interrompa o fluxo e corrija antes de commitar.*
+
+  _Se houver qualquer falha ou quebra de tipos, interrompa o fluxo e corrija antes de commitar._
 
 ---
 
@@ -414,6 +435,7 @@ Cada grupo validado deve ser commitado individualmente usando o padrão **Conven
   - `chore`: Tarefas de build, dependências ou manutenção de grafo/harness.
 
 - **Comando Seguro com HEREDOC**:
+
   ```bash
   git commit -m "$(cat <<'EOF'
   feat(auth): implementar rotas de login com tokens jwt em cookies httponly
@@ -429,6 +451,7 @@ Cada grupo validado deve ser commitado individualmente usando o padrão **Conven
 #### 🔹 Fase 4: Repetição e Limpeza Completa
 
 Repita as **Fases 1, 2 e 3** até que o comando abaixo retorne 100% limpo em todas as pastas do projeto:
+
 ```bash
 git status --porcelain
 ```
@@ -439,21 +462,24 @@ git status --porcelain
 
 Com os micro-commits concluídos, gere o relatório consolidado da sessão em `docs/commits/YYYY-MM-DD_<escopo-principal>.md`.
 
-##### Modelo Completo de Relatório de Sessão:
+##### Modelo Completo de Relatório de Sessão
 
 ````markdown
 # Relatório de Sessão de Desenvolvimento: YYYY-MM-DD (<Escopo>)
 
 ## 1. Metadados da Sessão
+
 - **Data**: YYYY-MM-DD
 - **Escopo Principal**: `<escopo>`
 - **Total de Commits**: X commit(s)
 - **ADRs Vinculadas**: `docs/adrs/0005-autenticacao-jwt-httponly.md` (ou "Nenhuma ADR exigida")
 
 ## 2. Visão Geral Executiva
+
 Resumo em 2 a 4 frases das entregas e refatorações realizadas nesta sessão de trabalho.
 
 ## 3. Diagrama Arquitetural & Fluxo (Mermaid)
+
 ```mermaid
 flowchart TD
     A[Cliente / Frontend] -->|POST /auth/login| B[Auth Router]
@@ -463,22 +489,26 @@ flowchart TD
 ```
 
 ## 4. Mapa de Arquivos Modificados
-| Arquivo | Tipo | Descrição da Alteração |
-| :--- | :--- | :--- |
-| `backend/app/api/v1/endpoints/auth.py` | Rota | Criação do endpoint de login e refresh |
+
+| Arquivo                                | Tipo    | Descrição da Alteração                    |
+| :------------------------------------- | :------ | :---------------------------------------- |
+| `backend/app/api/v1/endpoints/auth.py` | Rota    | Criação do endpoint de login e refresh    |
 | `backend/app/services/auth_service.py` | Serviço | Validação de credenciais e geração de JWT |
 
 ## 5. Detalhamento por Commit
+
 - **`feat(auth): ...`**: Descrição detalhada do comportamento e testes.
 - **`docs(adr): ...`**: Registro da decisão arquitetural tomada.
 
 ## 6. Status do Projeto
+
 - **✅ O Que Está Funcionando**: Funcionalidades testadas e operacionais.
 - **❌ O Que Está Pendente**: Débitos ou itens deixados para a próxima sessão.
 - **⚠️ Dívida Técnica Identificada**: Oportunidades de refatoração futuras.
 ````
 
 Após gerar o relatório, comite-o imediatamente:
+
 ```bash
 git add docs/commits/YYYY-MM-DD_<escopo>.md
 git commit -m "docs(commits): registra sessao de desenvolvimento de YYYY-MM-DD"
@@ -519,16 +549,19 @@ Para garantir máxima economia de tokens e precisão cirúrgica de contexto, o e
 > 💡 **Instalação Canônica**: O Graphify deve ser configurado via `uv tool install graphifyy` (caso o `uv` não esteja instalado na máquina, configure-o primeiro via `curl -LsSf https://astral.sh/uv/install.sh | sh`, a menos que o usuário declare que não deseja utilizar o `uv`). Consulte o [Guia de Graph Engineering](./guia-graph-engineering.md) para detalhes completos.
 
 #### A Diretriz Mandatória: "Graphify Antes de Grep/Glob"
+
 Antes de disparar buscas cegas de texto bruto (`Grep`) ou listas de arquivos (`Glob`), consulte o grafo relacional:
 
-| Comando | Propósito | Exemplo |
-| :--- | :--- | :--- |
-| `graphify query "<pergunta>"` | Retorna o subgrafo relevante focado na pergunta. | `graphify query "como funciona o fluxo de login e tokens?"` |
-| `graphify path "<A>" "<B>"` | Mapeia a cadeia de chamadas entre dois módulos/nós. | `graphify path "endpoints/auth.py" "services/auth_service.py"` |
-| `graphify explain "<conceito>"` | Explica entidades e interações de uma funcionalidade. | `graphify explain "autenticacao jwt"` |
+| Comando                         | Propósito                                             | Exemplo                                                        |
+| :------------------------------ | :---------------------------------------------------- | :------------------------------------------------------------- |
+| `graphify query "<pergunta>"`   | Retorna o subgrafo relevante focado na pergunta.      | `graphify query "como funciona o fluxo de login e tokens?"`    |
+| `graphify path "<A>" "<B>"`     | Mapeia a cadeia de chamadas entre dois módulos/nós.   | `graphify path "endpoints/auth.py" "services/auth_service.py"` |
+| `graphify explain "<conceito>"` | Explica entidades e interações de uma funcionalidade. | `graphify explain "autenticacao jwt"`                          |
 
 #### Atualização do Grafo
+
 Após criar ou modificar arquivos de código de produção (`.py`, `.ts`, `.js`, etc. — note que documentação `.md` é estritamente excluída pelo `.graphifyignore`), atualize incrementalmente o grafo:
+
 ```bash
 graphify update .
 ```
@@ -563,12 +596,15 @@ type: team
 ---
 
 ### Regra / Fato
+
 Definição objetiva e inegociável da diretriz técnica.
 
 ### Motivo (Why)
+
 Razão técnica, incidente histórico ou dependência que motivou a criação desta regra.
 
 ### Como Aplicar (How to apply)
+
 Exemplo prático de código ou comando de validação.
 ```
 
@@ -675,6 +711,7 @@ exit 0
 ```
 
 Torne o script executável:
+
 ```bash
 chmod +x .git/hooks/pre-commit
 ```

@@ -1,6 +1,6 @@
 {
   "context": {
-    "fileName": ["AGENTS.md"]
+    "fileName": ["AGENTS.md", "GEMINI.md"]
   },
   "hooks": {
     "BeforeTool": [

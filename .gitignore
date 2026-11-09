@@ -34,6 +34,8 @@ bazel-out/
 testem.log
 /typings/
 __screenshots__/
+playwright-report/
+test-results/
 
 # Logs de gerenciadores de pacotes
 npm-debug.log*

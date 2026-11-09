@@ -40,6 +40,26 @@
             "command": "ROOT=\"${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}\"; [ -f \"$ROOT/.claude/verify-docs.sh\" ] && exec bash \"$ROOT/.claude/verify-docs.sh\"; exit 0"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/mods/blast-radius/bin/blast-radius.js",
+            "statusMessage": "Auditando blast radius de comandos críticos..."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/mods/you-should-know/bin/risk-advisor.js",
+            "statusMessage": "Inspecionando riscos de arquitetura e segredos..."
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -52,6 +72,16 @@
             "statusMessage": "Atualizando Grafo de Conhecimento com Graphify..."
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/mods/replay-theater/bin/replay-collector.js",
+            "statusMessage": "Registrando diffs para o Replay Theater..."
+          }
+        ]
       }
     ],
     "Notification": [
@@ -61,6 +91,33 @@
           {
             "type": "command",
             "command": "jq -r '.message // \"OpenClaude requer atenção\"' | terminal-notifier -title 'OpenClaude' -sound default -activate com.google.antigravity-ide"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/mods/cache-tax/bin/cache-check.js",
+            "statusMessage": "Verificando expiração de cache de contexto..."
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/mods/reflect/bin/reflect.js",
+            "statusMessage": "Capturando correções e novas convenções..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR\"/mods/next-steps/bin/next-steps.js",
+            "statusMessage": "Sugerindo próximos passos contextuais..."
           }
         ]
       }

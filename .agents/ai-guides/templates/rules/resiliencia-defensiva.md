@@ -15,6 +15,7 @@ Regra always-on: aplique este checklist em aprovação de PRs e novas rotas de i
 7. ❌ **Gravar Idempotência só no Final:** Se a gravação da chave ocorrer após o efeito colateral, duas requisições simultâneas passarão pelo teste inicial e duplicarão a transação.
 8. ❌ **Circuit Breaker com Limiar Global:** Usar um único disjuntor para todas as APIs externas. Se o serviço de SMS falhar, o serviço de Pagamentos não deve ser desligado.
 9. ❌ **Requisições e Streams sem Cancelamento no Cliente:** Disparar requisições ou assinar fluxos assíncronos sem gerenciamento de ciclo de vida (`AbortController`, descarte de observadores/subscrições), retendo conexões HTTP obsoletas e gerando vazamentos de memória.
+10. ❌ **Erros HTTP Ad-Hoc em Projetos Novos ou Vazamento de Exceção Bruta:** Criar novos projetos retornando strings soltas (`{"err": msg}`) ou stack traces de banco/framework em vez de adotar a **RFC 9457 (`application/problem+json`)** por padrão, ou forçar migração quebrando consumidores existentes sem estratégia de compatibilidade.
 
 ---
 
@@ -29,6 +30,7 @@ Antes de aprovar Pull Requests ou subir novas rotas de integração para produç
 - [ ] **Outbox Pattern:** Eventos de mensageria críticos são persistidos na mesma transação atômica do banco de dados?
 - [ ] **Graceful Shutdown:** Servidores web e workers escutam `SIGTERM` e drenam tarefas pendentes antes do término?
 - [ ] **Probes Corretas:** `/livez` verifica apenas o processo interno e `/readyz` verifica conectividade com infraestrutura crítica?
+- [ ] **Respostas de Erro Padronizadas (RFC 9457):** Projetos novos ou sem padronização retornam `application/problem+json` seguindo a **RFC 9457** (`type`, `title`, `status`, `detail`, `instance`, `errors[]`)? Projetos existentes (especialmente com RFC 7807) receberam sugestão de evolução compatível para a RFC 9457 sem quebrar clientes ativos?
 - [ ] **Observabilidade:** Métricas e logs estruturados são emitidos na abertura de disjuntores, quedas para DLQ e ativação de fallbacks?
 
 ---

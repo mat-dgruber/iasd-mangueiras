@@ -10,7 +10,9 @@
     "start:front": "npm --prefix frontend start",
     "start:functions": "npm --prefix functions run build:watch",
     "test": "npm --prefix frontend run test:ci",
+    "test:ci": "npm --prefix frontend run test:ci",
     "test:front": "npm --prefix frontend run test:ci",
+    "openapi:export": "make openapi",
     "build": "npm --prefix frontend run build && npm --prefix functions run build",
     "build:functions": "npm --prefix functions run build",
     "deploy": "firebase deploy",
@@ -19,6 +21,7 @@
     "check": "npm run test && npm run build"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.64.1",
     "concurrently": "^9.1.2",
     "openapi-typescript": "^7.6.1"

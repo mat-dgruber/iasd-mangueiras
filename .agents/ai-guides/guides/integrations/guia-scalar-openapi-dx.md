@@ -594,7 +594,7 @@ app = FastAPI(openapi_tags=tags_metadata)
 
 Evite documentar apenas o caso de sucesso (`200 OK`). Declare explicitamente todas as respostas de falha tratadas pela aplicacao (`400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`, `409 Conflict`, `422 Unprocessable Entity`):
 
-- Cada status code deve conter um schema tipado de erro, preferencialmente seguindo o padrao RFC 7807 / RFC 9457 (`ProblemDetails`).
+- Cada status code deve conter um schema tipado de erro: em projetos novos ou sem padronizacao previa, adote **por padrao a RFC 9457 (`ProblemDetails`, `application/problem+json`)**; em projetos existentes (especialmente os que utilizam a RFC 7807), sugira a evolucao compativel para a RFC 9457 sem forcar quebra de consumidores ativos.
 - Inclua exemplos reais (`examples`) para payloads de sucesso e falha, permitindo execucao no playground com um clique.
 
 #### C. Declaracao de Seguranca (Security Schemes)

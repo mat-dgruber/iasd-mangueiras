@@ -20,7 +20,7 @@ PATH = os.environ.get("PATH", "") + os.pathsep + str(Path.home() / ".local" / "b
 KEYWORDS = {"if", "then", "elif", "else", "fi", "for", "while", "until", "do", "done", "case", "esac",
             "function", "return", "exit", "echo", "printf", "true", "false", "cd", "export", "set",
             "read", "local", "eval", "exec", "shift", "trap", "wait", "time", "source"}
-SCRIPT_RE = re.compile(r"[\w./~$-]+\.(?:sh|py)\b")
+SCRIPT_RE = re.compile(r"[\w./~$-]+\.(?:sh|py|js)\b")
 
 
 def commands(node) -> list[str]:
@@ -106,6 +106,17 @@ def check(cmd: str, root: Path) -> list[str]:
                 errs.append(f"{ref}: erro de sintaxe ({r.stderr.strip()[:60]})")
             elif not os.access(path, os.X_OK):
                 errs.append(f"{ref}: sem permissão de execução")
+        elif path.suffix == ".js":
+            node_bin = shutil.which("node", path=PATH)
+            if node_bin:
+                try:
+                    r = subprocess.run([node_bin, "-c", str(path)], capture_output=True, encoding="utf-8", errors="replace", env={**os.environ, "PATH": PATH})
+                    if r.returncode:
+                        errs.append(f"{ref}: erro de sintaxe JS ({r.stderr.strip()[:60]})")
+                except FileNotFoundError:
+                    node_bin = None
+            if not node_bin and "mods/" not in rel and not any("node" in e for e in errs):
+                errs.append(f"{ref}: node não encontrado no PATH")
         else:
             src = f"compile(open({str(path)!r}, encoding='utf-8').read(), {str(path)!r}, 'exec')"
             r = subprocess.run([sys.executable, "-B", "-c", src], capture_output=True, encoding="utf-8", errors="replace")

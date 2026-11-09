@@ -519,6 +519,7 @@ flowchart TD
 No início de qualquer sessão, o Harness força o alinhamento arquitetural do agente antes do envio da primeira mensagem do usuário ou do primeiro comando.
 
 - **Leitura Passiva e Compulsória de Instruções**: O agente consome o `AGENTS.md` (via `@AGENTS.md` no `CLAUDE.md` e `context.fileName` no Gemini), incorporando as regras do projeto (DDD Vertical Slice, política de linguagem pt-BR/EN-US, padrões de commit e linter).
+- **Ativação Determinística de Eficiência (`token_economy_runtime.py`)**: O hook `SessionStart` inicializa automaticamente `/token-economy on`, `/stoneage ultra` e `/ponytail ultra` (persistindo estado em `~/.config/stoneage/` e `~/.config/ponytail/` e propagando aos subagentes via `SubagentStart`), garantindo ~75% de economia de saída e YAGNI estrito desde o primeiro turno.
 - **Carregamento Automático de Memórias**: O histórico acumulado no `MEMORY.md` e em `.gemini/memory/team/` é injetado no contexto, garantindo que incidentes anteriores, decisões de design (ADRs) e convenções vigentes sejam imediatamente conhecidos.
 - **Partida Compulsória por Grafo (`graphify query`)**: Antes de realizar qualquer busca genérica por arquivos ou strings brutas, o agente obrigatoriamente consulta o Grafo de Conhecimento (`graphify query "<pergunta>"`). Isso orienta a navegação reduzindo a varredura desnecessária de diretórios em até 90%.
 
@@ -529,6 +530,7 @@ Antes de escrever qualquer linha de código produtivo, a demanda passa pelo pipe
 - **Refinamento Iterativo via `/brainstorming`**: A skill de especificação orienta a criação do spec técnico em `docs/ai/specs/`, definindo requisitos, arquitetura afetada e critérios de aceite.
 - **Sabatina Adversária com `/grill-me`**: O agente dispara proativamente o `/grill-me` para estressar o design proposto. A sabatina questiona premissas, riscos de segurança, gargalos de performance, falhas em schemas Pydantic/SQLAlchemy e compatibilidade de migrações.
 - **Decomposição em Plano Cirúrgico via `/writing-plans`**: Com o spec aprovado e sabatinado, o plano de execução é gerado em `docs/ai/plans/`, dividindo a tarefa em etapas granulares e testáveis sob a perspectiva de TDD.
+- **Teste de Estresse Obrigatório com `/plan-criticize` (`plan_critic.py`)**: Antes de solicitar o "sim" explícito do usuário para qualquer spec ou plano, o agente executa obrigatoriamente por padrão a auditoria `/plan-criticize`, validando alternativas consideradas, pré-mortem de falhas, invariantes, plano de rollback e governança de ADRs (meta: Risk Score $\le 15$).
 
 ##### 3. Fase 3: Execução & Edit Zero-Turn
 

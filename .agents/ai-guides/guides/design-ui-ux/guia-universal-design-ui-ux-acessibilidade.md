@@ -94,14 +94,14 @@ heuristics:
   - id: UI-04
     title: Plugin ESLint de acessibilidade do framework (§5 WCAG 2.2)
     when: |
-      sh "$AI_GUIDES_RUNTIME/templates/detect_stack.sh" frontend && ! sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all node "python3 "$AI_GUIDES_RUNTIME/templates/testing/npm_dep.py" eslint-plugin-jsx-a11y eslint-plugin-vuejs-accessibility @angular-eslint/eslint-plugin-template eslint-plugin-svelte"
+      sh "$AI_GUIDES_RUNTIME/templates/detect_stack.sh" frontend && ! sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all frontend "python3 "$AI_GUIDES_RUNTIME/templates/testing/npm_dep.py" eslint-plugin-jsx-a11y eslint-plugin-vuejs-accessibility @angular-eslint/eslint-plugin-template eslint-plugin-svelte"
     do: |
       agent: Instale como devDependency e habilite na configuração do ESLint o plugin de acessibilidade do framework:
       React/Next → eslint-plugin-jsx-a11y (plugin:jsx-a11y/recommended); Vue/Nuxt → eslint-plugin-vuejs-accessibility;
       Angular → @angular-eslint/eslint-plugin-template (plugin:@angular-eslint/template/accessibility);
       Svelte → eslint-plugin-svelte (regras a11y). Rode o lint e corrija as violações.
     verify: |
-      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all node "python3 "$AI_GUIDES_RUNTIME/templates/testing/npm_dep.py" eslint-plugin-jsx-a11y eslint-plugin-vuejs-accessibility @angular-eslint/eslint-plugin-template eslint-plugin-svelte"
+      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all frontend "python3 "$AI_GUIDES_RUNTIME/templates/testing/npm_dep.py" eslint-plugin-jsx-a11y eslint-plugin-vuejs-accessibility @angular-eslint/eslint-plugin-template eslint-plugin-svelte"
     optional: true
 
   - id: UI-05
@@ -118,13 +118,13 @@ heuristics:
   - id: UI-06
     title: Stylelint proibindo hex hardcoded, font-size em px e z-index literal (§2-4 tokens)
     when: |
-      sh "$AI_GUIDES_RUNTIME/templates/detect_stack.sh" frontend && sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --any node "! ls .stylelintrc .stylelintrc.json .stylelintrc.js .stylelintrc.cjs stylelint.config.js stylelint.config.mjs stylelint.config.cjs 2>/dev/null | grep -q ."
+      sh "$AI_GUIDES_RUNTIME/templates/detect_stack.sh" frontend && sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --any frontend "! ls .stylelintrc .stylelintrc.json .stylelintrc.js .stylelintrc.cjs stylelint.config.js stylelint.config.mjs stylelint.config.cjs 2>/dev/null | grep -q ."
     do: |
       agent: Copie "$AI_GUIDES_RUNTIME/templates/design/stylelintrc.json" para .stylelintrc.json, instale stylelint e
       stylelint-config-standard como devDependencies e crie o script "lint:css": "stylelint \"**/*.{css,scss}\"".
       Rode-o; violações existentes viram tarefas de migração para tokens (não desabilite as regras).
     verify: |
-      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all node "grep -qs color-no-hex .stylelintrc.json && python3 "$AI_GUIDES_RUNTIME/templates/testing/npm_dep.py" stylelint"
+      sh "$AI_GUIDES_RUNTIME/templates/in_each.sh" --all frontend "grep -qs color-no-hex .stylelintrc.json && python3 "$AI_GUIDES_RUNTIME/templates/testing/npm_dep.py" stylelint"
     optional: true
 
   - id: UI-07

@@ -10,10 +10,15 @@ project:
   - seguranca
   - arquitetura
   - ux-design
+  - gestao-de-produto
+  - dx-de-api
+  backend_style: enxuto
+  backend_blocks: use_cases
+  stores: documentos,cache
 guides:
   1password-credentials:
     version: 2
-    applied_at: '2026-10-18T10:02:14'
+    applied_at: '2026-11-09T15:05:14'
     status: pass
     heuristics:
       OP-01: pass
@@ -23,31 +28,31 @@ guides:
       OP-05: pass
   ai-jail-sandbox:
     version: 2
-    applied_at: '2026-10-18T10:02:14'
+    applied_at: '2026-11-09T15:05:14'
     status: pass
     heuristics:
       JAIL-01: pass
       JAIL-02: pass
       JAIL-03: pass
-      JAIL-04: warn
+      JAIL-04: pass
       JAIL-05: pass
   notificacoes-openclaude:
     version: 2
-    applied_at: '2026-10-18T10:02:15'
+    applied_at: '2026-11-09T15:05:14'
     status: pass
     heuristics:
       NOTIF-01: pass
       NOTIF-02: pass
   orquestracao-ciclo-de-vida-skills:
     version: 2
-    applied_at: '2026-10-18T10:02:15'
+    applied_at: '2026-11-09T15:05:14'
     status: pass
     heuristics:
       LIFE-01: pass
       LIFE-02: pass
   domain-documentation-standards:
     version: 2
-    applied_at: '2026-10-18T10:02:15'
+    applied_at: '2026-11-09T15:05:14'
     status: pass
     heuristics:
       DOM-01: pass
@@ -55,8 +60,8 @@ guides:
       DOM-03: pass
       DOM-04: pass
   resiliencia-defensiva:
-    version: 5
-    applied_at: '2026-10-18T10:02:16'
+    version: 6
+    applied_at: '2026-11-09T15:05:15'
     status: pass
     heuristics:
       RESIL-01: pass
@@ -64,9 +69,10 @@ guides:
       RESIL-03: pass
       RESIL-04: skip
       RESIL-05: pass
+      RESIL-06: pass
   seguranca-zero-trust:
     version: 4
-    applied_at: '2026-10-18T10:02:17'
+    applied_at: '2026-11-09T15:05:15'
     status: pass
     heuristics:
       ZT-01: pass
@@ -78,7 +84,7 @@ guides:
       ZT-07: pass
   data-table-ui-ux:
     version: 2
-    applied_at: '2026-10-18T10:02:18'
+    applied_at: '2026-11-09T15:05:15'
     status: pass
     heuristics:
       TABLE-01: pass
@@ -86,14 +92,14 @@ guides:
       TABLE-03: pass
   dashboard-anti-slop:
     version: 2
-    applied_at: '2026-10-18T10:02:18'
+    applied_at: '2026-11-09T15:05:15'
     status: pass
     heuristics:
       DASH-01: pass
       DASH-02: pass
   liquid-glass:
     version: 2
-    applied_at: '2026-10-18T10:02:18'
+    applied_at: '2026-11-09T15:05:15'
     status: pass
     heuristics:
       GLASS-01: pass
@@ -101,33 +107,33 @@ guides:
       GLASS-03: pass
   product-design-ciclo:
     version: 2
-    applied_at: '2026-10-18T10:02:18'
+    applied_at: '2026-11-09T15:05:15'
     status: pass
     heuristics:
       PD-01: pass
       PD-02: pass
   ux-cognicao-comportamental:
     version: 2
-    applied_at: '2026-10-18T10:02:18'
+    applied_at: '2026-11-09T15:05:15'
     status: pass
     heuristics:
       UX-01: pass
       UX-02: pass
   design-universal-acessibilidade:
     version: 2
-    applied_at: '2026-10-18T10:02:21'
+    applied_at: '2026-11-09T15:05:15'
     status: pass
     heuristics:
       UI-01: pass
       UI-02: pass
       UI-03: pass
-      UI-04: warn
-      UI-05: warn
-      UI-06: warn
+      UI-04: pass
+      UI-05: pass
+      UI-06: pass
       UI-07: pass
   harness-commit-memoria:
     version: 7
-    applied_at: '2026-10-18T10:02:23'
+    applied_at: '2026-11-09T15:05:16'
     status: pass
     heuristics:
       HARNESS-01: pass
@@ -148,7 +154,7 @@ guides:
       HARNESS-14: pass
   graph-engineering:
     version: 4
-    applied_at: '2026-10-18T10:02:24'
+    applied_at: '2026-11-09T15:05:16'
     status: pass
     heuristics:
       GRAPH-01: pass
@@ -160,8 +166,8 @@ guides:
       GRAPH-08: pass
       GRAPH-09: pass
   padrao-criacao-adrs:
-    version: 4
-    applied_at: '2026-10-18T10:02:25'
+    version: 5
+    applied_at: '2026-11-09T15:05:16'
     status: pass
     heuristics:
       ADR-01: pass
@@ -173,8 +179,8 @@ guides:
       ADR-07: pass
       ADR-08: pass
   arquitetura-clean-code:
-    version: 6
-    applied_at: '2026-10-18T10:02:26'
+    version: 7
+    applied_at: '2026-11-09T15:05:17'
     status: pass
     heuristics:
       ARCH-01: pass
@@ -185,7 +191,7 @@ guides:
       ARCH-06: skip
   system-design-distribuidos:
     version: 2
-    applied_at: '2026-10-18T10:02:27'
+    applied_at: '2026-11-09T15:05:17'
     status: pass
     heuristics:
       SYSD-01: pass
@@ -193,7 +199,7 @@ guides:
       SYSD-03: pass
   semver-versioning:
     version: 2
-    applied_at: '2026-10-18T10:02:27'
+    applied_at: '2026-11-09T15:05:17'
     status: pass
     heuristics:
       SEMVER-01: pass
@@ -202,7 +208,7 @@ guides:
       SEMVER-04: pass
   construcao-harness:
     version: 4
-    applied_at: '2026-10-18T10:02:28'
+    applied_at: '2026-11-09T15:05:17'
     status: pass
     heuristics:
       HN3-01: pass
@@ -213,24 +219,24 @@ guides:
       HN3-06: skip
       HN3-07: pass
       HN3-08: pass
-      HN3-09: warn
+      HN3-09: pass
       HN3-10: pass
       HN3-11: pass
       HN3-12: pass
   scalar-openapi:
     version: 2
-    applied_at: '2026-10-18T10:02:29'
+    applied_at: '2026-11-09T15:05:17'
     status: pass
     heuristics:
       SCALAR-01: pass
       SCALAR-02: pass
-      SCALAR-03: warn
-      SCALAR-04: warn
+      SCALAR-03: pass
+      SCALAR-04: pass
       SCALAR-05: pass
       SCALAR-06: pass
   product-management-ciclo:
     version: 2
-    applied_at: '2026-10-18T10:02:29'
+    applied_at: '2026-11-09T15:05:17'
     status: pass
     heuristics:
       PM-01: pass
@@ -238,7 +244,7 @@ guides:
       PM-03: pass
   testing-backend:
     version: 4
-    applied_at: '2026-10-18T10:02:32'
+    applied_at: '2026-11-09T15:05:18'
     status: pass
     heuristics:
       TESTB-01: skip
@@ -251,7 +257,7 @@ guides:
       TESTB-08: pass
   testing-frontend:
     version: 4
-    applied_at: '2026-10-18T10:02:33'
+    applied_at: '2026-11-09T15:05:18'
     status: pass
     heuristics:
       TESTF-01: pass
@@ -262,13 +268,54 @@ guides:
       TESTF-06: pass
       TESTF-07: pass
       TESTF-08: pass
-  ARCH-04:
+  mods-tui-observabilidade:
+    version: 1
+    applied_at: '2026-11-09T15:05:14'
+    status: pass
+    heuristics:
+      MODS-01: pass
+      MODS-02: pass
+      MODS-03: pass
+      MODS-04: pass
+      MODS-05: pass
+  engenharia-banco-dados:
+    version: 1
+    applied_at: '2026-11-09T15:05:15'
+    status: pass
+    heuristics:
+      DBENG-01: pass
+      DBENG-02: pass
+      DBENG-03: pass
+      DBENG-04: pass
+      DBENG-05: pass
+      DBENG-06: pass
+  orquestracao-ciclo-de-vida-agentes:
+    version: 1
+    applied_at: '2026-11-09T15:05:16'
+    status: pass
+    heuristics:
+      AGNT-01: pass
+      AGNT-02: pass
+  ddd-pragmatico:
+    version: 1
+    applied_at: '2026-11-09T15:05:17'
+    status: pass
+    heuristics:
+      DDDP-00: pass
+      DDDP-01: pass
+      DDDP-02: pass
+      DDDP-03: skip
+      DDDP-04: skip
+      DDDP-05: pass
+  desenvolvimento-desktop:
     status: skipped
-  UI-04:
+  desenvolvimento-jogos:
     status: skipped
-  UI-06:
+  desenvolvimento-mobile:
     status: skipped
-  SCALAR-03:
+  testing-desktop:
     status: skipped
-  SCALAR-04:
+  testing-games:
+    status: skipped
+  testing-mobile:
     status: skipped
