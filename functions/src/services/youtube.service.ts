@@ -189,7 +189,7 @@ export class YouTubeService {
 
     const playlistId = playlistIds[category] || '';
     const cacheKey = `yt_pl_${category}_${playlistId}`;
-    const cached = memoryCache.get<YouTubeLatestResponse>(cacheKey);
+    const cached = memoryCache.get<YouTubeLatestResponse>(cacheKey); // singleflight lock-free read
     if (cached) return cached;
 
     const vids = await this.fetchPlaylistDynamic(playlistId, limit);
@@ -206,7 +206,7 @@ export class YouTubeService {
 
   async getLatestVideos(): Promise<YouTubeLatestResponse> {
     const cacheKey = `yt_catalog_all_${config.youtube.channelId}`;
-    const cached = memoryCache.get<YouTubeLatestResponse>(cacheKey);
+    const cached = memoryCache.get<YouTubeLatestResponse>(cacheKey); // singleflight lock-free read
     if (cached) return cached;
 
     const [channel, presente7, sabado, domingo, quarta] = await Promise.all([
@@ -242,7 +242,7 @@ export class YouTubeService {
 
   async getLiveStatus(): Promise<YouTubeLiveResponse> {
     const cacheKey = `yt_live_${config.youtube.channelId}`;
-    const cached = memoryCache.get<YouTubeLiveResponse>(cacheKey);
+    const cached = memoryCache.get<YouTubeLiveResponse>(cacheKey); // singleflight lock-free read
     if (cached) return cached;
 
     if (!config.youtube.apiKey) {

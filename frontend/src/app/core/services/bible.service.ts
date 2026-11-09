@@ -327,7 +327,7 @@ export class BibleService {
 
     const key = this.normalizeKey(trimmed);
     if (this.verseCache.has(key)) {
-      return of(this.verseCache.get(key)!);
+      return of(this.verseCache.get(key)!); // singleflight in-memory cache hit
     }
 
     const url = `${this.baseUrl}/${encodeURIComponent(trimmed)}?translation=almeida`;

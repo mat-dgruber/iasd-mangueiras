@@ -107,7 +107,7 @@ export class PgRecommenderService {
       // 4. Calcula Cosine Similarity entre Query e cada PG
       const matches: PgMatch[] = pgs.map((pg, idx) => {
         const text = pgTexts[idx];
-        const pgVector = this.embeddingsCache.get(text)!;
+        const pgVector = this.embeddingsCache.get(text)!; // singleflight batch-populated cache
         const score = this.calculateCosineSimilarity(queryVector, pgVector);
         
         // Normaliza para % visual (0 a 100)
