@@ -1,4 +1,4 @@
-ai_guides_version: 2.13.0
+ai_guides_version: 2.9.0
 project:
   purpose: fullstack
   stack:
@@ -225,7 +225,7 @@ guides:
       HN3-12: pass
   scalar-openapi:
     version: 2
-    applied_at: '2026-11-09T15:05:17'
+    applied_at: '2026-11-10T15:36:11'
     status: pass
     heuristics:
       SCALAR-01: pass

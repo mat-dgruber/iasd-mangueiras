@@ -26,5 +26,4 @@ jobs:
           else
             cp docs/api/openapi.json /tmp/openapi.base.json
           fi
-      - run: npm install --no-save @scalar/openapi-diff
       - run: node .agents/scripts/openapi_diff.mjs /tmp/openapi.base.json docs/api/openapi.json
