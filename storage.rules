@@ -12,13 +12,14 @@ service firebase.storage {
         request.auth.token.admin == true ||
         request.auth.token.role == 'admin' ||
         firestore.exists(/databases/(default)/documents/usuarios_admin/$(request.auth.uid)) ||
-        (request.auth.token.email != null && request.auth.token.email.matches('(?i).*@iasdmangueiras\\.org\\.br$'))
+        (request.auth.token.email != null && request.auth.token.email_verified == true && request.auth.token.email.matches('(?i).*@iasdmangueiras\\.org\\.br$'))
       );
     }
 
-    match /banners/{allPaths=**} {
+    match /{folder}/{allPaths=**} {
       allow read: if true;
       allow write: if isAdmin()
+                   && folder in ['banners', 'ministerios', 'eventos', 'comunicados', 'pgs']
                    && request.resource.size < 5 * 1024 * 1024
                    && request.resource.contentType.matches('image/(jpeg|jpg|png|webp)');
     }

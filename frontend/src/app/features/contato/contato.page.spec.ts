@@ -1,16 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { ContatoPage } from './contato.page';
+import { environment } from '../../../environments/environment';
 
 describe('ContatoPage', () => {
   let fixture: ComponentFixture<ContatoPage>;
+  let httpMock: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ContatoPage],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
     }).compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(ContatoPage);
     fixture.detectChanges();
   });
@@ -66,12 +70,21 @@ describe('ContatoPage', () => {
     expect(component.estudoForm.valid).toBe(true);
   });
 
-  it('aplica máscara de telefone corretamente', () => {
+  it('aplica máscara de telefone corretamente e rejeita telefones incompletos no estudoForm', () => {
     const component = fixture.componentInstance;
     const fakeEvent = { target: { value: '15998887766' } } as unknown as Event;
     component.formatPhone(fakeEvent, component.contatoForm, 'telefone');
 
     expect(component.contatoForm.get('telefone')?.value).toBe('(15) 99888-7766');
+
+    const shortEvent = { target: { value: '15999999' } } as unknown as Event;
+    component.formatPhone(shortEvent, component.estudoForm, 'telefone');
+    expect(component.estudoForm.get('telefone')?.valid).toBe(false);
+
+    const landlineEvent = { target: { value: '1532511234' } } as unknown as Event;
+    component.formatPhone(landlineEvent, component.estudoForm, 'telefone');
+    expect(component.estudoForm.get('telefone')?.value).toBe('(15) 3251-1234');
+    expect(component.estudoForm.get('telefone')?.valid).toBe(true);
   });
 
   it('exibe mensagem de erro quando errorMessage signal está preenchido', () => {
@@ -82,5 +95,73 @@ describe('ContatoPage', () => {
     const text = fixture.nativeElement.textContent;
     expect(text).toContain('Não foi possível enviar');
     expect(text).toContain('Erro de conexão ao servidor.');
+  });
+
+  it('envia formulários de contato, oração e estudo bíblico com sucesso e trata erros', () => {
+    const component = fixture.componentInstance;
+
+    component.contatoForm.setValue({
+      nome: 'João Silva',
+      email: 'joao@exemplo.com',
+      telefone: '(15) 99999-9999',
+      mensagem: 'Gostaria de conhecer a igreja.',
+    });
+    component.submitContato();
+    const reqContato = httpMock.expectOne(`${environment.apiUrl}/contato`);
+    reqContato.flush({ status: 'ok', message: 'Contato recebido!' });
+    expect(component.successMessage()).toBe('Contato recebido!');
+
+    component.oracaoForm.setValue({
+      nome: 'Maria Souza',
+      telefone: '(15) 98888-7777',
+      pedido: 'Oração pela família.',
+      confidencial: true,
+    });
+    component.submitOracao();
+    const reqOracao = httpMock.expectOne(`${environment.apiUrl}/oracao`);
+    reqOracao.flush({ status: 'ok', message: 'Pedido recebido!' });
+    expect(component.successMessage()).toBe('Pedido recebido!');
+
+    component.estudoForm.setValue({
+      nome: 'Carlos',
+      email: 'carlos@exemplo.com',
+      telefone: '(15) 97777-6666',
+      preferencia: 'digital',
+    });
+    component.submitEstudo();
+    const reqEstudo = httpMock.expectOne(`${environment.apiUrl}/contato`);
+    reqEstudo.flush({ status: 'ok', message: 'OK' });
+    expect(component.successMessage()).toContain('Estudo Bíblico');
+
+    // Simula falhas nos 3 formulários
+    component.contatoForm.setValue({
+      nome: 'João Silva',
+      email: 'joao@exemplo.com',
+      telefone: '',
+      mensagem: 'Mensagem teste',
+    });
+    component.submitContato();
+    httpMock.expectOne(`${environment.apiUrl}/contato`).error(new ProgressEvent('error'));
+    expect(component.errorMessage()).toBeTruthy();
+
+    component.oracaoForm.setValue({
+      nome: 'Maria',
+      telefone: '',
+      pedido: 'Oração urgente',
+      confidencial: false,
+    });
+    component.submitOracao();
+    httpMock.expectOne(`${environment.apiUrl}/oracao`).error(new ProgressEvent('error'));
+    expect(component.errorMessage()).toBeTruthy();
+
+    component.estudoForm.setValue({
+      nome: 'Carlos',
+      email: 'carlos@exemplo.com',
+      telefone: '(15) 97777-6666',
+      preferencia: 'digital',
+    });
+    component.submitEstudo();
+    httpMock.expectOne(`${environment.apiUrl}/contato`).error(new ProgressEvent('error'));
+    expect(component.errorMessage()).toBeTruthy();
   });
 });

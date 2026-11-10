@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.iasdmangueiras.org.br/api',
+  apiUrl: '/api',
   firebase: {
     projectId: 'iasd-mangueiras-web',
     appId: '1:1001967121181:web:68a4241cd74a42384ce7f4',

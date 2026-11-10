@@ -34,6 +34,8 @@ bazel-out/
 testem.log
 /typings/
 __screenshots__/
+playwright-report/
+test-results/
 
 # Logs de gerenciadores de pacotes
 npm-debug.log*
@@ -87,6 +89,16 @@ htmlcov/
 .ruff_cache/
 
 # ==========================================
+# Firebase & Cloud Functions
+# ==========================================
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+functions/dist/
+functions/node_modules/
+
+# ==========================================
 # IDEs, Editores e Agentes IA
 # ==========================================
 .idea/
@@ -104,12 +116,28 @@ htmlcov/
 !.vscode/mcp.json
 .history/*
 
-# Agentes e caches temporários
-.gemini/
+# Configuração compartilhada do Antigravity
+.gemini/*
+!.gemini/
+!.gemini/settings.json
+!.gemini/sync-memory.sh
+
 .openclaude/
 .playwright-mcp/
+.trunk/
+.remember/
+.superpowers/
+.superpowers/*
 continue-*.md
-.agents/
-.firebase/
 graphify-out/
+*-command-message*.md
 
+# Worktrees temporários do OpenClaude
+.claude/worktrees/
+
+
+# ai-guides: memória privada local, team/ versionada
+.claude/memory/*
+!.claude/memory/team/
+.gemini/memory/*
+!.gemini/memory/team/

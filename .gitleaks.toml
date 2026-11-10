@@ -1,0 +1,10 @@
+title = "IASD Mangueiras Gitleaks Config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Ignorar fixtures de teste e exemplos didáticos do harness .agents"
+paths = [
+  '''^\.agents/(skills|ai-guides)/''',
+]

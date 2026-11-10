@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { SITE_CONFIG } from '../../core/site/site.config';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <footer class="mt-16 bg-advent-blue text-white">
@@ -11,7 +13,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
         <section>
           <h2 class="font-brand text-2xl text-white">{{ site.name }}</h2>
           <p class="mt-3 text-sm text-white/80 leading-relaxed">{{ site.description }}</p>
-          <p class="mt-4 text-xs text-white/60">
+          <p class="mt-4 text-xs text-white/75 tabular-nums">
             © {{ currentYear }} {{ site.legalName }}. Todos os direitos reservados.
           </p>
         </section>
@@ -20,17 +22,20 @@ import { SITE_CONFIG } from '../../core/site/site.config';
             Encontre-nos & Cultos
           </h2>
           <p class="mt-2 text-sm font-medium text-white">{{ site.address.street }}</p>
-          <p class="text-xs text-white/70">{{ site.address.locality }}-{{ site.address.region }}</p>
-          <div class="mt-3 border-t border-white/10 pt-2 text-xs text-white/80 space-y-1">
-            <p>• <strong>Sábados:</strong> 09:00 e 10:15</p>
-            <p>• <strong>Quartas:</strong> 19:30</p>
+          <p class="text-xs text-white/75">{{ site.address.locality }}-{{ site.address.region }}</p>
+          <div class="mt-3 border-t border-white/10 pt-2 text-xs text-white/80 space-y-1 tabular-nums">
+            <p class="tabular-nums">• <strong>Sábados:</strong> 09:00 e 10:15</p>
+            <p class="tabular-nums">• <strong>Domingos:</strong> 19:30</p>
+            <p class="tabular-nums">• <strong>Quartas:</strong> 19:30</p>
           </div>
-          <a
-            class="mt-3 inline-flex items-center text-xs font-semibold text-white underline hover:text-white/80"
-            href="/horarios"
-          >
-            Ver mapa e como chegar →
-          </a>
+          <div class="mt-3 flex flex-wrap items-center gap-3">
+            <a
+              class="inline-flex items-center text-xs font-semibold text-white underline hover:text-white/80"
+              routerLink="/horarios"
+            >
+              Ver horários e mapa →
+            </a>
+          </div>
         </section>
         <section>
           <h2 class="text-base font-bold uppercase tracking-wider text-white">Canais Oficiais</h2>
@@ -66,17 +71,16 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               </a>
             </li>
             <li>
-              <a class="hover:text-white hover:underline transition-colors" href="/estudos">
+              <a class="hover:text-white hover:underline transition-colors" routerLink="/estudos">
                 Pequenos Grupos & Estudos →
               </a>
             </li>
             <li>
-              <a class="hover:text-white hover:underline transition-colors" href="/contato">
+              <a class="hover:text-white hover:underline transition-colors" routerLink="/contato">
                 Fale Conosco / Oração →
               </a>
             </li>
           </ul>
-
         </section>
       </div>
     </footer>

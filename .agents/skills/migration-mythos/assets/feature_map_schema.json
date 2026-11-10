@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FeatureMap",
+  "description": "Schema for feature_map.json produced by scan_repo.py",
+  "type": "object",
+  "required": ["scan_metadata", "summary", "artifacts"],
+  "properties": {
+    "scan_metadata": {
+      "type": "object",
+      "required": ["scanned_at", "repo_path", "feature_name"],
+      "properties": {
+        "scanned_at": { "type": "string", "format": "date-time" },
+        "repo_path": { "type": "string" },
+        "feature_name": { "type": "string" },
+        "search_terms": { "type": "array", "items": { "type": "string" } },
+        "shallow_scan": { "type": "boolean" },
+        "primary_language": { "type": "string" }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "total_files_matched": { "type": "integer" },
+        "core_files": { "type": "integer" },
+        "test_files": { "type": "integer" },
+        "env_vars_referenced": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "size_lines", "is_test"],
+        "properties": {
+          "path": { "type": "string" },
+          "absolute_path": { "type": "string" },
+          "size_lines": { "type": "integer" },
+          "is_test": { "type": "boolean" },
+          "matched_terms": { "type": "array", "items": { "type": "string" } },
+          "language": { "type": "string" },
+          "symbols": {
+            "type": "object",
+            "properties": {
+              "classes": { "type": "array" },
+              "functions": { "type": "array" },
+              "imports": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "env_vars": { "type": "array", "items": { "type": "string" } },
+          "recent_commits": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

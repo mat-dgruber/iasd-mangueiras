@@ -1,0 +1,29 @@
+# Fonte canônica: templates/integrations/openapi-diff.yml (guia-scalar-openapi-dx.md §8) — instalado por SCALAR-04
+# Compara docs/api/openapi.json da branch base com o da PR e falha em breaking changes.
+name: openapi-diff
+on:
+  pull_request:
+    paths: ["docs/api/openapi.json"]
+jobs:
+  diff:
+    name: openapi-contract-check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22
+      - env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if git cat-file -e "origin/${BASE_REF}:docs/api/openapi.json" 2>/dev/null; then
+            git show "origin/${BASE_REF}:docs/api/openapi.json" > /tmp/openapi.base.json
+          else
+            cp docs/api/openapi.json /tmp/openapi.base.json
+          fi
+      - run: node .agents/scripts/openapi_diff.mjs /tmp/openapi.base.json docs/api/openapi.json

@@ -1,8 +1,13 @@
-@if (!isAdminRoute()) {
-  <app-header />
-}
-<router-outlet />
-@if (!isAdminRoute()) {
-  <app-footer />
-}
-
+<div class="flex min-h-dvh flex-col">
+  @if (!isAdminRoute()) {
+    <app-header (searchClick)="openSearch()" />
+  }
+  <div class="flex-1">
+    <router-outlet />
+  </div>
+  @if (!isAdminRoute()) {
+    <app-footer />
+  }
+</div>
+<app-toast-container />
+<app-global-search-dialog />

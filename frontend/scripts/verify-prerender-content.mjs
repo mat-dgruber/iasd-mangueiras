@@ -15,11 +15,11 @@ const checks = [
   },
   {
     file: 'dist/frontend/browser/eventos/index.html',
-    expectedTexts: ['Eventos e Comunicados', 'Próximos Eventos', 'Semana de Oração da Família', 'Comunicados e Avisos Gerais'],
+    expectedTexts: ['Eventos e Comunicados', 'Próximos Eventos', 'Culto Jovem Especial de Louvor', 'Comunicados e Avisos Gerais'],
   },
   {
     file: 'dist/frontend/browser/ministerios/index.html',
-    expectedTexts: ['Ministérios da Igreja', 'Recepção e Acolhimento', 'Ministério da Criança', 'Desbravadores e Aventureiros'],
+    expectedTexts: ['Ministérios da Igreja', 'Serviço e Comunhão', 'Comunicação &amp; Acolhimento', 'Novas Gerações &amp; Família'],
   },
   {
     file: 'dist/frontend/browser/sou-novo/index.html',
@@ -32,8 +32,9 @@ const checks = [
 ];
 
 for (const { file, expectedTexts } of checks) {
-  if (!existsSync(file)) throw new Error(`Missing prerendered file: ${file}`);
-  const html = readFileSync(file, 'utf8');
+  const targetFile = existsSync(file) ? file : `frontend/${file}`;
+  if (!existsSync(targetFile)) throw new Error(`Missing prerendered file: ${file}`);
+  const html = readFileSync(targetFile, 'utf8');
   for (const text of expectedTexts) {
     if (!html.includes(text)) throw new Error(`Missing text "${text}" in ${file}`);
   }

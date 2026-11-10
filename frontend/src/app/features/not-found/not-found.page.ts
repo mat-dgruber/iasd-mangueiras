@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { SeoService } from '../../core/seo/seo.service';
 
 @Component({
   selector: 'app-not-found-page',
   standalone: true,
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main id="conteudo" class="mx-auto max-w-site px-4 py-16 text-center">
@@ -23,13 +25,13 @@ import { SeoService } from '../../core/seo/seo.service';
         <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <a
             class="rounded-card bg-advent-blue px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner"
-            href="/"
+            routerLink="/"
           >
             Voltar para o Início
           </a>
           <a
             class="rounded-card border border-advent-border bg-white px-6 py-3 text-sm font-semibold text-advent-text shadow-sm transition-all hover:bg-gray-50 active:scale-[0.98] active:shadow-inner"
-            href="/horarios"
+            routerLink="/horarios"
           >
             Ver Horários
           </a>

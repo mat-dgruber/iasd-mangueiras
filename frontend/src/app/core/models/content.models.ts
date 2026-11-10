@@ -5,6 +5,17 @@ export interface Horario {
   horario: string;
   descricao: string;
   ativo?: boolean;
+  ordem?: number;
+}
+
+export interface AvisoHorarioEspecial {
+  id?: string;
+  titulo: string;
+  data_evento?: string;
+  mensagem: string;
+  ativo?: boolean;
+  expira_em?: string; // Formato YYYY-MM-DD
+  createdAt?: string;
 }
 
 export interface Evento {
@@ -15,8 +26,19 @@ export interface Evento {
   descricao: string;
   local?: string;
   imagem_url?: string;
+  banner_url?: string;
   href?: string;
+  destaque?: boolean;
+  palestrante?: string;
+  departamento?: string;
+  valor_entrada?: string;
+  link_inscricao?: string;
+  publico_alvo?: string;
   status?: 'publicado' | 'rascunho' | 'encerrado';
+  data_inicio?: string;
+  data_fim?: string;
+  endereco?: string;
+  whatsapp_contato?: string;
 }
 
 export interface Comunicado {
@@ -35,6 +57,14 @@ export interface Ministerio {
   descricao: string;
   categoria?: string;
   lideres?: string;
+  imagem_url?: string;
+  banner_url?: string;
+  reunioes_horario?: string;
+  contato_whatsapp?: string;
+  publico_alvo?: string;
+  atividades?: string[];
+  destaque?: boolean;
+  ativo?: boolean;
 }
 
 export interface PequenoGrupo {
@@ -51,12 +81,22 @@ export interface PequenoGrupo {
   ativo?: boolean;
 }
 
-export interface LicaoVideo {
-  id: string;
-  titulo: string;
-  canal: string;
-  autor: string;
-  video_url: string;
-  thumbnail_url: string;
-  trimestre?: string;
+export interface EscalaItem {
+  id?: string;
+  data: string; // Ex: '2026-08-29'
+  dia_semana: string; // Ex: 'Sábado'
+  departamento: 'Sonorização & Transmissão' | 'Diaconato' | 'Recepção' | 'Escola Sabatina' | 'Música & Louvor' | 'Ministério Infantil';
+  oficiais: string[]; // Ex: ['Carlos Silva', 'Lucas Oliveira']
+  observacoes?: string;
+  horario?: string; // Ex: '09:00 e 10:15'
+}
+
+export interface CultoEscalaGroup {
+  data: string; // YYYY-MM-DD
+  dataFormatada: string; // Ex: '05 de Setembro de 2026'
+  diaSemana: string; // Ex: 'Sábado'
+  isHoje: boolean;
+  isProximoCulto: boolean;
+  isPassado: boolean;
+  escalas: EscalaItem[];
 }

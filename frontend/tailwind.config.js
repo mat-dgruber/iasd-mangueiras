@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
@@ -7,6 +8,9 @@ module.exports = {
         advent: {
           blue: '#003767',
           'blue-dark': '#003366',
+          'blue-light': '#38bdf8',
+          gold: '#c59b27',
+          teal: '#0d9488',
           black: '#000000',
           white: '#FFFFFF',
           neutral: '#F4F4F4',
@@ -17,6 +21,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         brand: ['AdventSansLogo', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
@@ -24,7 +29,41 @@ module.exports = {
         section: '20px',
       },
       maxWidth: {
-        site: '1120px',
+        site: '1380px',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        modalSlideUp: {
+          '0%': { opacity: '0', transform: 'scale(0.96) translateY(12px)' },
+          '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+        },
+        slideInRight: {
+          '0%': { opacity: '0', transform: 'translateX(100%)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        scaleUp: {
+          '0%': { opacity: '0', transform: 'scale(0.96)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        slideLeft: {
+          '0%': { opacity: '0', transform: 'translateX(16px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+      },
+      animation: {
+        fadeIn: 'fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        modalSlideUp: 'modalSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        slideInRight: 'slideInRight 250ms cubic-bezier(0.16, 1, 0.3, 1)',
+        scaleUp: 'scaleUp 220ms cubic-bezier(0.16, 1, 0.3, 1)',
+        slideLeft: 'slideLeft 220ms cubic-bezier(0.16, 1, 0.3, 1)',
+        shimmer: 'shimmer 2s infinite linear',
       },
     },
   },

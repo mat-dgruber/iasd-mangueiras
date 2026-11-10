@@ -13,7 +13,7 @@ service cloud.firestore {
         request.auth.token.admin == true ||
         request.auth.token.role == 'admin' ||
         exists(/databases/$(database)/documents/usuarios_admin/$(request.auth.uid)) ||
-        (request.auth.token.email != null && request.auth.token.email.matches('(?i).*@iasdmangueiras\\.org\\.br$'))
+        (request.auth.token.email != null && request.auth.token.email_verified == true && request.auth.token.email.matches('(?i).*@iasdmangueiras\\.org\\.br$'))
       );
     }
 
@@ -54,11 +54,44 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /horarios_regulares/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /escalas/{document} {
+      allow read, write: if isAdmin();
+    }
+
+    // Cronogramas de Culto e Templates de Liturgia (Admin-Only)
+    match /cronogramas_culto/{document} {
+      allow read, write: if isAdmin();
+    }
+
+    match /cronogramas_templates/{document} {
+      allow read, write: if isAdmin();
+    }
+
+    // Mensagens de Contato
+    // Criação pública com validação de payload; gestão e leitura restritas a administradores.
+    match /mensagens_contato/{document} {
+      allow create: if request.resource.data.keys().hasOnly(['nome', 'email', 'telefone', 'assunto', 'mensagem', 'criadoEm', 'lido'])
+        && request.resource.data.nome is string
+        && request.resource.data.nome.size() >= 2
+        && request.resource.data.nome.size() <= 100
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 120
+        && request.resource.data.mensagem is string
+        && request.resource.data.mensagem.size() <= 2000;
+      allow read, update, delete: if isAdmin();
+    }
+
     // Pedidos de Oração
     // Criação pública com validação rigorosa de tipos e limites de payload (Anti-DoS).
     // Leitura, atualização e exclusão restritas exclusivamente à liderança autorizada (RBAC).
     match /pedidos_oracao/{document} {
-      allow create: if request.resource.data.nome is string
+      allow create: if request.resource.data.keys().hasOnly(['nome', 'email', 'telefone', 'pedido', 'privado', 'confidencial', 'criadoEm', 'orado', 'atendido', 'oracoesCount'])
+                    && request.resource.data.nome is string
                     && request.resource.data.nome.size() >= 2
                     && request.resource.data.nome.size() <= 120
                     && request.resource.data.pedido is string
@@ -72,7 +105,8 @@ service cloud.firestore {
     // Criação pública protegida com validação de campos.
     // Leitura e gestão restritas estritamente a administradores.
     match /pedidos_estudo/{document} {
-      allow create: if request.resource.data.nome is string
+      allow create: if request.resource.data.keys().hasOnly(['acao', 'estudoId', 'estudoTitulo', 'categoria', 'criadoEm', 'origem', 'nome', 'telefone', 'email'])
+                    && request.resource.data.nome is string
                     && request.resource.data.nome.size() >= 2
                     && request.resource.data.nome.size() <= 120
                     && (!('telefone' in request.resource.data) || (request.resource.data.telefone is string && request.resource.data.telefone.size() <= 30))

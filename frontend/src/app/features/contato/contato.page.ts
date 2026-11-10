@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SeoService } from '../../core/seo/seo.service';
 import { ContatoService } from '../../core/services/contato.service';
 import { SITE_CONFIG } from '../../core/site/site.config';
@@ -7,14 +8,14 @@ import { SITE_CONFIG } from '../../core/site/site.config';
 @Component({
   selector: 'app-contato-page',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <main id="conteudo" class="py-10 md:py-14">
       <div class="mx-auto max-w-site px-4">
         <!-- Breadcrumb -->
         <nav class="mb-4 text-sm text-advent-muted" aria-label="Navegação estrutural">
-          <a class="hover:text-advent-blue hover:underline" href="/">Início</a>
+          <a class="hover:text-advent-blue hover:underline" routerLink="/">Início</a>
           <span class="mx-2">/</span>
           <span class="font-medium text-advent-text" aria-current="page">Contato e Oração</span>
         </nav>
@@ -45,7 +46,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 id="tab-contato"
                 [attr.aria-selected]="activeTab() === 'contato'"
                 [attr.aria-controls]="'panel-contato'"
-                class="pb-3 px-4 text-sm font-bold transition-colors relative cursor-pointer"
+                class="min-h-[44px] py-3 px-4 text-sm font-bold transition-colors relative cursor-pointer"
                 [class.text-advent-blue]="activeTab() === 'contato'"
                 [class.text-advent-muted]="activeTab() !== 'contato'"
                 (click)="setTab('contato')"
@@ -61,12 +62,15 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 id="tab-oracao"
                 [attr.aria-selected]="activeTab() === 'oracao'"
                 [attr.aria-controls]="'panel-oracao'"
-                class="pb-3 px-4 text-sm font-bold transition-colors relative cursor-pointer"
+                class="min-h-[44px] py-3 px-4 text-sm font-bold transition-colors relative cursor-pointer inline-flex items-center gap-2"
                 [class.text-advent-blue]="activeTab() === 'oracao'"
                 [class.text-advent-muted]="activeTab() !== 'oracao'"
                 (click)="setTab('oracao')"
               >
-                Pedido de Oração 🙏
+                <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                </svg>
+                Pedido de Oração
                 @if (activeTab() === 'oracao') {
                   <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-advent-blue"></span>
                 }
@@ -77,12 +81,15 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 id="tab-estudo"
                 [attr.aria-selected]="activeTab() === 'estudo'"
                 [attr.aria-controls]="'panel-estudo'"
-                class="pb-3 px-4 text-sm font-bold transition-colors relative cursor-pointer"
+                class="min-h-[44px] py-3 px-4 text-sm font-bold transition-colors relative cursor-pointer inline-flex items-center gap-2"
                 [class.text-advent-blue]="activeTab() === 'estudo'"
                 [class.text-advent-muted]="activeTab() !== 'estudo'"
                 (click)="setTab('estudo')"
               >
-                Estudo Bíblico 📖
+                <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                </svg>
+                Estudo Bíblico
                 @if (activeTab() === 'estudo') {
                   <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-advent-blue"></span>
                 }
@@ -94,12 +101,17 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               <div
                 class="mb-6 rounded-card border border-green-200 bg-green-50 p-4 text-green-800 animate-fadeIn"
                 role="status"
+                aria-live="polite"
               >
                 <p class="font-bold flex items-center gap-2">
                   <span
-                    class="flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-white text-xs"
-                    >✓</span
+                    class="flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-white"
+                    aria-hidden="true"
                   >
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                  </span>
                   Mensagem Enviada com Sucesso!
                 </p>
                 <p class="text-sm mt-1.5">{{ successMessage() }}</p>
@@ -111,10 +123,12 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               <div
                 class="mb-6 rounded-card border border-red-200 bg-red-50 p-4 text-red-800 animate-fadeIn"
                 role="alert"
+                aria-live="assertive"
               >
                 <p class="font-bold flex items-center gap-2">
                   <span
                     class="flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-white text-xs"
+                    aria-hidden="true"
                     >!</span
                   >
                   Não foi possível enviar
@@ -143,12 +157,16 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                   <input
                     id="contato-nome"
                     type="text"
+                    name="name"
+                    autocomplete="name"
                     formControlName="nome"
-                    class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
-                    placeholder="Seu nome"
+                    class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
+                    placeholder="Seu nome completo"
+                    [attr.aria-invalid]="contatoForm.get('nome')?.touched && contatoForm.get('nome')?.invalid"
+                    [attr.aria-describedby]="(contatoForm.get('nome')?.touched && contatoForm.get('nome')?.invalid) ? 'contato-nome-erro' : null"
                   />
                   @if (contatoForm.get('nome')?.touched && contatoForm.get('nome')?.invalid) {
-                    <p class="mt-1 text-xs text-red-600">Por favor, informe seu nome.</p>
+                    <p id="contato-nome-erro" class="mt-1 text-xs text-red-600" role="alert">Por favor, informe seu nome.</p>
                   }
                 </div>
 
@@ -162,12 +180,18 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                     <input
                       id="contato-email"
                       type="email"
+                      name="email"
+                      autocomplete="email"
+                      inputmode="email"
+                      spellcheck="false"
                       formControlName="email"
-                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
+                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
                       placeholder="seu@email.com"
+                      [attr.aria-invalid]="contatoForm.get('email')?.touched && contatoForm.get('email')?.invalid"
+                      [attr.aria-describedby]="(contatoForm.get('email')?.touched && contatoForm.get('email')?.invalid) ? 'contato-email-erro' : null"
                     />
                     @if (contatoForm.get('email')?.touched && contatoForm.get('email')?.invalid) {
-                      <p class="mt-1 text-xs text-red-600">Informe um e-mail válido.</p>
+                      <p id="contato-email-erro" class="mt-1 text-xs text-red-600" role="alert">Informe um e-mail válido.</p>
                     }
                   </div>
 
@@ -180,9 +204,12 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                     <input
                       id="contato-telefone"
                       type="tel"
+                      name="tel"
+                      autocomplete="tel"
+                      inputmode="tel"
                       formControlName="telefone"
                       (input)="formatPhone($event, contatoForm, 'telefone')"
-                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
+                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
                       placeholder="(15) 99999-9999"
                       maxlength="15"
                     />
@@ -199,13 +226,15 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                     id="contato-mensagem"
                     rows="4"
                     formControlName="mensagem"
-                    class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
-                    placeholder="Como podemos ajudar você?"
+                    class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
+                    placeholder="Como podemos ajudar você?…"
+                    [attr.aria-invalid]="contatoForm.get('mensagem')?.touched && contatoForm.get('mensagem')?.invalid"
+                    [attr.aria-describedby]="(contatoForm.get('mensagem')?.touched && contatoForm.get('mensagem')?.invalid) ? 'contato-mensagem-erro' : null"
                   ></textarea>
                   @if (
                     contatoForm.get('mensagem')?.touched && contatoForm.get('mensagem')?.invalid
                   ) {
-                    <p class="mt-1 text-xs text-red-600">
+                    <p id="contato-mensagem-erro" class="mt-1 text-xs text-red-600" role="alert">
                       Por favor, escreva sua mensagem (mínimo 5 caracteres).
                     </p>
                   }
@@ -216,7 +245,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                   [disabled]="contatoForm.invalid || isSubmitting()"
                   class="w-full sm:w-auto rounded-card bg-advent-blue px-8 py-3.5 font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {{ isSubmitting() ? 'Enviando...' : 'Enviar Mensagem' }}
+                  {{ isSubmitting() ? 'Enviando…' : 'Enviar Mensagem' }}
                 </button>
               </form>
             }
@@ -242,12 +271,16 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                     <input
                       id="oracao-nome"
                       type="text"
+                      name="name"
+                      autocomplete="name"
                       formControlName="nome"
-                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
+                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
                       placeholder="Seu nome"
+                      [attr.aria-invalid]="oracaoForm.get('nome')?.touched && oracaoForm.get('nome')?.invalid"
+                      [attr.aria-describedby]="(oracaoForm.get('nome')?.touched && oracaoForm.get('nome')?.invalid) ? 'oracao-nome-erro' : null"
                     />
                     @if (oracaoForm.get('nome')?.touched && oracaoForm.get('nome')?.invalid) {
-                      <p class="mt-1 text-xs text-red-600">Por favor, informe seu nome.</p>
+                      <p id="oracao-nome-erro" class="mt-1 text-xs text-red-600" role="alert">Por favor, informe seu nome.</p>
                     }
                   </div>
 
@@ -260,9 +293,12 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                     <input
                       id="oracao-telefone"
                       type="tel"
+                      name="tel"
+                      autocomplete="tel"
+                      inputmode="tel"
                       formControlName="telefone"
                       (input)="formatPhone($event, oracaoForm, 'telefone')"
-                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
+                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
                       placeholder="(15) 99999-9999"
                       maxlength="15"
                     />
@@ -279,11 +315,13 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                     id="oracao-pedido"
                     rows="4"
                     formControlName="pedido"
-                    class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
-                    placeholder="Compartilhe seu pedido (saúde, família, decisões, gratidão...)"
+                    class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
+                    placeholder="Compartilhe seu pedido (saúde, família, decisões, gratidão…)…"
+                    [attr.aria-invalid]="oracaoForm.get('pedido')?.touched && oracaoForm.get('pedido')?.invalid"
+                    [attr.aria-describedby]="(oracaoForm.get('pedido')?.touched && oracaoForm.get('pedido')?.invalid) ? 'oracao-pedido-erro' : null"
                   ></textarea>
                   @if (oracaoForm.get('pedido')?.touched && oracaoForm.get('pedido')?.invalid) {
-                    <p class="mt-1 text-xs text-red-600">
+                    <p id="oracao-pedido-erro" class="mt-1 text-xs text-red-600" role="alert">
                       Por favor, descreva seu pedido de oração.
                     </p>
                   }
@@ -306,7 +344,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                   [disabled]="oracaoForm.invalid || isSubmitting()"
                   class="w-full sm:w-auto rounded-card bg-advent-blue px-8 py-3.5 font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {{ isSubmitting() ? 'Enviando...' : 'Enviar Pedido de Oração' }}
+                  {{ isSubmitting() ? 'Enviando…' : 'Enviar Pedido de Oração' }}
                 </button>
               </form>
             }
@@ -323,11 +361,16 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 aria-label="Formulário de solicitação de estudo bíblico"
               >
                 <div
-                  class="rounded-card border border-blue-100 bg-blue-50/60 p-4 text-xs text-advent-blue leading-relaxed"
+                  class="rounded-card border border-blue-100 bg-blue-50/60 p-4 text-xs text-advent-blue leading-relaxed flex items-start gap-2.5"
                 >
-                  📖 <strong>Estudo Bíblico Gratuito:</strong> Você receberá materiais práticos para
-                  estudar as profecias e os ensinamentos bíblicos de forma dinâmica e sem custo
-                  algum.
+                  <svg class="h-5 w-5 shrink-0 text-advent-blue mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                  </svg>
+                  <div>
+                    <strong>Estudo Bíblico Gratuito:</strong> Você receberá materiais práticos para
+                    estudar as profecias e os ensinamentos bíblicos de forma dinâmica e sem custo
+                    algum.
+                  </div>
                 </div>
 
                 <div>
@@ -337,12 +380,16 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                   <input
                     id="estudo-nome"
                     type="text"
+                    name="name"
+                    autocomplete="name"
                     formControlName="nome"
-                    class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
-                    placeholder="Seu nome"
+                    class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
+                    placeholder="Seu nome completo"
+                    [attr.aria-invalid]="estudoForm.get('nome')?.touched && estudoForm.get('nome')?.invalid"
+                    [attr.aria-describedby]="(estudoForm.get('nome')?.touched && estudoForm.get('nome')?.invalid) ? 'estudo-nome-erro' : null"
                   />
                   @if (estudoForm.get('nome')?.touched && estudoForm.get('nome')?.invalid) {
-                    <p class="mt-1 text-xs text-red-600">Por favor, informe seu nome.</p>
+                    <p id="estudo-nome-erro" class="mt-1 text-xs text-red-600" role="alert">Por favor, informe seu nome.</p>
                   }
                 </div>
 
@@ -356,12 +403,18 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                     <input
                       id="estudo-email"
                       type="email"
+                      name="email"
+                      autocomplete="email"
+                      inputmode="email"
+                      spellcheck="false"
                       formControlName="email"
-                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
+                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
                       placeholder="seu@email.com"
+                      [attr.aria-invalid]="estudoForm.get('email')?.touched && estudoForm.get('email')?.invalid"
+                      [attr.aria-describedby]="(estudoForm.get('email')?.touched && estudoForm.get('email')?.invalid) ? 'estudo-email-erro' : null"
                     />
                     @if (estudoForm.get('email')?.touched && estudoForm.get('email')?.invalid) {
-                      <p class="mt-1 text-xs text-red-600">Informe um e-mail válido.</p>
+                      <p id="estudo-email-erro" class="mt-1 text-xs text-red-600" role="alert">Informe um e-mail válido.</p>
                     }
                   </div>
 
@@ -374,16 +427,21 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                     <input
                       id="estudo-telefone"
                       type="tel"
+                      name="tel"
+                      autocomplete="tel"
+                      inputmode="tel"
                       formControlName="telefone"
                       (input)="formatPhone($event, estudoForm, 'telefone')"
-                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue"
+                      class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
                       placeholder="(15) 99999-9999"
                       maxlength="15"
+                      [attr.aria-invalid]="estudoForm.get('telefone')?.touched && estudoForm.get('telefone')?.invalid"
+                      [attr.aria-describedby]="(estudoForm.get('telefone')?.touched && estudoForm.get('telefone')?.invalid) ? 'estudo-tel-erro' : null"
                     />
                     @if (
                       estudoForm.get('telefone')?.touched && estudoForm.get('telefone')?.invalid
                     ) {
-                      <p class="mt-1 text-xs text-red-600">
+                      <p id="estudo-tel-erro" class="mt-1 text-xs text-red-600" role="alert">
                         Informe seu WhatsApp para envio do material.
                       </p>
                     }
@@ -399,7 +457,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                   <select
                     id="estudo-preferencia"
                     formControlName="preferencia"
-                    class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-1 focus:ring-advent-blue bg-white"
+                    class="w-full rounded-card border border-advent-border px-4 py-2.5 text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30 bg-white"
                   >
                     <option value="digital">Guia Digital por WhatsApp / E-mail</option>
                     <option value="presencial">Presencialmente com um instrutor na igreja</option>
@@ -412,7 +470,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                   [disabled]="estudoForm.invalid || isSubmitting()"
                   class="w-full sm:w-auto rounded-card bg-advent-blue px-8 py-3.5 font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {{ isSubmitting() ? 'Enviando...' : 'Solicitar Estudo Gratuito' }}
+                  {{ isSubmitting() ? 'Enviando…' : 'Solicitar Estudo Gratuito' }}
                 </button>
               </form>
             }
@@ -449,14 +507,14 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               <p class="mt-2 text-sm text-advent-muted">
                 Venha nos visitar em nossos encontros regulares:
               </p>
-              <ul class="mt-4 space-y-2 text-sm text-advent-text">
-                <li>• <strong>Sábados:</strong> 09:00 (Escola Sabatina) e 10:15 (Culto Divino)</li>
-                <li>• <strong>Sábados:</strong> 17:00 (Culto Jovem / JA)</li>
-                <li>• <strong>Quartas:</strong> 19:30 (Culto de Oração)</li>
+              <ul class="mt-4 space-y-2 text-sm text-advent-text tabular-nums">
+                <li>• <strong>Sábados:</strong> <span class="tabular-nums">09:00</span> (Escola Sabatina) e <span class="tabular-nums">10:15</span> (Culto Divino)</li>
+                <li>• <strong>Domingos:</strong> <span class="tabular-nums">19:30</span> (Culto de Domingo)</li>
+                <li>• <strong>Quartas:</strong> <span class="tabular-nums">19:30</span> (Culto de Oração)</li>
               </ul>
               <a
                 class="mt-5 inline-block text-sm font-semibold text-advent-blue hover:underline"
-                href="/horarios"
+                routerLink="/horarios"
               >
                 Ver endereço e mapa →
               </a>
@@ -471,6 +529,7 @@ export class ContatoPage {
   protected readonly site = SITE_CONFIG;
   private readonly contatoService = inject(ContatoService);
   private readonly seo = inject(SeoService);
+  private readonly route = inject(ActivatedRoute, { optional: true });
 
   readonly activeTab = signal<'contato' | 'oracao' | 'estudo'>('contato');
   readonly isSubmitting = signal<boolean>(false);
@@ -494,7 +553,11 @@ export class ContatoPage {
   readonly estudoForm = new FormGroup({
     nome: new FormControl('', [Validators.required, Validators.minLength(2)]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    telefone: new FormControl('', [Validators.required, Validators.minLength(10)]),
+    telefone: new FormControl('', [
+      Validators.required,
+      Validators.minLength(14),
+      Validators.pattern(/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/),
+    ]),
     preferencia: new FormControl('digital'),
   });
 
@@ -508,6 +571,22 @@ export class ContatoPage {
       description:
         'Fale com a equipe da IASD Mangueiras em Tatuí-SP, tire dúvidas sobre programações, solicite um estudo bíblico gratuito ou envie seu pedido de oração.',
       path: '/contato',
+      breadcrumbs: [
+        { name: 'Início', url: 'https://iasdmangueiras.org.br/' },
+        { name: 'Contato', url: 'https://iasdmangueiras.org.br/contato' },
+      ],
+    });
+
+    const initialTab = this.route?.snapshot?.queryParamMap?.get('aba');
+    if (initialTab === 'contato' || initialTab === 'oracao' || initialTab === 'estudo') {
+      this.activeTab.set(initialTab);
+    }
+
+    this.route?.queryParamMap?.subscribe((params) => {
+      const aba = params.get('aba');
+      if (aba === 'contato' || aba === 'oracao' || aba === 'estudo') {
+        this.setTab(aba);
+      }
     });
   }
 
@@ -527,13 +606,16 @@ export class ContatoPage {
       formatted = `(${digits.slice(0, 2)}`;
       if (digits.length > 2) {
         if (digits.length > 6) {
-          formatted += `) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+          const splitIndex = digits.length === 10 ? 6 : 7;
+          formatted += `) ${digits.slice(2, splitIndex)}-${digits.slice(splitIndex)}`;
         } else {
           formatted += `) ${digits.slice(2)}`;
         }
       }
     }
-    form.get(controlName)?.setValue(formatted, { emitEvent: false });
+    const control = form.get(controlName);
+    control?.setValue(formatted, { emitEvent: false });
+    control?.updateValueAndValidity({ emitEvent: false });
   }
 
   submitContato(): void {

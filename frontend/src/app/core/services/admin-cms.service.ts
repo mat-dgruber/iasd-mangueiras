@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { FirebaseService } from '../firebase/firebase.service';
-import { Evento, Comunicado, PequenoGrupo } from '../models/content.models';
+import { Evento, Comunicado, PequenoGrupo, AvisoHorarioEspecial, EscalaItem, Ministerio, Horario } from '../models/content.models';
 
 export interface PedidoOracaoAdmin {
   id?: string;
@@ -24,12 +24,17 @@ export interface PedidoOracaoAdmin {
   created_at?: unknown;
 }
 
-export interface AvisoHorarioEspecial {
+export interface MensagemContatoAdmin {
   id?: string;
-  titulo: string;
+  nome: string;
+  email: string;
+  telefone?: string;
   mensagem: string;
-  ativo: boolean;
-  data_evento?: string;
+  assunto?: string;
+  criadoEm?: unknown;
+  created_at?: unknown;
+  lido?: boolean;
+  respondido?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -74,10 +79,48 @@ export class AdminCmsService {
   }
 
   async uploadBanner(file: File): Promise<string> {
+    const filePath = await this.validateAndBuildStoragePath('banners', file);
     if (!this.firebase.storage) throw new Error('Firebase Storage indisponível');
-    const storageRef = ref(this.firebase.storage, `banners/${Date.now()}_${file.name}`);
+    const storageRef = ref(this.firebase.storage, filePath);
     const snapshot = await uploadBytes(storageRef, file);
     return await getDownloadURL(snapshot.ref);
+  }
+
+  private async validateAndBuildStoragePath(folder: string, file: File): Promise<string> {
+    const MAX_BYTES = 5 * 1024 * 1024;
+    if (file.size > MAX_BYTES) {
+      throw new Error('O arquivo excede o tamanho máximo permitido de 5 MB.');
+    }
+    if (typeof file.slice === 'function') {
+      const slice = file.slice(0, 12);
+      if (typeof slice.arrayBuffer === 'function') {
+        const bytes = new Uint8Array(await slice.arrayBuffer());
+        if (bytes.length < 4) {
+          throw new Error('Formato de imagem inválido. Utilize JPEG, PNG ou WebP.');
+        }
+        const isJpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+        const isPng =
+          bytes[0] === 0x89 &&
+          bytes[1] === 0x50 &&
+          bytes[2] === 0x4e &&
+          bytes[3] === 0x47;
+        const isWebp =
+          bytes.length >= 12 &&
+          bytes[0] === 0x52 &&
+          bytes[1] === 0x49 &&
+          bytes[2] === 0x46 &&
+          bytes[3] === 0x46 &&
+          bytes[8] === 0x57 &&
+          bytes[9] === 0x45 &&
+          bytes[10] === 0x42 &&
+          bytes[11] === 0x50;
+        if (!isJpeg && !isPng && !isWebp) {
+          throw new Error('Formato de imagem inválido. Utilize JPEG, PNG ou WebP.');
+        }
+      }
+    }
+    const safeName = (file.name || 'image').replace(/[^a-zA-Z0-9._-]/g, '_');
+    return `${folder}/${Date.now()}_${safeName}`;
   }
 
   // ----------------------------------------------------
@@ -144,6 +187,55 @@ export class AdminCmsService {
   }
 
   // ----------------------------------------------------
+  // HORÁRIOS REGULARES
+  // ----------------------------------------------------
+  async getHorariosRegulares(): Promise<Horario[]> {
+    if (!this.firebase.firestore) return [];
+    try {
+      const colRef = collection(this.firebase.firestore, 'horarios_regulares');
+      const q = query(colRef, orderBy('ordem', 'asc'));
+      const snap = await getDocs(q);
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as unknown as Horario);
+    } catch {
+      return [];
+    }
+  }
+
+  async saveHorarioRegular(horario: Partial<Horario>, id?: string): Promise<string> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docId = id || horario.id;
+    if (docId) {
+      const docRef = doc(this.firebase.firestore, 'horarios_regulares', docId);
+      const dataToUpdate = { ...horario };
+      delete dataToUpdate.id;
+      await updateDoc(docRef, { ...dataToUpdate, updated_at: serverTimestamp() });
+      return docId;
+    } else {
+      const colRef = collection(this.firebase.firestore, 'horarios_regulares');
+      const dataToSave = { ...horario };
+      delete dataToSave.id;
+      const res = await addDoc(colRef, {
+        ...dataToSave,
+        ativo: horario.ativo ?? true,
+        created_at: serverTimestamp(),
+      });
+      return res.id;
+    }
+  }
+
+  async deleteHorarioRegular(id: string): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'horarios_regulares', id);
+    await deleteDoc(docRef);
+  }
+
+  async toggleHorarioAtivo(id: string, ativo: boolean): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'horarios_regulares', id);
+    await updateDoc(docRef, { ativo, updated_at: serverTimestamp() });
+  }
+
+  // ----------------------------------------------------
   // AVISOS DE HORÁRIOS ESPECIAIS
   // ----------------------------------------------------
   async getAvisosHorarios(): Promise<AvisoHorarioEspecial[]> {
@@ -159,14 +251,19 @@ export class AdminCmsService {
 
   async saveAvisoHorario(aviso: Partial<AvisoHorarioEspecial>, id?: string): Promise<string> {
     if (!this.firebase.firestore) throw new Error('Firestore indisponível');
-    if (id) {
-      const docRef = doc(this.firebase.firestore, 'avisos_horarios', id);
-      await updateDoc(docRef, { ...aviso, updated_at: serverTimestamp() });
-      return id;
+    const docId = id || aviso.id;
+    if (docId) {
+      const docRef = doc(this.firebase.firestore, 'avisos_horarios', docId);
+      const dataToUpdate = { ...aviso };
+      delete dataToUpdate.id;
+      await updateDoc(docRef, { ...dataToUpdate, updated_at: serverTimestamp() });
+      return docId;
     } else {
       const colRef = collection(this.firebase.firestore, 'avisos_horarios');
+      const dataToSave = { ...aviso };
+      delete dataToSave.id;
       const res = await addDoc(colRef, {
-        ...aviso,
+        ...dataToSave,
         ativo: aviso.ativo ?? true,
         created_at: serverTimestamp(),
       });
@@ -214,6 +311,121 @@ export class AdminCmsService {
   async deletePg(id: string): Promise<void> {
     if (!this.firebase.firestore) throw new Error('Firestore indisponível');
     const docRef = doc(this.firebase.firestore, 'pequenos_grupos', id);
+    await deleteDoc(docRef);
+  }
+
+  async togglePgAtivo(id: string, ativo: boolean): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'pequenos_grupos', id);
+    await updateDoc(docRef, { ativo, updated_at: serverTimestamp() });
+  }
+
+  // ----------------------------------------------------
+  // ESCALAS DOS DEPARTAMENTOS
+  // ----------------------------------------------------
+  async getEscalas(): Promise<EscalaItem[]> {
+    if (!this.firebase.firestore) return [];
+    try {
+      const colRef = collection(this.firebase.firestore, 'escalas');
+      const snap = await getDocs(colRef);
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as unknown as EscalaItem);
+    } catch {
+      return [];
+    }
+  }
+
+  async saveEscala(escala: Partial<EscalaItem>, id?: string): Promise<string> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    if (id) {
+      const docRef = doc(this.firebase.firestore, 'escalas', id);
+      await updateDoc(docRef, { ...escala, updated_at: serverTimestamp() });
+      return id;
+    } else {
+      const colRef = collection(this.firebase.firestore, 'escalas');
+      const res = await addDoc(colRef, {
+        ...escala,
+        created_at: serverTimestamp(),
+      });
+      return res.id;
+    }
+  }
+
+  async deleteEscala(id: string): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'escalas', id);
+    await deleteDoc(docRef);
+  }
+
+  // ----------------------------------------------------
+  // MINISTÉRIOS
+  // ----------------------------------------------------
+  async getMinisterios(): Promise<Ministerio[]> {
+    if (!this.firebase.firestore) return [];
+    try {
+      const colRef = collection(this.firebase.firestore, 'ministerios');
+      const snap = await getDocs(colRef);
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as unknown as Ministerio);
+    } catch {
+      return [];
+    }
+  }
+
+  async saveMinisterio(ministerio: Partial<Ministerio>, id?: string): Promise<string> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    if (id) {
+      const docRef = doc(this.firebase.firestore, 'ministerios', id);
+      await updateDoc(docRef, { ...ministerio, updated_at: serverTimestamp() });
+      return id;
+    } else {
+      const colRef = collection(this.firebase.firestore, 'ministerios');
+      const res = await addDoc(colRef, {
+        ...ministerio,
+        created_at: serverTimestamp(),
+      });
+      return res.id;
+    }
+  }
+
+  async deleteMinisterio(id: string): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'ministerios', id);
+    await deleteDoc(docRef);
+  }
+
+  async uploadMinisterioImage(file: File): Promise<string> {
+    const filePath = await this.validateAndBuildStoragePath('ministerios', file);
+    if (!this.firebase.storage) throw new Error('Firebase Storage indisponível');
+    const storageRef = ref(this.firebase.storage, filePath);
+    const snapshot = await uploadBytes(storageRef, file);
+    return await getDownloadURL(snapshot.ref);
+  }
+
+  // ----------------------------------------------------
+  // MENSAGENS DE CONTATO
+  // ----------------------------------------------------
+  async getMensagensContato(): Promise<MensagemContatoAdmin[]> {
+    if (!this.firebase.firestore) return [];
+    try {
+      const colRef = collection(this.firebase.firestore, 'mensagens_contato');
+      const snap = await getDocs(colRef);
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as unknown as MensagemContatoAdmin);
+    } catch {
+      return [];
+    }
+  }
+
+  async updateMensagemContatoStatus(
+    id: string,
+    updates: Partial<MensagemContatoAdmin>,
+  ): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'mensagens_contato', id);
+    await updateDoc(docRef, { ...updates, updated_at: serverTimestamp() });
+  }
+
+  async deleteMensagemContato(id: string): Promise<void> {
+    if (!this.firebase.firestore) throw new Error('Firestore indisponível');
+    const docRef = doc(this.firebase.firestore, 'mensagens_contato', id);
     await deleteDoc(docRef);
   }
 }
