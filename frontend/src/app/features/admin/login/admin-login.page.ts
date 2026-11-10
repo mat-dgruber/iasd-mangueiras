@@ -80,7 +80,7 @@ import { SITE_CONFIG } from '../../../core/site/site.config';
         <!-- Formulário Email/Senha -->
         <form
           [formGroup]="loginForm"
-          (ngSubmit)="handleEmailLogin()"
+          (ngSubmit)="onSubmit()"
           class="mt-6 space-y-4"
           aria-label="Formulário de acesso administrativo"
         >
@@ -96,9 +96,19 @@ import { SITE_CONFIG } from '../../../core/site/site.config';
               inputmode="email"
               spellcheck="false"
               formControlName="email"
-              class="w-full rounded-card border border-advent-border bg-white px-4 py-2.5 text-sm text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
+              class="w-full rounded-card border border-advent-border bg-white px-4 py-2.5 text-base sm:text-sm min-h-[44px] text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
+              [class.border-red-500]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
               placeholder="seu.email@exemplo.com"
             />
+            @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+              <p role="alert" class="mt-1 text-xs text-red-600">
+                @if (loginForm.get('email')?.errors?.['required']) {
+                  O e-mail é obrigatório.
+                } @else {
+                  Informe um endereço de e-mail válido.
+                }
+              </p>
+            }
           </div>
 
           <div>
@@ -109,7 +119,7 @@ import { SITE_CONFIG } from '../../../core/site/site.config';
               <button
                 type="button"
                 (click)="handleResetPassword()"
-                class="text-xs font-semibold text-advent-blue hover:underline cursor-pointer"
+                class="text-xs font-semibold text-advent-blue hover:underline cursor-pointer min-h-[44px] inline-flex items-center"
               >
                 Esqueci a senha
               </button>
@@ -120,15 +130,25 @@ import { SITE_CONFIG } from '../../../core/site/site.config';
               name="current-password"
               autocomplete="current-password"
               formControlName="password"
-              class="w-full rounded-card border border-advent-border bg-white px-4 py-2.5 text-sm text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
+              class="w-full rounded-card border border-advent-border bg-white px-4 py-2.5 text-base sm:text-sm min-h-[44px] text-advent-text focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
+              [class.border-red-500]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
               placeholder="Digite sua senha"
             />
+            @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+              <p role="alert" class="mt-1 text-xs text-red-600">
+                @if (loginForm.get('password')?.errors?.['required']) {
+                  A senha é obrigatória.
+                } @else {
+                  A senha deve ter no mínimo 6 caracteres.
+                }
+              </p>
+            }
           </div>
 
           <button
             type="submit"
             [disabled]="loginForm.invalid || authService.isLoading()"
-            class="w-full rounded-card bg-advent-blue px-4 py-3 text-sm font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer"
+            class="w-full rounded-card bg-advent-blue px-4 py-3 min-h-[44px] text-sm font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer"
           >
             {{ authService.isLoading() ? 'Autenticando…' : 'Acessar Painel' }}
           </button>
@@ -137,7 +157,7 @@ import { SITE_CONFIG } from '../../../core/site/site.config';
         <div class="mt-6 text-center">
           <a
             routerLink="/"
-            class="text-xs font-semibold text-advent-muted hover:text-advent-blue hover:underline"
+            class="text-xs font-semibold text-advent-muted hover:text-advent-blue hover:underline min-h-[44px] inline-flex items-center"
           >
             ← Voltar para o site público
           </a>
@@ -160,7 +180,12 @@ export class AdminLoginPage {
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
 
+  async onSubmit(): Promise<void> {
+    await this.handleEmailLogin();
+  }
+
   async handleEmailLogin(): Promise<void> {
+    this.loginForm.markAllAsTouched();
     if (this.loginForm.invalid) return;
     const { email, password } = this.loginForm.value;
     try {

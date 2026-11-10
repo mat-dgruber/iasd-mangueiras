@@ -25,7 +25,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
         <div class="flex flex-wrap items-center gap-2.5">
           <a
             routerLink="/admin/eventos"
-            class="rounded-card bg-advent-blue px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-advent-blue-dark transition-all cursor-pointer min-h-[40px] inline-flex items-center gap-1.5"
+            class="rounded-card bg-advent-blue px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-advent-blue-dark transition-all cursor-pointer min-h-[44px] inline-flex items-center gap-1.5"
           >
             <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -35,7 +35,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
 
           <a
             routerLink="/admin/comunicados"
-            class="rounded-card border border-advent-border bg-white px-4 py-2.5 text-xs font-semibold text-advent-text shadow-xs hover:bg-slate-50 transition-all cursor-pointer min-h-[40px] inline-flex items-center gap-1.5"
+            class="rounded-card border border-advent-border bg-white px-4 py-2.5 text-xs font-semibold text-advent-text shadow-xs hover:bg-slate-50 transition-all cursor-pointer min-h-[44px] inline-flex items-center gap-1.5"
           >
             <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -44,6 +44,22 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
           </a>
         </div>
       </header>
+
+      @if (loadError()) {
+        <div
+          role="alert"
+          class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-xs text-red-800"
+        >
+          <span>Não foi possível carregar todas as métricas do painel.</span>
+          <button
+            type="button"
+            (click)="loadDashboardCounts()"
+            class="rounded-card bg-red-700 px-4 py-2 text-xs font-semibold text-white hover:bg-red-800 transition-colors cursor-pointer min-h-[44px] inline-flex items-center justify-center shrink-0"
+          >
+            Tentar novamente
+          </button>
+        </div>
+      }
 
       <!-- Cards de Métricas e Resumos -->
       <section aria-labelledby="section-metrics">
@@ -76,7 +92,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                   </svg>
                 </span>
               </div>
-              <p class="mt-3 text-3xl font-extrabold text-advent-text">{{ counts().eventos }}</p>
+              <p class="mt-3 text-3xl font-extrabold text-advent-text tabular-nums">{{ counts().eventos }}</p>
               <div class="mt-2 flex items-center justify-between text-xs text-advent-muted">
                 <span>Programações cadastradas</span>
                 <a routerLink="/admin/eventos" class="font-semibold text-advent-blue hover:underline">Gerenciar →</a>
@@ -95,7 +111,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                   </svg>
                 </span>
               </div>
-              <p class="mt-3 text-3xl font-extrabold text-advent-text">{{ counts().comunicados }}</p>
+              <p class="mt-3 text-3xl font-extrabold text-advent-text tabular-nums">{{ counts().comunicados }}</p>
               <div class="mt-2 flex items-center justify-between text-xs text-advent-muted">
                 <span>Avisos ativos</span>
                 <a routerLink="/admin/comunicados" class="font-semibold text-advent-blue hover:underline">Ver avisos →</a>
@@ -114,7 +130,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                   </svg>
                 </span>
               </div>
-              <p class="mt-3 text-3xl font-extrabold text-advent-text">{{ counts().pgs }}</p>
+              <p class="mt-3 text-3xl font-extrabold text-advent-text tabular-nums">{{ counts().pgs }}</p>
               <div class="mt-2 flex items-center justify-between text-xs text-advent-muted">
                 <span>Grupos nos bairros</span>
                 <a routerLink="/admin/pgs" class="font-semibold text-advent-blue hover:underline">Listar PGs →</a>
@@ -133,7 +149,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                   </svg>
                 </span>
               </div>
-              <p class="mt-3 text-3xl font-extrabold text-advent-text">{{ counts().oracoes }}</p>
+              <p class="mt-3 text-3xl font-extrabold text-advent-text tabular-nums">{{ counts().oracoes }}</p>
               <div class="mt-2 flex items-center justify-between text-xs text-advent-muted">
                 <span>Pedidos recebidos</span>
                 <a routerLink="/admin/oracoes" class="font-semibold text-advent-blue hover:underline">Atender →</a>
@@ -229,6 +245,7 @@ export class AdminDashboardPage implements OnInit {
 
   readonly user = this.auth.currentUser;
   readonly isLoading = signal<boolean>(true);
+  readonly loadError = signal<boolean>(false);
   readonly counts = signal({
     eventos: 0,
     comunicados: 0,
@@ -238,13 +255,18 @@ export class AdminDashboardPage implements OnInit {
   });
 
   async ngOnInit(): Promise<void> {
-    await this.loadMetrics();
+    await this.loadDashboardCounts();
   }
 
   async loadMetrics(): Promise<void> {
+    await this.loadDashboardCounts();
+  }
+
+  async loadDashboardCounts(): Promise<void> {
     this.isLoading.set(true);
+    this.loadError.set(false);
     try {
-      const [evts, coms, pgs, oracs, escs] = await Promise.allSettled([
+      const results = await Promise.allSettled([
         this.cms.getEventos(),
         this.cms.getComunicados(),
         this.cms.getPgs(),
@@ -252,20 +274,25 @@ export class AdminDashboardPage implements OnInit {
         this.cms.getEscalas(),
       ]);
 
+      const [evts, coms, pgs, oracs, escs] = results;
+      const anyFailed = results.some((r) => r.status === 'rejected');
+      this.loadError.set(anyFailed);
+
       this.counts.set({
-        eventos: evts.status === 'fulfilled' ? evts.value.length : 3,
-        comunicados: coms.status === 'fulfilled' ? coms.value.length : 2,
-        pgs: pgs.status === 'fulfilled' ? pgs.value.length : 6,
-        oracoes: oracs.status === 'fulfilled' ? oracs.value.length : 2,
-        escalas: escs.status === 'fulfilled' ? escs.value.length : 4,
+        eventos: evts.status === 'fulfilled' ? evts.value.length : 0,
+        comunicados: coms.status === 'fulfilled' ? coms.value.length : 0,
+        pgs: pgs.status === 'fulfilled' ? pgs.value.length : 0,
+        oracoes: oracs.status === 'fulfilled' ? oracs.value.length : 0,
+        escalas: escs.status === 'fulfilled' ? escs.value.length : 0,
       });
     } catch {
+      this.loadError.set(true);
       this.counts.set({
-        eventos: 3,
-        comunicados: 2,
-        pgs: 6,
-        oracoes: 2,
-        escalas: 4,
+        eventos: 0,
+        comunicados: 0,
+        pgs: 0,
+        oracoes: 0,
+        escalas: 0,
       });
     } finally {
       this.isLoading.set(false);

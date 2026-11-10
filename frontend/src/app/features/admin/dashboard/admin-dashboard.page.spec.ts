@@ -56,4 +56,14 @@ describe('AdminDashboardPage', () => {
     const skeletons = fixture.nativeElement.querySelectorAll('app-ui-skeleton');
     expect(skeletons.length).toBeGreaterThan(0);
   });
+
+  it('zera contadores que falharam e exibe banner de erro sem números mágicos', async () => {
+    vi.spyOn(cmsService, 'getEventos').mockRejectedValueOnce(new Error('Falha'));
+    await component.loadDashboardCounts();
+    fixture.detectChanges();
+
+    expect(component.loadError()).toBe(true);
+    expect(component.counts().eventos).toBe(0);
+    expect(fixture.nativeElement.textContent).toContain('Tentar novamente');
+  });
 });

@@ -28,7 +28,7 @@ import defaultComunicados from '../../../../content/comunicados.json';
         <button
           type="button"
           (click)="openModal()"
-          class="rounded-card bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner cursor-pointer min-h-[40px] flex items-center justify-center gap-1.5"
+          class="rounded-card bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner cursor-pointer min-h-[44px] flex items-center justify-center gap-1.5"
         >
           <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -38,6 +38,22 @@ import defaultComunicados from '../../../../content/comunicados.json';
       </header>
 
       <div class="mt-8 space-y-4">
+        @if (loadError()) {
+          <div
+            role="alert"
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-xs text-red-800"
+          >
+            <span>Erro ao carregar os comunicados.</span>
+            <button
+              type="button"
+              (click)="loadComunicados()"
+              class="rounded-card bg-red-700 px-4 py-2 text-xs font-semibold text-white hover:bg-red-800 transition-colors cursor-pointer min-h-[44px] inline-flex items-center justify-center shrink-0"
+            >
+              Tentar novamente
+            </button>
+          </div>
+        }
+
         @if (isLoading()) {
           <div class="grid gap-4">
             @for (i of [1, 2, 3]; track i) {
@@ -62,7 +78,7 @@ import defaultComunicados from '../../../../content/comunicados.json';
             <button
               type="button"
               (click)="openModal()"
-              class="rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[38px] inline-flex items-center gap-1.5"
+              class="rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[44px] inline-flex items-center gap-1.5"
             >
               <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -76,15 +92,15 @@ import defaultComunicados from '../../../../content/comunicados.json';
               <article class="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-2xl border border-advent-border bg-white p-5 shadow-xs transition-colors hover:border-advent-blue/40">
                 <div class="space-y-1.5">
                   <div class="flex items-center gap-2">
-                    <span class="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-800">
+                    <span class="rounded bg-amber-100 px-2 py-0.5 text-xs font-bold uppercase text-amber-800">
                       {{ com.data || 'Aviso Ativo' }}
                     </span>
                     @if (com.ativo !== false) {
-                      <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-green-700">
+                      <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-700">
                         <span class="h-2 w-2 rounded-full bg-green-500"></span> Visível no Site
                       </span>
                     } @else {
-                      <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400">
+                      <span class="inline-flex items-center gap-1 text-xs font-semibold text-slate-400">
                         <span class="h-2 w-2 rounded-full bg-slate-300"></span> Pausado
                       </span>
                     }
@@ -96,8 +112,16 @@ import defaultComunicados from '../../../../content/comunicados.json';
                 <div class="flex items-center gap-2 self-end md:self-center">
                   <button
                     type="button"
+                    (click)="openEditModal(com)"
+                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-advent-blue bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer min-h-[44px] flex items-center"
+                    aria-label="Editar comunicado {{ com.titulo }}"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    type="button"
                     (click)="toggleStatus(com)"
-                    class="rounded-lg px-3.5 py-2 text-xs font-semibold transition-colors cursor-pointer min-h-[36px] flex items-center"
+                    class="rounded-lg px-3.5 py-2 text-xs font-semibold transition-colors cursor-pointer min-h-[44px] flex items-center"
                     [class.bg-green-50]="com.ativo !== false"
                     [class.text-green-800]="com.ativo !== false"
                     [class.bg-slate-100]="com.ativo === false"
@@ -109,7 +133,7 @@ import defaultComunicados from '../../../../content/comunicados.json';
                   <button
                     type="button"
                     (click)="confirmDelete(com)"
-                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[36px] flex items-center"
+                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[44px] flex items-center"
                     aria-label="Excluir comunicado {{ com.titulo }}"
                   >
                     Excluir
@@ -121,10 +145,10 @@ import defaultComunicados from '../../../../content/comunicados.json';
         }
       </div>
 
-      <!-- Modal Novo Comunicado -->
+      <!-- Modal Novo / Editar Comunicado -->
       <app-ui-modal
         [isOpen]="isModalOpen()"
-        title="Novo Comunicado"
+        [title]="editingId() ? 'Editar Comunicado' : 'Novo Comunicado'"
         [size]="'md'"
         (close)="closeModal()"
       >
@@ -198,16 +222,16 @@ import defaultComunicados from '../../../../content/comunicados.json';
             <button
               type="button"
               (click)="closeModal()"
-              class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 transition-colors cursor-pointer"
+              class="rounded-card border border-advent-border px-4 py-2 min-h-[44px] text-xs font-semibold text-advent-text hover:bg-slate-50 transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
               [disabled]="comunicadoForm.invalid || isSaving()"
-              class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 transition-all cursor-pointer"
+              class="rounded-card bg-advent-blue px-6 py-2 min-h-[44px] text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 transition-all cursor-pointer"
             >
-              {{ isSaving() ? 'Publicando...' : 'Publicar Comunicado' }}
+              {{ isSaving() ? 'Publicando...' : (editingId() ? 'Salvar Alterações' : 'Publicar Comunicado') }}
             </button>
           </div>
         </form>
@@ -234,9 +258,11 @@ export class AdminComunicadosPage implements OnInit {
 
   readonly comunicados = signal<Comunicado[]>([]);
   readonly isLoading = signal<boolean>(true);
+  readonly loadError = signal<boolean>(false);
   readonly isSaving = signal<boolean>(false);
   readonly isDeleting = signal<boolean>(false);
   readonly isModalOpen = signal<boolean>(false);
+  readonly editingId = signal<string | null>(null);
   readonly comunicadoToDelete = signal<Comunicado | null>(null);
 
   readonly comunicadoForm = new FormGroup({
@@ -251,16 +277,24 @@ export class AdminComunicadosPage implements OnInit {
 
   async loadComunicados(): Promise<void> {
     this.isLoading.set(true);
-    const firestoreItems = await this.cmsService.getComunicados();
-    if (firestoreItems.length > 0) {
-      this.comunicados.set(firestoreItems);
-    } else {
-      this.comunicados.set(defaultComunicados as Comunicado[]);
+    this.loadError.set(false);
+    try {
+      const firestoreItems = await this.cmsService.getComunicados();
+      if (firestoreItems.length > 0) {
+        this.comunicados.set(firestoreItems);
+      } else {
+        this.comunicados.set(defaultComunicados as Comunicado[]);
+      }
+    } catch {
+      this.loadError.set(true);
+      this.toastService.error('Erro ao carregar comunicados.');
+    } finally {
+      this.isLoading.set(false);
     }
-    this.isLoading.set(false);
   }
 
   openModal(): void {
+    this.editingId.set(null);
     this.comunicadoForm.reset({
       titulo: '',
       data: '',
@@ -269,8 +303,19 @@ export class AdminComunicadosPage implements OnInit {
     this.isModalOpen.set(true);
   }
 
+  openEditModal(com: Comunicado): void {
+    this.editingId.set(com.id || null);
+    this.comunicadoForm.patchValue({
+      titulo: com.titulo,
+      data: com.data || '',
+      mensagem: com.mensagem || com.descricao || '',
+    });
+    this.isModalOpen.set(true);
+  }
+
   closeModal(): void {
     this.isModalOpen.set(false);
+    this.editingId.set(null);
   }
 
   async saveComunicado(): Promise<void> {
@@ -280,7 +325,9 @@ export class AdminComunicadosPage implements OnInit {
     }
     this.isSaving.set(true);
     const formVal = this.comunicadoForm.value;
+    const currentId = this.editingId();
     const newCom: Partial<Comunicado> = {
+      ...(currentId ? { id: currentId } : {}),
       titulo: formVal.titulo!,
       data: formVal.data || 'Aviso Recente',
       mensagem: formVal.mensagem!,
@@ -289,12 +336,20 @@ export class AdminComunicadosPage implements OnInit {
     };
 
     try {
-      await this.cmsService.saveComunicado(newCom);
-      this.toastService.success('Comunicado publicado com sucesso!');
+      await this.cmsService.saveComunicado(newCom, currentId || undefined);
+      this.toastService.success(
+        currentId ? 'Comunicado atualizado com sucesso!' : 'Comunicado publicado com sucesso!',
+      );
       this.closeModal();
       await this.loadComunicados();
     } catch {
-      this.comunicados.update((prev) => [newCom as Comunicado, ...prev]);
+      if (currentId) {
+        this.comunicados.update((prev) =>
+          prev.map((c) => (c.id === currentId ? ({ ...c, ...newCom, id: currentId } as Comunicado) : c)),
+        );
+      } else {
+        this.comunicados.update((prev) => [newCom as Comunicado, ...prev]);
+      }
       this.toastService.success('Comunicado adicionado na visualização local!');
       this.closeModal();
     } finally {
@@ -303,16 +358,21 @@ export class AdminComunicadosPage implements OnInit {
   }
 
   async toggleStatus(com: Comunicado): Promise<void> {
+    const prevStatus = com.ativo;
     const nextStatus = com.ativo === false;
     com.ativo = nextStatus;
     this.comunicados.update((prev) => [...prev]);
-    this.toastService.info(nextStatus ? 'Comunicado ativado.' : 'Comunicado pausado.');
     if (com.id) {
       try {
         await this.cmsService.saveComunicado({ ativo: nextStatus }, com.id);
+        this.toastService.info(nextStatus ? 'Comunicado ativado.' : 'Comunicado pausado.');
       } catch {
-        // ok
+        com.ativo = prevStatus;
+        this.comunicados.update((prev) => [...prev]);
+        this.toastService.error('Erro ao atualizar status do comunicado.');
       }
+    } else {
+      this.toastService.info(nextStatus ? 'Comunicado ativado.' : 'Comunicado pausado.');
     }
   }
 

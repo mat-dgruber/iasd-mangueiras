@@ -42,7 +42,7 @@ import defaultHorarios from '../../../../content/horarios.json';
           <button
             type="button"
             (click)="openRegularModal()"
-            class="rounded-card border border-advent-blue bg-blue-50/60 px-4 py-2.5 text-xs font-semibold text-advent-blue shadow-xs transition-all hover:bg-advent-blue hover:text-white active:scale-[0.98] cursor-pointer min-h-[40px] flex items-center justify-center gap-1.5"
+            class="rounded-card border border-advent-blue bg-blue-50/60 px-4 py-2.5 text-xs font-semibold text-advent-blue shadow-xs transition-all hover:bg-advent-blue hover:text-white active:scale-[0.98] cursor-pointer min-h-[44px] flex items-center justify-center gap-1.5"
           >
             <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -53,7 +53,7 @@ import defaultHorarios from '../../../../content/horarios.json';
           <button
             type="button"
             (click)="openAvisoModal()"
-            class="rounded-card bg-advent-blue px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-advent-blue-dark active:scale-[0.98] cursor-pointer min-h-[40px] flex items-center justify-center gap-1.5"
+            class="rounded-card bg-advent-blue px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-advent-blue-dark active:scale-[0.98] cursor-pointer min-h-[44px] flex items-center justify-center gap-1.5"
           >
             <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -77,7 +77,7 @@ import defaultHorarios from '../../../../content/horarios.json';
           <button
             type="button"
             (click)="openRegularModal()"
-            class="text-xs font-semibold text-advent-blue hover:text-advent-blue-dark hover:underline cursor-pointer"
+            class="text-xs font-semibold text-advent-blue hover:text-advent-blue-dark hover:underline cursor-pointer min-h-[44px] inline-flex items-center"
           >
             + Adicionar Culto
           </button>
@@ -113,7 +113,7 @@ import defaultHorarios from '../../../../content/horarios.json';
             <button
               type="button"
               (click)="openRegularModal()"
-              class="mt-3 inline-flex items-center gap-1 rounded-card bg-advent-blue px-3.5 py-1.5 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark cursor-pointer min-h-[36px]"
+              class="mt-3 inline-flex items-center gap-1 rounded-card bg-advent-blue px-3.5 py-1.5 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark cursor-pointer min-h-[44px]"
             >
               + Adicionar Culto Regular
             </button>
@@ -129,16 +129,16 @@ import defaultHorarios from '../../../../content/horarios.json';
               >
                 <div>
                   <div class="flex items-center justify-between gap-2">
-                    <span class="rounded bg-advent-blue/10 px-2 py-0.5 text-[10px] font-bold uppercase text-advent-blue">
+                    <span class="rounded bg-advent-blue/10 px-2 py-0.5 text-xs font-bold uppercase text-advent-blue tabular-nums">
                       {{ h.dia }} • {{ h.horario }}
                     </span>
 
                     @if (h.ativo !== false) {
-                      <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-green-700">
+                      <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-700">
                         <span class="h-2 w-2 rounded-full bg-green-500"></span> Ativo
                       </span>
                     } @else {
-                      <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400">
+                      <span class="inline-flex items-center gap-1 text-xs font-semibold text-slate-400">
                         <span class="h-2 w-2 rounded-full bg-slate-300"></span> Pausado
                       </span>
                     }
@@ -152,7 +152,7 @@ import defaultHorarios from '../../../../content/horarios.json';
                   <button
                     type="button"
                     (click)="editRegularHorario(h)"
-                    class="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-advent-blue bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer min-h-[32px]"
+                    class="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-advent-blue bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer min-h-[44px]"
                     [attr.aria-label]="'Editar culto ' + h.titulo"
                   >
                     Editar
@@ -161,7 +161,7 @@ import defaultHorarios from '../../../../content/horarios.json';
                   <button
                     type="button"
                     (click)="toggleRegularStatus(h)"
-                    class="rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors cursor-pointer min-h-[32px]"
+                    class="rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors cursor-pointer min-h-[44px]"
                     [class.bg-green-50]="h.ativo !== false"
                     [class.text-green-800]="h.ativo !== false"
                     [class.hover:bg-green-100]="h.ativo !== false"
@@ -176,7 +176,7 @@ import defaultHorarios from '../../../../content/horarios.json';
                   <button
                     type="button"
                     (click)="openDeleteRegularDialog(h)"
-                    class="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[32px]"
+                    class="rounded-lg px-2.5 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[44px]"
                     [attr.aria-label]="'Excluir culto ' + h.titulo"
                   >
                     Excluir
@@ -202,7 +202,7 @@ import defaultHorarios from '../../../../content/horarios.json';
           <button
             type="button"
             (click)="openAvisoModal()"
-            class="text-xs font-semibold text-advent-blue hover:text-advent-blue-dark hover:underline cursor-pointer"
+            class="text-xs font-semibold text-advent-blue hover:text-advent-blue-dark hover:underline cursor-pointer min-h-[44px] inline-flex items-center"
           >
             + Novo Aviso
           </button>
@@ -233,7 +233,7 @@ import defaultHorarios from '../../../../content/horarios.json';
             <button
               type="button"
               (click)="openAvisoModal()"
-              class="mt-3 inline-flex items-center gap-1 rounded-card bg-advent-blue px-3.5 py-1.5 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark cursor-pointer min-h-[36px]"
+              class="mt-3 inline-flex items-center gap-1 rounded-card bg-advent-blue px-3.5 py-1.5 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark cursor-pointer min-h-[44px]"
             >
               + Novo Aviso Especial
             </button>
@@ -252,7 +252,7 @@ import defaultHorarios from '../../../../content/horarios.json';
                 <div class="space-y-1">
                   <div class="flex flex-wrap items-center gap-2">
                     <span
-                      class="rounded px-2 py-0.5 text-[10px] font-bold uppercase"
+                      class="rounded px-2 py-0.5 text-xs font-bold uppercase tabular-nums"
                       [class.bg-amber-200]="aviso.ativo !== false"
                       [class.text-amber-900]="aviso.ativo !== false"
                       [class.bg-slate-200]="aviso.ativo === false"
@@ -262,17 +262,17 @@ import defaultHorarios from '../../../../content/horarios.json';
                     </span>
 
                     @if (aviso.ativo !== false) {
-                      <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-green-700">
+                      <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-700">
                         <span class="h-2 w-2 rounded-full bg-green-500"></span> Ativo
                       </span>
                     } @else {
-                      <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400">
+                      <span class="inline-flex items-center gap-1 text-xs font-semibold text-slate-400">
                         <span class="h-2 w-2 rounded-full bg-slate-300"></span> Pausado
                       </span>
                     }
 
                     @if (aviso.expira_em) {
-                      <span class="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600">
+                      <span class="rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600 tabular-nums">
                         Expira em: {{ formatDisplayDate(aviso.expira_em) }}
                       </span>
                     }
@@ -298,7 +298,7 @@ import defaultHorarios from '../../../../content/horarios.json';
                   <button
                     type="button"
                     (click)="editAviso(aviso)"
-                    class="rounded-lg px-3 py-1.5 text-xs font-semibold text-advent-blue bg-white border border-blue-200 hover:bg-blue-50 transition-colors cursor-pointer min-h-[36px] flex items-center"
+                    class="rounded-lg px-3 py-1.5 text-xs font-semibold text-advent-blue bg-white border border-blue-200 hover:bg-blue-50 transition-colors cursor-pointer min-h-[44px] flex items-center"
                     [attr.aria-label]="'Editar aviso ' + aviso.titulo"
                   >
                     Editar
@@ -307,7 +307,7 @@ import defaultHorarios from '../../../../content/horarios.json';
                   <button
                     type="button"
                     (click)="toggleAvisoStatus(aviso)"
-                    class="rounded-lg px-3 py-1.5 text-xs font-semibold bg-white border transition-colors cursor-pointer min-h-[36px] flex items-center"
+                    class="rounded-lg px-3 py-1.5 text-xs font-semibold bg-white border transition-colors cursor-pointer min-h-[44px] flex items-center"
                     [class.border-amber-300]="aviso.ativo !== false"
                     [class.text-amber-800]="aviso.ativo !== false"
                     [class.hover:bg-amber-100]="aviso.ativo !== false"
@@ -322,7 +322,7 @@ import defaultHorarios from '../../../../content/horarios.json';
                   <button
                     type="button"
                     (click)="openDeleteAvisoDialog(aviso)"
-                    class="rounded-lg px-3 py-1.5 text-xs font-semibold text-red-600 bg-white border border-red-200 hover:bg-red-50 transition-colors cursor-pointer min-h-[36px] flex items-center"
+                    class="rounded-lg px-3 py-1.5 text-xs font-semibold text-red-600 bg-white border border-red-200 hover:bg-red-50 transition-colors cursor-pointer min-h-[44px] flex items-center"
                     [attr.aria-label]="'Remover aviso ' + aviso.titulo"
                   >
                     Remover
@@ -337,12 +337,17 @@ import defaultHorarios from '../../../../content/horarios.json';
       <!-- MODAL: Culto Regular -->
       @if (isRegularModalOpen()) {
         <div
-          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
+          class="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-regular-title"
+          (click)="closeRegularModal()"
+          (keydown)="trapFocus($event)"
         >
-          <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+          <div
+            class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
+            (click)="$event.stopPropagation()"
+          >
             <div class="flex items-center justify-between pb-4 border-b border-advent-border">
               <h2 id="modal-regular-title" class="text-lg font-bold text-advent-text">
                 {{ editingRegularId() ? 'Editar Culto Regular' : 'Novo Culto Regular' }}
@@ -410,7 +415,7 @@ import defaultHorarios from '../../../../content/horarios.json';
                     id="regular-horario"
                     type="text"
                     formControlName="horario"
-                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none tabular-nums"
                     [class.border-red-500]="regularForm.get('horario')?.invalid && regularForm.get('horario')?.touched"
                     [class.border-advent-border]="!regularForm.get('horario')?.invalid || !regularForm.get('horario')?.touched"
                     placeholder="Ex: 09:00 ou 19:30"
@@ -455,14 +460,14 @@ import defaultHorarios from '../../../../content/horarios.json';
                 <button
                   type="button"
                   (click)="closeRegularModal()"
-                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[38px]"
+                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[44px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   [disabled]="regularForm.invalid || isSaving()"
-                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[38px]"
+                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[44px]"
                 >
                   {{ isSaving() ? 'Salvando...' : (editingRegularId() ? 'Salvar Alterações' : 'Cadastrar Culto') }}
                 </button>
@@ -475,12 +480,17 @@ import defaultHorarios from '../../../../content/horarios.json';
       <!-- MODAL: Aviso de Horário Especial -->
       @if (isAvisoModalOpen()) {
         <div
-          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
+          class="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-aviso-title"
+          (click)="closeAvisoModal()"
+          (keydown)="trapFocus($event)"
         >
-          <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+          <div
+            class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
+            (click)="$event.stopPropagation()"
+          >
             <div class="flex items-center justify-between pb-4 border-b border-advent-border">
               <h2 id="modal-aviso-title" class="text-lg font-bold text-advent-text">
                 {{ editingAvisoId() ? 'Editar Aviso de Horário Especial' : 'Novo Aviso de Horário Especial' }}
@@ -573,14 +583,14 @@ import defaultHorarios from '../../../../content/horarios.json';
                 <button
                   type="button"
                   (click)="closeAvisoModal()"
-                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[38px]"
+                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[44px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   [disabled]="avisoForm.invalid || isSaving()"
-                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[38px]"
+                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[44px]"
                 >
                   {{ isSaving() ? 'Salvando...' : (editingAvisoId() ? 'Salvar Alterações' : 'Publicar Aviso') }}
                 </button>
@@ -647,17 +657,30 @@ export class AdminHorariosPage implements OnInit {
   }
 
   async loadRegularHorarios(): Promise<void> {
-    const list = await this.cmsService.getHorariosRegulares();
-    if (list && list.length > 0) {
-      this.regularHorarios.set(list);
-    } else {
+    try {
+      const list = await this.cmsService.getHorariosRegulares();
+      if (list && list.length > 0) {
+        this.regularHorarios.set(list);
+      } else {
+        this.regularHorarios.set([...defaultHorarios]);
+      }
+    } catch {
       this.regularHorarios.set([...defaultHorarios]);
+      this.toastService.error('Erro ao carregar grade de cultos regulares.');
+    } finally {
+      this.isLoading.set(false);
     }
   }
 
   async loadAvisos(): Promise<void> {
-    const list = await this.cmsService.getAvisosHorarios();
-    this.avisos.set(list);
+    try {
+      const list = await this.cmsService.getAvisosHorarios();
+      this.avisos.set(list);
+    } catch {
+      this.toastService.error('Erro ao carregar avisos de horários.');
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   formatDisplayDate(val?: string): string {
@@ -704,7 +727,10 @@ export class AdminHorariosPage implements OnInit {
   }
 
   async saveRegularHorario(): Promise<void> {
-    if (this.regularForm.invalid) return;
+    if (this.regularForm.invalid) {
+      this.regularForm.markAllAsTouched();
+      return;
+    }
     this.isSaving.set(true);
     const formVal = this.regularForm.value;
     const editingId = this.editingRegularId();
@@ -819,7 +845,10 @@ export class AdminHorariosPage implements OnInit {
   }
 
   async saveAviso(): Promise<void> {
-    if (this.avisoForm.invalid) return;
+    if (this.avisoForm.invalid) {
+      this.avisoForm.markAllAsTouched();
+      return;
+    }
     this.isSaving.set(true);
     const formVal = this.avisoForm.value;
     const editingId = this.editingAvisoId();
@@ -927,6 +956,27 @@ export class AdminHorariosPage implements OnInit {
     }
     if (this.isAvisoModalOpen()) {
       this.closeAvisoModal();
+    }
+  }
+
+  trapFocus(event: KeyboardEvent): void {
+    if (event.key !== 'Tab') return;
+    const dialog = event.currentTarget as HTMLElement | null;
+    if (!dialog) return;
+    const focusables = Array.from(
+      dialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    );
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
     }
   }
 }

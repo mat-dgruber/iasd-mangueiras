@@ -46,6 +46,22 @@ import defaultMinisterios from '../../../../content/ministerios.json';
 
       <!-- Listagem de Ministérios -->
       <div class="mt-8 space-y-4">
+        @if (loadError()) {
+          <div
+            role="alert"
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-xs text-red-800"
+          >
+            <span>Erro ao carregar os ministérios.</span>
+            <button
+              type="button"
+              (click)="loadMinisterios()"
+              class="rounded-card bg-red-700 px-4 py-2 text-xs font-semibold text-white hover:bg-red-800 transition-colors cursor-pointer min-h-[44px] inline-flex items-center justify-center shrink-0"
+            >
+              Tentar novamente
+            </button>
+          </div>
+        }
+
         @if (isLoading()) {
           <div class="grid gap-4">
             @for (i of [1, 2, 3]; track i) {
@@ -80,7 +96,7 @@ import defaultMinisterios from '../../../../content/ministerios.json';
             <button
               type="button"
               (click)="openModal()"
-              class="rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[40px] inline-flex items-center gap-1.5"
+              class="rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[44px] inline-flex items-center gap-1.5"
             >
               <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -113,13 +129,13 @@ import defaultMinisterios from '../../../../content/ministerios.json';
                       }
 
                       @if (ministerio.destaque) {
-                        <span class="rounded-md bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800 flex items-center gap-1">
+                        <span class="rounded-md bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800 flex items-center gap-1">
                           Destaque
                         </span>
                       }
 
                       <span
-                        class="rounded-md px-2 py-0.5 text-[11px] font-bold"
+                        class="rounded-md px-2 py-0.5 text-xs font-bold"
                         [class]="ministerio.ativo !== false ? 'bg-green-50 text-green-700' : 'bg-slate-100 text-slate-500'"
                       >
                         {{ ministerio.ativo !== false ? 'Ativo' : 'Inativo' }}
@@ -137,7 +153,7 @@ import defaultMinisterios from '../../../../content/ministerios.json';
                     <p class="text-xs text-advent-muted max-w-2xl leading-relaxed">{{ ministerio.descricao }}</p>
 
                     @if (ministerio.reunioes_horario) {
-                      <p class="inline-flex items-center gap-1 text-xs text-advent-muted">
+                      <p class="inline-flex items-center gap-1 text-xs text-advent-muted tabular-nums">
                         <svg class="h-3.5 w-3.5 shrink-0 text-advent-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -402,6 +418,7 @@ export class AdminMinisteriosPage implements OnInit {
   readonly ministerios = signal<Ministerio[]>([]);
   readonly categorias = signal<string[]>([]);
   readonly isLoading = signal<boolean>(true);
+  readonly loadError = signal<boolean>(false);
   readonly isSaving = signal<boolean>(false);
   readonly isDeleting = signal<boolean>(false);
   readonly isModalOpen = signal<boolean>(false);
@@ -429,14 +446,21 @@ export class AdminMinisteriosPage implements OnInit {
 
   async loadMinisterios(): Promise<void> {
     this.isLoading.set(true);
-    const firestoreMinisterios = await this.cmsService.getMinisterios();
-    if (firestoreMinisterios.length > 0) {
-      this.ministerios.set(firestoreMinisterios);
-    } else {
-      this.ministerios.set(defaultMinisterios as Ministerio[]);
+    this.loadError.set(false);
+    try {
+      const firestoreMinisterios = await this.cmsService.getMinisterios();
+      if (firestoreMinisterios.length > 0) {
+        this.ministerios.set(firestoreMinisterios);
+      } else {
+        this.ministerios.set(defaultMinisterios as Ministerio[]);
+      }
+      this.updateCategorias();
+    } catch {
+      this.loadError.set(true);
+      this.toastService.error('Erro ao carregar ministérios.');
+    } finally {
+      this.isLoading.set(false);
     }
-    this.updateCategorias();
-    this.isLoading.set(false);
   }
 
   private updateCategorias(): void {
@@ -536,28 +560,7 @@ export class AdminMinisteriosPage implements OnInit {
       this.closeModal();
       await this.loadMinisterios();
     } catch {
-      // Fallback local se Firestore não estiver com chaves ativas
-      const formVal = this.ministerioForm.value;
-      const atividadesArray = formVal.atividades
-        ? formVal.atividades.split('\n').map((a) => a.trim()).filter((a) => a.length > 0)
-        : [];
-      const newMin: Ministerio = {
-        nome: formVal.nome!,
-        descricao: formVal.descricao!,
-        categoria: formVal.categoria || undefined,
-        lideres: formVal.lideres || undefined,
-        reunioes_horario: formVal.reunioes_horario || undefined,
-        contato_whatsapp: formVal.contato_whatsapp || undefined,
-        publico_alvo: formVal.publico_alvo || undefined,
-        banner_url: formVal.banner_url || undefined,
-        atividades: atividadesArray.length > 0 ? atividadesArray : undefined,
-        destaque: Boolean(formVal.destaque),
-        ativo: Boolean(formVal.ativo),
-      };
-      this.ministerios.update((prev) => [newMin, ...prev]);
-      this.updateCategorias();
-      this.toastService.info('Ministério salvo na pré-visualização local.');
-      this.closeModal();
+      this.toastService.error('Erro ao salvar no banco de dados. Tente novamente.');
     } finally {
       this.isSaving.set(false);
     }

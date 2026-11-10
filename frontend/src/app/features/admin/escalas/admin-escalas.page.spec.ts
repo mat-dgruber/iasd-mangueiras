@@ -131,7 +131,7 @@ describe('AdminEscalasPage', () => {
     expect(toastService.success).toHaveBeenCalledWith('Escala de Sonorização & Transmissão excluída.');
   });
 
-  it('copia escala individual para o WhatsApp via ToastService', () => {
+  it('copia escala individual para o WhatsApp via ToastService', async () => {
     vi.spyOn(toastService, 'success');
     const mockEscala: EscalaItem = {
       id: 'escala-wpp',
@@ -142,7 +142,7 @@ describe('AdminEscalasPage', () => {
       horario: '10:00',
     };
 
-    component.copySingleEscalaWhatsApp(mockEscala);
+    await component.copySingleEscalaWhatsApp(mockEscala);
     expect(toastService.success).toHaveBeenCalledWith('Escala copiada para a área de transferência!');
   });
 

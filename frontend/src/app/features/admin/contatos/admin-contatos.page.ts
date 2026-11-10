@@ -37,7 +37,8 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
             <button
               type="button"
               (click)="selectedFilter.set(f)"
-              class="rounded-full px-3.5 py-1.5 min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center text-xs font-semibold transition-colors cursor-pointer"
+              [attr.aria-pressed]="selectedFilter() === f"
+              class="rounded-full px-3.5 py-1.5 min-h-[44px] inline-flex items-center justify-center text-xs font-semibold transition-colors cursor-pointer"
               [class.bg-advent-blue]="selectedFilter() === f"
               [class.text-white]="selectedFilter() === f"
               [class.bg-white]="selectedFilter() !== f"
@@ -52,6 +53,22 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
       </header>
 
       <div class="mt-8 space-y-4">
+        @if (loadError()) {
+          <div
+            role="alert"
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-xs text-red-800"
+          >
+            <span>Erro ao carregar mensagens de contato.</span>
+            <button
+              type="button"
+              (click)="carregar()"
+              class="rounded-card bg-red-700 px-4 py-2 text-xs font-semibold text-white hover:bg-red-800 transition-colors cursor-pointer min-h-[44px] inline-flex items-center justify-center shrink-0"
+            >
+              Tentar novamente
+            </button>
+          </div>
+        }
+
         @if (isLoading()) {
           <div class="grid gap-4" aria-busy="true" aria-label="Carregando mensagens de contato">
             @for (i of [1, 2, 3]; track i) {
@@ -99,7 +116,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
               <button
                 type="button"
                 (click)="selectedFilter.set('Todos')"
-                class="mt-4 inline-flex items-center gap-1.5 rounded-card border border-advent-border bg-slate-50 px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-100 transition-colors cursor-pointer min-h-[38px]"
+                class="mt-4 inline-flex items-center gap-1.5 rounded-card border border-advent-border bg-slate-50 px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-100 transition-colors cursor-pointer min-h-[44px]"
               >
                 Ver todas as mensagens
               </button>
@@ -118,7 +135,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                     <span class="text-sm font-bold text-advent-text">{{ item.nome }}</span>
                     @if (item.respondido) {
                       <span
-                        class="inline-flex items-center gap-1 rounded-full bg-green-100 border border-green-200 px-2.5 py-0.5 text-[10px] font-bold uppercase text-green-800"
+                        class="inline-flex items-center gap-1 rounded-full bg-green-100 border border-green-200 px-2.5 py-0.5 text-xs font-bold uppercase text-green-800"
                       >
                         <svg class="h-3 w-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -127,13 +144,13 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                       </span>
                     } @else if (item.lido) {
                       <span
-                        class="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[10px] font-bold uppercase text-slate-700"
+                        class="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-xs font-bold uppercase text-slate-700"
                       >
                         Lido
                       </span>
                     } @else {
                       <span
-                        class="inline-flex items-center gap-1 rounded-full bg-amber-100 border border-amber-200 px-2.5 py-0.5 text-[10px] font-bold uppercase text-amber-800"
+                        class="inline-flex items-center gap-1 rounded-full bg-amber-100 border border-amber-200 px-2.5 py-0.5 text-xs font-bold uppercase text-amber-800"
                       >
                         Novo / Não Lido
                       </span>
@@ -143,7 +160,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                   <div class="flex items-center gap-3 text-xs text-advent-muted">
                     <span>{{ item.email }}</span>
                     @if (item.telefone) {
-                      <span>• {{ item.telefone }}</span>
+                      <span class="tabular-nums">• {{ item.telefone }}</span>
                     }
                   </div>
                 </div>
@@ -168,7 +185,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                       <button
                         type="button"
                         (click)="marcarLido(item, true)"
-                        class="rounded-lg border border-advent-border bg-slate-50 px-3 py-1.5 font-medium text-advent-text hover:bg-slate-100 cursor-pointer min-h-[36px]"
+                        class="rounded-lg border border-advent-border bg-slate-50 px-3 py-1.5 font-medium text-advent-text hover:bg-slate-100 cursor-pointer min-h-[44px]"
                       >
                         Marcar como lido
                       </button>
@@ -176,7 +193,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                       <button
                         type="button"
                         (click)="marcarLido(item, false)"
-                        class="rounded-lg border border-advent-border bg-slate-50 px-3 py-1.5 font-medium text-advent-muted hover:bg-slate-100 cursor-pointer min-h-[36px]"
+                        class="rounded-lg border border-advent-border bg-slate-50 px-3 py-1.5 font-medium text-advent-muted hover:bg-slate-100 cursor-pointer min-h-[44px]"
                       >
                         Marcar como não lido
                       </button>
@@ -186,7 +203,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                       <button
                         type="button"
                         (click)="marcarRespondido(item, true)"
-                        class="rounded-lg bg-green-50 border border-green-200 px-3 py-1.5 font-medium text-green-700 hover:bg-green-100 cursor-pointer min-h-[36px] inline-flex items-center gap-1"
+                        class="rounded-lg bg-green-50 border border-green-200 px-3 py-1.5 font-medium text-green-700 hover:bg-green-100 cursor-pointer min-h-[44px] inline-flex items-center gap-1"
                       >
                         <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -197,7 +214,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                       <button
                         type="button"
                         (click)="marcarRespondido(item, false)"
-                        class="rounded-lg bg-slate-50 border border-slate-200 px-3 py-1.5 font-medium text-slate-600 hover:bg-slate-100 cursor-pointer min-h-[36px]"
+                        class="rounded-lg bg-slate-50 border border-slate-200 px-3 py-1.5 font-medium text-slate-600 hover:bg-slate-100 cursor-pointer min-h-[44px]"
                       >
                         Desmarcar respondido
                       </button>
@@ -210,7 +227,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                         [href]="getWhatsAppUrl(item.telefone, item.nome)"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="rounded-lg bg-green-700 px-3.5 py-1.5 font-semibold text-white hover:bg-green-800 cursor-pointer inline-flex items-center gap-1.5 min-h-[36px] transition-colors"
+                        class="rounded-lg bg-green-700 px-3.5 py-1.5 font-semibold text-white hover:bg-green-800 cursor-pointer inline-flex items-center gap-1.5 min-h-[44px] transition-colors"
                         [attr.aria-label]="'Conversar no WhatsApp com ' + item.nome"
                       >
                         <svg class="h-3.5 w-3.5 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true">
@@ -222,7 +239,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
 
                     <a
                       [href]="'mailto:' + item.email + '?subject=' + encodeUri('Resposta IASD Mangueiras')"
-                      class="rounded-lg border border-advent-blue bg-blue-50/60 px-3.5 py-1.5 font-semibold text-advent-blue hover:bg-advent-blue hover:text-white cursor-pointer inline-flex items-center gap-1.5 min-h-[36px] transition-colors"
+                      class="rounded-lg border border-advent-blue bg-blue-50/60 px-3.5 py-1.5 font-semibold text-advent-blue hover:bg-advent-blue hover:text-white cursor-pointer inline-flex items-center gap-1.5 min-h-[44px] transition-colors"
                       [attr.aria-label]="'Enviar e-mail para ' + item.nome"
                     >
                       <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -234,7 +251,7 @@ import { SkeletonComponent } from '../../../shared/ui/skeleton/skeleton.componen
                     <button
                       type="button"
                       (click)="openDeleteDialog(item)"
-                      class="rounded-lg px-3 py-1.5 font-medium text-red-600 hover:bg-red-50 cursor-pointer min-h-[36px] flex items-center"
+                      class="rounded-lg px-3 py-1.5 font-medium text-red-600 hover:bg-red-50 cursor-pointer min-h-[44px] flex items-center"
                       [attr.aria-label]="'Excluir mensagem de ' + item.nome"
                     >
                       Excluir
@@ -268,6 +285,7 @@ export class AdminContatosPage implements OnInit {
 
   readonly contatos = signal<MensagemContatoAdmin[]>([]);
   readonly isLoading = signal(true);
+  readonly loadError = signal(false);
   readonly selectedFilter = signal('Todos');
   readonly isDeleteDialogOpen = signal(false);
   readonly contatoToDelete = signal<MensagemContatoAdmin | null>(null);
@@ -289,10 +307,12 @@ export class AdminContatosPage implements OnInit {
 
   async carregar(): Promise<void> {
     this.isLoading.set(true);
+    this.loadError.set(false);
     try {
       const data = await this.adminCms.getMensagensContato();
       this.contatos.set(data);
     } catch {
+      this.loadError.set(true);
       this.toast.error('Erro ao carregar mensagens de contato.');
     } finally {
       this.isLoading.set(false);

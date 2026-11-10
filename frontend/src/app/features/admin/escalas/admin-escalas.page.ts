@@ -38,7 +38,7 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
           <button
             type="button"
             (click)="copyFullEscalaWhatsApp()"
-            class="inline-flex items-center gap-1.5 rounded-card bg-green-700 px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-green-800 active:scale-[0.98] transition-all cursor-pointer min-h-[40px]"
+            class="inline-flex items-center gap-1.5 rounded-card bg-green-700 px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-green-800 active:scale-[0.98] transition-all cursor-pointer min-h-[44px]"
             aria-label="Copiar escala completa para WhatsApp"
           >
             <svg class="h-4 w-4 shrink-0 fill-current" viewBox="0 0 24 24">
@@ -50,7 +50,7 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
           <button
             type="button"
             (click)="generateAndDownloadStory()"
-            class="inline-flex items-center gap-1.5 rounded-card border border-advent-border bg-white px-4 py-2.5 text-xs font-semibold text-advent-text shadow-sm hover:bg-slate-50 active:scale-[0.98] transition-all cursor-pointer min-h-[40px]"
+            class="inline-flex items-center gap-1.5 rounded-card border border-advent-border bg-white px-4 py-2.5 text-xs font-semibold text-advent-text shadow-sm hover:bg-slate-50 active:scale-[0.98] transition-all cursor-pointer min-h-[44px]"
             aria-label="Gerar card visual da escala para stories"
           >
             <svg class="h-4 w-4 shrink-0 text-advent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -62,7 +62,7 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
           <button
             type="button"
             (click)="openCreateModal()"
-            class="inline-flex items-center gap-1.5 rounded-card bg-advent-blue px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[40px]"
+            class="inline-flex items-center gap-1.5 rounded-card bg-advent-blue px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[44px]"
           >
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -78,7 +78,8 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
           <button
             type="button"
             (click)="selectedDept.set(dep)"
-            class="rounded-full px-3.5 py-1.5 min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center text-xs font-semibold transition-all cursor-pointer"
+            [attr.aria-pressed]="selectedDept() === dep"
+            class="rounded-full px-3.5 py-1.5 min-h-[44px] inline-flex items-center justify-center text-xs font-semibold transition-all cursor-pointer"
             [class.bg-advent-blue]="selectedDept() === dep"
             [class.text-white]="selectedDept() === dep"
             [class.bg-white]="selectedDept() !== dep"
@@ -131,7 +132,7 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
             <button
               type="button"
               (click)="openCreateModal()"
-              class="rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[38px] inline-flex items-center gap-1.5"
+              class="rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[44px] inline-flex items-center gap-1.5"
             >
               <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -145,16 +146,16 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
               <article class="flex flex-col justify-between rounded-2xl border border-advent-border bg-white p-5 shadow-xs transition-all hover:border-advent-blue hover:shadow-md">
                 <div>
                   <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
-                    <span class="rounded-full bg-advent-blue/10 px-2.5 py-0.5 text-[11px] font-bold text-advent-blue">
+                    <span class="rounded-full bg-advent-blue/10 px-2.5 py-0.5 text-xs font-bold text-advent-blue">
                       {{ escala.departamento }}
                     </span>
-                    <span class="text-xs font-semibold text-advent-muted">
+                    <span class="text-xs font-semibold text-advent-muted tabular-nums">
                       {{ escala.dia_semana }} ({{ escala.data }})
                     </span>
                   </div>
 
                   <div class="mt-4">
-                    <span class="text-[11px] font-bold uppercase tracking-wider text-advent-muted block mb-1">
+                    <span class="text-xs font-bold uppercase tracking-wider text-advent-muted block mb-1">
                       Oficiais Escalados:
                     </span>
                     <div class="space-y-1">
@@ -170,7 +171,7 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
                   </div>
 
                   @if (escala.horario) {
-                    <p class="mt-3 text-xs text-advent-blue font-semibold inline-flex items-center gap-1.5">
+                    <p class="mt-3 text-xs text-advent-blue font-semibold inline-flex items-center gap-1.5 tabular-nums">
                       <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
@@ -192,7 +193,7 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
                   <button
                     type="button"
                     (click)="copySingleEscalaWhatsApp(escala)"
-                    class="text-xs font-semibold text-green-700 hover:underline cursor-pointer inline-flex items-center gap-1"
+                    class="text-xs font-semibold text-green-700 hover:underline cursor-pointer inline-flex items-center gap-1 min-h-[44px]"
                   >
                     Copiar WhatsApp
                   </button>
@@ -201,14 +202,16 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
                     <button
                       type="button"
                       (click)="openEditModal(escala)"
-                      class="rounded-lg px-2.5 py-1 text-xs font-semibold text-advent-blue hover:bg-blue-50 transition-colors cursor-pointer"
+                      class="rounded-lg px-2.5 py-1 text-xs font-semibold text-advent-blue hover:bg-blue-50 transition-colors cursor-pointer min-h-[44px] inline-flex items-center"
+                      [attr.aria-label]="'Editar escala de ' + escala.departamento"
                     >
                       Editar
                     </button>
                     <button
                       type="button"
                       (click)="confirmDelete(escala)"
-                      class="rounded-lg px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                      class="rounded-lg px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors cursor-pointer min-h-[44px] inline-flex items-center"
+                      [attr.aria-label]="'Excluir escala de ' + escala.departamento"
                     >
                       Excluir
                     </button>
@@ -314,12 +317,12 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
 
             @if (uniqueOficiais().length > 0) {
               <div class="mt-2 flex flex-wrap items-center gap-1">
-                <span class="text-[11px] font-semibold text-advent-muted mr-1">Sugestões:</span>
+                <span class="text-xs font-semibold text-advent-muted mr-1">Sugestões:</span>
                 @for (oficial of uniqueOficiais(); track oficial) {
                   <button
                     type="button"
                     (click)="appendOficial(oficial)"
-                    class="rounded-md border border-advent-border bg-slate-50 px-2 py-0.5 text-[11px] text-slate-700 hover:bg-advent-blue hover:text-white transition-colors cursor-pointer"
+                    class="rounded-md border border-advent-border bg-slate-50 px-2 py-0.5 text-xs text-slate-700 hover:bg-advent-blue hover:text-white transition-colors cursor-pointer min-h-[44px]"
                   >
                     + {{ oficial }}
                   </button>
@@ -337,7 +340,7 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
               type="text"
               formControlName="horario"
               placeholder="Ex: 08:45 às 12:00"
-              class="w-full rounded-card border border-advent-border px-3 py-2 text-xs text-advent-text focus:border-advent-blue focus:outline-none transition-colors"
+              class="w-full rounded-card border border-advent-border px-3 py-2 text-xs text-advent-text focus:border-advent-blue focus:outline-none transition-colors tabular-nums"
             />
           </div>
 
@@ -358,14 +361,14 @@ import { ConfirmDialogComponent } from '../../../shared/ui/confirm-dialog/confir
             <button
               type="button"
               (click)="closeModal()"
-              class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-muted hover:bg-slate-50 transition-colors cursor-pointer"
+              class="rounded-card border border-advent-border px-4 py-2 min-h-[44px] text-xs font-semibold text-advent-muted hover:bg-slate-50 transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
               [disabled]="escalaForm.invalid || isSaving()"
-              class="rounded-card bg-advent-blue px-5 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark transition-colors disabled:opacity-50 cursor-pointer"
+              class="rounded-card bg-advent-blue px-5 py-2 min-h-[44px] text-xs font-semibold text-white shadow hover:bg-advent-blue-dark transition-colors disabled:opacity-50 cursor-pointer"
             >
               {{ isSaving() ? 'Salvando…' : 'Salvar Escala' }}
             </button>
@@ -473,43 +476,48 @@ export class AdminEscalasPage implements OnInit {
 
   async loadEscalas(): Promise<void> {
     this.isLoading.set(true);
-    const list = await this.cmsService.getEscalas();
-    if (list.length > 0) {
-      this.escalas.set(list);
-    } else {
-      // Carrega padrão se o Firestore estiver vazio
-      const defaultData: EscalaItem[] = [
-        {
-          id: 'escala-1',
-          data: '2026-08-29',
-          dia_semana: 'Sábado',
-          departamento: 'Sonorização & Transmissão',
-          oficiais: ['Matheus Diniz', 'Lucas Oliveira'],
-          horario: '08:45 às 12:00',
-          observacoes: 'Chegar 15 min antes para teste dos microfones e link do YouTube.',
-        },
-        {
-          id: 'escala-2',
-          data: '2026-08-29',
-          dia_semana: 'Sábado',
-          departamento: 'Diaconato',
-          oficiais: ['Paulo Roberto', 'Gabriel Souza', 'José Silva'],
-          horario: '08:40 às 12:30',
-          observacoes: 'Apoio no estacionamento, recolhimento dos dízimos e climatização.',
-        },
-        {
-          id: 'escala-3',
-          data: '2026-08-29',
-          dia_semana: 'Sábado',
-          departamento: 'Recepção',
-          oficiais: ['Ana Paula Diniz', 'Carla Rodrigues'],
-          horario: '08:45 às 10:30',
-          observacoes: 'Acolhimento aos visitantes na porta principal.',
-        },
-      ];
+    const defaultData: EscalaItem[] = [
+      {
+        id: 'escala-1',
+        data: '2026-08-29',
+        dia_semana: 'Sábado',
+        departamento: 'Sonorização & Transmissão',
+        oficiais: ['Matheus Diniz', 'Lucas Oliveira'],
+        horario: '08:45 às 12:00',
+        observacoes: 'Chegar 15 min antes para teste dos microfones e link do YouTube.',
+      },
+      {
+        id: 'escala-2',
+        data: '2026-08-29',
+        dia_semana: 'Sábado',
+        departamento: 'Diaconato',
+        oficiais: ['Paulo Roberto', 'Gabriel Souza', 'José Silva'],
+        horario: '08:40 às 12:30',
+        observacoes: 'Apoio no estacionamento, recolhimento dos dízimos e climatização.',
+      },
+      {
+        id: 'escala-3',
+        data: '2026-08-29',
+        dia_semana: 'Sábado',
+        departamento: 'Recepção',
+        oficiais: ['Ana Paula Diniz', 'Carla Rodrigues'],
+        horario: '08:45 às 10:30',
+        observacoes: 'Acolhimento aos visitantes na porta principal.',
+      },
+    ];
+    try {
+      const list = await this.cmsService.getEscalas();
+      if (list.length > 0) {
+        this.escalas.set(list);
+      } else {
+        this.escalas.set(defaultData);
+      }
+    } catch {
       this.escalas.set(defaultData);
+      this.toastService.error('Erro ao carregar escalas.');
+    } finally {
+      this.isLoading.set(false);
     }
-    this.isLoading.set(false);
   }
 
   openCreateModal(): void {
@@ -617,9 +625,13 @@ export class AdminEscalasPage implements OnInit {
     }
   }
 
-  copySingleEscalaWhatsApp(escala: EscalaItem): void {
+  async copyEscalaWhatsApp(escala: EscalaItem): Promise<void> {
+    await this.copySingleEscalaWhatsApp(escala);
+  }
+
+  async copySingleEscalaWhatsApp(escala: EscalaItem): Promise<void> {
     const text =
-      `⛪ *IASD MANGUEIRAS — ESCALA ${escala.dia_semana.toUpperCase()}*\n` +
+      `⛪ *IASD MANGUEIRAS - ESCALA ${escala.dia_semana.toUpperCase()}*\n` +
       `📅 *Data:* ${escala.data}\n` +
       `🏷️ *Departamento:* ${escala.departamento}\n` +
       `👥 *Oficiais:* ${escala.oficiais.join(', ')}\n` +
@@ -628,21 +640,21 @@ export class AdminEscalasPage implements OnInit {
       `\n_Deus abençoe a dedicação de todos no ministério!_`;
 
     try {
-      navigator.clipboard?.writeText(text);
+      await navigator.clipboard?.writeText(text);
       this.toastService.success('Escala copiada para a área de transferência!');
     } catch {
       this.toastService.error('Não foi possível copiar para a área de transferência.');
     }
   }
 
-  copyFullEscalaWhatsApp(): void {
+  async copyFullEscalaWhatsApp(): Promise<void> {
     const list = this.escalas();
     if (list.length === 0) {
       this.toastService.warning('Nenhuma escala disponível para copiar.');
       return;
     }
 
-    let text = `⛪ *ESCALA GERAL DOS DEPARTAMENTOS — IASD MANGUEIRAS*\n`;
+    let text = `⛪ *ESCALA GERAL DOS DEPARTAMENTOS - IASD MANGUEIRAS*\n`;
     text += `📅 *Próximo Sábado*\n\n`;
 
     for (const item of list) {
@@ -656,7 +668,7 @@ export class AdminEscalasPage implements OnInit {
     text += `https://iasdmangueiras.org.br`;
 
     try {
-      navigator.clipboard?.writeText(text);
+      await navigator.clipboard?.writeText(text);
       this.toastService.success('Escala geral copiada com sucesso para o WhatsApp!');
     } catch {
       this.toastService.error('Não foi possível copiar para a área de transferência.');

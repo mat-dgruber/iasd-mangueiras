@@ -35,7 +35,7 @@ import defaultEventos from '../../../../content/eventos.json';
         <button
           type="button"
           (click)="openModal()"
-          class="rounded-card bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner cursor-pointer min-h-[40px] flex items-center justify-center gap-1.5"
+          class="rounded-card bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner cursor-pointer min-h-[44px] flex items-center justify-center gap-1.5"
         >
           <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -46,6 +46,22 @@ import defaultEventos from '../../../../content/eventos.json';
 
       <!-- Listagem de Eventos -->
       <div class="mt-8 space-y-4">
+        @if (loadError()) {
+          <div
+            role="alert"
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-xs text-red-800"
+          >
+            <span>Erro ao carregar os eventos.</span>
+            <button
+              type="button"
+              (click)="loadEventos()"
+              class="rounded-card bg-red-700 px-4 py-2 text-xs font-semibold text-white hover:bg-red-800 transition-colors cursor-pointer min-h-[44px] inline-flex items-center justify-center shrink-0"
+            >
+              Tentar novamente
+            </button>
+          </div>
+        }
+
         @if (isLoading()) {
           <div class="grid gap-4">
             @for (i of [1, 2, 3]; track i) {
@@ -80,7 +96,7 @@ import defaultEventos from '../../../../content/eventos.json';
             <button
               type="button"
               (click)="openModal()"
-              class="rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[40px] inline-flex items-center gap-1.5"
+              class="rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[44px] inline-flex items-center gap-1.5"
             >
               <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -107,24 +123,24 @@ import defaultEventos from '../../../../content/eventos.json';
 
                   <div class="space-y-1.5">
                     <div class="flex flex-wrap items-center gap-2">
-                      <span class="rounded-md bg-advent-blue/10 px-2.5 py-0.5 text-xs font-bold uppercase text-advent-blue">
+                      <span class="rounded-md bg-advent-blue/10 px-2.5 py-0.5 text-xs font-bold uppercase text-advent-blue tabular-nums">
                         {{ evento.data }} • {{ evento.horario }}
                       </span>
 
                       @if (evento.destaque) {
-                        <span class="rounded-md bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800 flex items-center gap-1">
-                          ⭐ Destaque
+                        <span class="rounded-md bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800 flex items-center gap-1">
+                          <span aria-hidden="true">⭐</span> Destaque
                         </span>
                       }
 
                       @if (evento.departamento) {
-                        <span class="rounded-md bg-purple-50 px-2 py-0.5 text-[11px] font-semibold text-purple-700">
+                        <span class="rounded-md bg-purple-50 px-2 py-0.5 text-xs font-semibold text-purple-700">
                           {{ evento.departamento }}
                         </span>
                       }
 
                       @if (evento.valor_entrada) {
-                        <span class="rounded-md bg-green-50 px-2 py-0.5 text-[11px] font-semibold text-green-700">
+                        <span class="rounded-md bg-green-50 px-2 py-0.5 text-xs font-semibold text-green-700">
                           {{ evento.valor_entrada }}
                         </span>
                       }
@@ -134,7 +150,7 @@ import defaultEventos from '../../../../content/eventos.json';
 
                     @if (evento.palestrante) {
                       <p class="text-xs font-semibold text-advent-blue">
-                        🎙️ Orador/Convidado: {{ evento.palestrante }}
+                        <span aria-hidden="true">🎙️</span> Orador/Convidado: {{ evento.palestrante }}
                       </p>
                     }
 
@@ -156,7 +172,7 @@ import defaultEventos from '../../../../content/eventos.json';
                   <button
                     type="button"
                     (click)="editEvento(evento)"
-                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-advent-blue bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer min-h-[36px] flex items-center"
+                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-advent-blue bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer min-h-[44px] flex items-center"
                     aria-label="Editar evento {{ evento.titulo }}"
                   >
                     Editar
@@ -164,7 +180,7 @@ import defaultEventos from '../../../../content/eventos.json';
                   <button
                     type="button"
                     (click)="confirmDelete(evento)"
-                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[36px] flex items-center"
+                    class="rounded-lg px-3.5 py-2 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[44px] flex items-center"
                     aria-label="Excluir evento {{ evento.titulo }}"
                   >
                     Excluir
@@ -448,7 +464,7 @@ import defaultEventos from '../../../../content/eventos.json';
               class="h-4 w-4 rounded border-advent-border text-advent-blue focus:ring-advent-blue"
             />
             <label for="evento-destaque" class="text-xs font-semibold text-advent-text cursor-pointer">
-              ⭐ Destacar este evento no topo da página e na Home
+              <span aria-hidden="true">⭐</span> Destacar este evento no topo da página e na Home
             </label>
           </div>
 
@@ -457,14 +473,14 @@ import defaultEventos from '../../../../content/eventos.json';
             <button
               type="button"
               (click)="closeModal()"
-              class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 transition-colors cursor-pointer min-h-[36px]"
+              class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 transition-colors cursor-pointer min-h-[44px]"
             >
               Cancelar
             </button>
             <button
               type="submit"
               [disabled]="eventoForm.invalid || isSaving()"
-              class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 transition-all cursor-pointer min-h-[36px]"
+              class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 transition-all cursor-pointer min-h-[44px]"
             >
               {{ isSaving() ? 'Salvando...' : 'Salvar Evento' }}
             </button>
@@ -493,6 +509,7 @@ export class AdminEventosPage implements OnInit {
 
   readonly eventos = signal<Evento[]>([]);
   readonly isLoading = signal<boolean>(true);
+  readonly loadError = signal<boolean>(false);
   readonly isSaving = signal<boolean>(false);
   readonly isDeleting = signal<boolean>(false);
   readonly isModalOpen = signal<boolean>(false);
@@ -525,13 +542,20 @@ export class AdminEventosPage implements OnInit {
 
   async loadEventos(): Promise<void> {
     this.isLoading.set(true);
-    const firestoreEventos = await this.cmsService.getEventos();
-    if (firestoreEventos.length > 0) {
-      this.eventos.set(firestoreEventos);
-    } else {
-      this.eventos.set(defaultEventos as Evento[]);
+    this.loadError.set(false);
+    try {
+      const firestoreEventos = await this.cmsService.getEventos();
+      if (firestoreEventos.length > 0) {
+        this.eventos.set(firestoreEventos);
+      } else {
+        this.eventos.set(defaultEventos as Evento[]);
+      }
+    } catch {
+      this.loadError.set(true);
+      this.toastService.error('Erro ao carregar eventos.');
+    } finally {
+      this.isLoading.set(false);
     }
-    this.isLoading.set(false);
   }
 
   openModal(): void {
@@ -636,12 +660,7 @@ export class AdminEventosPage implements OnInit {
       this.closeModal();
       await this.loadEventos();
     } catch {
-      // Fallback local se Firestore não estiver com chaves ativas
-      const formVal = this.eventoForm.value;
-      const newEv = this.eventoForm.value as unknown as Evento;
-      this.eventos.update((prev) => [newEv, ...prev]);
-      this.toastService.info('Evento salvo na pré-visualização local.');
-      this.closeModal();
+      this.toastService.error('Erro ao salvar no banco de dados. Tente novamente.');
     } finally {
       this.isSaving.set(false);
     }

@@ -121,4 +121,13 @@ describe('AdminOracoesPage', () => {
     const skeletonContainer = fixture.nativeElement.querySelector('[aria-busy="true"]');
     expect(skeletonContainer).not.toBeNull();
   });
+
+  it('exibe empty state real quando o Firestore retorna lista vazia', async () => {
+    vi.spyOn(cmsService, 'getOracoes').mockResolvedValueOnce([]);
+    await component.loadOracoes();
+    fixture.detectChanges();
+
+    expect(component.oracoes().length).toBe(0);
+    expect(fixture.nativeElement.textContent).toContain('Nenhum pedido de oração encontrado');
+  });
 });

@@ -114,4 +114,28 @@ describe('AdminComunicadosPage', () => {
     expect(saveSpy).not.toHaveBeenCalled();
     expect(component.comunicadoForm.invalid).toBe(true);
   });
+
+  it('abre modal de edição preenchido e preserva o id ao salvar', async () => {
+    const mockCom: Comunicado = {
+      id: 'com-edit-1',
+      titulo: 'Comunicado Original',
+      data: '10/11',
+      mensagem: 'Mensagem original de teste',
+      ativo: true,
+    };
+    const saveSpy = vi.spyOn(cmsService, 'saveComunicado').mockResolvedValue('com-edit-1');
+
+    component.openEditModal(mockCom);
+    expect(component.isModalOpen()).toBe(true);
+    expect(component.editingId()).toBe('com-edit-1');
+    expect(component.comunicadoForm.value.titulo).toBe('Comunicado Original');
+
+    component.comunicadoForm.patchValue({ titulo: 'Comunicado Editado' });
+    await component.saveComunicado();
+
+    expect(saveSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'com-edit-1', titulo: 'Comunicado Editado' }),
+      'com-edit-1',
+    );
+  });
 });

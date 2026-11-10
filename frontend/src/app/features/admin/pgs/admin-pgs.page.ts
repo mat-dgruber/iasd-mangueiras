@@ -27,7 +27,7 @@ import defaultPgs from '../../../../content/pgs.json';
         <button
           type="button"
           (click)="openModal()"
-          class="rounded-card bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner cursor-pointer min-h-[40px] flex items-center justify-center gap-1.5"
+          class="rounded-card bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner cursor-pointer min-h-[44px] flex items-center justify-center gap-1.5"
         >
           <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -77,7 +77,7 @@ import defaultPgs from '../../../../content/pgs.json';
             <button
               type="button"
               (click)="openModal()"
-              class="mt-4 inline-flex items-center gap-1.5 rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-advent-blue-dark transition-all cursor-pointer min-h-[38px]"
+              class="mt-4 inline-flex items-center gap-1.5 rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-advent-blue-dark transition-all cursor-pointer min-h-[44px]"
             >
               + Cadastrar Primeiro PG
             </button>
@@ -98,16 +98,16 @@ import defaultPgs from '../../../../content/pgs.json';
                         {{ pg.perfil || 'Geral' }}
                       </span>
                       <span class="text-xs font-semibold text-advent-muted">
-                        📍 {{ pg.bairro }}
+                        <span aria-hidden="true">📍</span> {{ pg.bairro }}
                       </span>
                     </div>
 
                     @if (pg.ativo !== false) {
-                      <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-green-700">
+                      <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-700">
                         <span class="h-2 w-2 rounded-full bg-green-500"></span> Ativo
                       </span>
                     } @else {
-                      <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400">
+                      <span class="inline-flex items-center gap-1 text-xs font-semibold text-slate-400">
                         <span class="h-2 w-2 rounded-full bg-slate-300"></span> Pausado
                       </span>
                     }
@@ -115,7 +115,7 @@ import defaultPgs from '../../../../content/pgs.json';
 
                   <h2 class="mt-3 text-base font-bold text-advent-text">{{ pg.nome }}</h2>
 
-                  <div class="mt-2 space-y-1 text-xs text-advent-muted">
+                  <div class="mt-2 space-y-1 text-xs text-advent-muted tabular-nums">
                     <p><strong>Líder(es):</strong> {{ pg.lider }}</p>
                     <p><strong>Encontros:</strong> {{ pg.dia }} às {{ pg.horario }}</p>
                     @if (pg.telefone) {
@@ -130,7 +130,7 @@ import defaultPgs from '../../../../content/pgs.json';
                   <button
                     type="button"
                     (click)="editPg(pg)"
-                    class="rounded-lg px-3 py-1.5 text-xs font-semibold text-advent-blue bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer min-h-[34px]"
+                    class="rounded-lg px-3 py-1.5 text-xs font-semibold text-advent-blue bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer min-h-[44px]"
                     [attr.aria-label]="'Editar ' + pg.nome"
                   >
                     Editar
@@ -139,7 +139,7 @@ import defaultPgs from '../../../../content/pgs.json';
                   <button
                     type="button"
                     (click)="toggleStatus(pg)"
-                    class="rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer min-h-[34px]"
+                    class="rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer min-h-[44px]"
                     [class.bg-green-50]="pg.ativo !== false"
                     [class.text-green-800]="pg.ativo !== false"
                     [class.hover:bg-green-100]="pg.ativo !== false"
@@ -154,7 +154,7 @@ import defaultPgs from '../../../../content/pgs.json';
                   <button
                     type="button"
                     (click)="openDeleteDialog(pg)"
-                    class="rounded-lg px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[34px]"
+                    class="rounded-lg px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer min-h-[44px]"
                     [attr.aria-label]="'Excluir ' + pg.nome"
                   >
                     Excluir
@@ -169,12 +169,17 @@ import defaultPgs from '../../../../content/pgs.json';
       <!-- MODAL DE CADASTRO / EDIÇÃO DE PG -->
       @if (isModalOpen()) {
         <div
-          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
+          class="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"
+          (click)="closeModal()"
+          (keydown)="trapFocus($event)"
         >
-          <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div
+            class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
+            (click)="$event.stopPropagation()"
+          >
             <div class="flex items-center justify-between pb-4 border-b border-advent-border">
               <h2 id="modal-title" class="text-lg font-bold text-advent-text">
                 {{ editingId() ? 'Editar Pequeno Grupo' : 'Novo Pequeno Grupo' }}
@@ -235,9 +240,11 @@ import defaultPgs from '../../../../content/pgs.json';
                   </label>
                   <input
                     id="pg-telefone"
-                    type="text"
+                    type="tel"
+                    inputmode="tel"
+                    autocomplete="tel"
                     formControlName="telefone"
-                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none tabular-nums"
                     [class.border-red-500]="pgForm.get('telefone')?.invalid && pgForm.get('telefone')?.touched"
                     [class.border-advent-border]="!pgForm.get('telefone')?.invalid || !pgForm.get('telefone')?.touched"
                     placeholder="Ex: (15) 99888-7766"
@@ -318,7 +325,7 @@ import defaultPgs from '../../../../content/pgs.json';
                     id="pg-horario"
                     type="text"
                     formControlName="horario"
-                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none"
+                    class="w-full rounded-card border px-3.5 py-2 text-sm text-advent-text focus:border-advent-blue focus:outline-none tabular-nums"
                     [class.border-red-500]="pgForm.get('horario')?.invalid && pgForm.get('horario')?.touched"
                     [class.border-advent-border]="!pgForm.get('horario')?.invalid || !pgForm.get('horario')?.touched"
                     placeholder="Ex: 19:30 ou 20:00"
@@ -363,14 +370,14 @@ import defaultPgs from '../../../../content/pgs.json';
                 <button
                   type="button"
                   (click)="closeModal()"
-                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[38px]"
+                  class="rounded-card border border-advent-border px-4 py-2 text-xs font-semibold text-advent-text hover:bg-slate-50 cursor-pointer min-h-[44px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   [disabled]="pgForm.invalid || isSaving()"
-                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[38px]"
+                  class="rounded-card bg-advent-blue px-6 py-2 text-xs font-semibold text-white shadow hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner disabled:opacity-50 cursor-pointer min-h-[44px]"
                 >
                   {{ isSaving() ? 'Salvando...' : (editingId() ? 'Salvar Alterações' : 'Cadastrar PG') }}
                 </button>
@@ -478,7 +485,10 @@ export class AdminPgsPage implements OnInit {
   }
 
   async savePg(): Promise<void> {
-    if (this.pgForm.invalid) return;
+    if (this.pgForm.invalid) {
+      this.pgForm.markAllAsTouched();
+      return;
+    }
     this.isSaving.set(true);
 
     const formVal = this.pgForm.value;
@@ -526,21 +536,23 @@ export class AdminPgsPage implements OnInit {
   }
 
   async toggleStatus(pg: PequenoGrupo): Promise<void> {
+    const prevStatus = pg.ativo;
     const newStatus = !(pg.ativo !== false);
+    this.pgs.update((prev) =>
+      prev.map((p) => (p === pg || p.id === pg.id ? { ...p, ativo: newStatus } : p)),
+    );
     try {
       if (pg.id) {
         await this.cmsService.savePg({ ativo: newStatus }, pg.id);
       }
-      this.pgs.update((prev) =>
-        prev.map((p) => (p === pg || p.id === pg.id ? { ...p, ativo: newStatus } : p)),
-      );
       this.toastService.success(
         newStatus ? `PG "${pg.nome}" ativado com sucesso.` : `PG "${pg.nome}" pausado.`,
       );
     } catch {
       this.pgs.update((prev) =>
-        prev.map((p) => (p === pg || p.id === pg.id ? { ...p, ativo: newStatus } : p)),
+        prev.map((p) => (p === pg || p.id === pg.id ? { ...p, ativo: prevStatus } : p)),
       );
+      this.toastService.error('Erro ao atualizar status do Pequeno Grupo.');
     }
   }
 
@@ -583,6 +595,27 @@ export class AdminPgsPage implements OnInit {
   onEscape(): void {
     if (this.isModalOpen()) {
       this.closeModal();
+    }
+  }
+
+  trapFocus(event: KeyboardEvent): void {
+    if (event.key !== 'Tab') return;
+    const dialog = event.currentTarget as HTMLElement | null;
+    if (!dialog) return;
+    const focusables = Array.from(
+      dialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    );
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
     }
   }
 }
