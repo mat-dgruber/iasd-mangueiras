@@ -79,10 +79,48 @@ export class AdminCmsService {
   }
 
   async uploadBanner(file: File): Promise<string> {
+    const filePath = await this.validateAndBuildStoragePath('banners', file);
     if (!this.firebase.storage) throw new Error('Firebase Storage indisponível');
-    const storageRef = ref(this.firebase.storage, `banners/${Date.now()}_${file.name}`);
+    const storageRef = ref(this.firebase.storage, filePath);
     const snapshot = await uploadBytes(storageRef, file);
     return await getDownloadURL(snapshot.ref);
+  }
+
+  private async validateAndBuildStoragePath(folder: string, file: File): Promise<string> {
+    const MAX_BYTES = 5 * 1024 * 1024;
+    if (file.size > MAX_BYTES) {
+      throw new Error('O arquivo excede o tamanho máximo permitido de 5 MB.');
+    }
+    if (typeof file.slice === 'function') {
+      const slice = file.slice(0, 12);
+      if (typeof slice.arrayBuffer === 'function') {
+        const bytes = new Uint8Array(await slice.arrayBuffer());
+        if (bytes.length < 4) {
+          throw new Error('Formato de imagem inválido. Utilize JPEG, PNG ou WebP.');
+        }
+        const isJpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+        const isPng =
+          bytes[0] === 0x89 &&
+          bytes[1] === 0x50 &&
+          bytes[2] === 0x4e &&
+          bytes[3] === 0x47;
+        const isWebp =
+          bytes.length >= 12 &&
+          bytes[0] === 0x52 &&
+          bytes[1] === 0x49 &&
+          bytes[2] === 0x46 &&
+          bytes[3] === 0x46 &&
+          bytes[8] === 0x57 &&
+          bytes[9] === 0x45 &&
+          bytes[10] === 0x42 &&
+          bytes[11] === 0x50;
+        if (!isJpeg && !isPng && !isWebp) {
+          throw new Error('Formato de imagem inválido. Utilize JPEG, PNG ou WebP.');
+        }
+      }
+    }
+    const safeName = (file.name || 'image').replace(/[^a-zA-Z0-9._-]/g, '_');
+    return `${folder}/${Date.now()}_${safeName}`;
   }
 
   // ----------------------------------------------------
@@ -355,8 +393,9 @@ export class AdminCmsService {
   }
 
   async uploadMinisterioImage(file: File): Promise<string> {
+    const filePath = await this.validateAndBuildStoragePath('ministerios', file);
     if (!this.firebase.storage) throw new Error('Firebase Storage indisponível');
-    const storageRef = ref(this.firebase.storage, `ministerios/${Date.now()}_${file.name}`);
+    const storageRef = ref(this.firebase.storage, filePath);
     const snapshot = await uploadBytes(storageRef, file);
     return await getDownloadURL(snapshot.ref);
   }

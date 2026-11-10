@@ -163,7 +163,7 @@ const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
               (input)="onUrlInput($event)"
               (keydown.enter)="applyUrl()"
               placeholder="https://exemplo.com/imagem.webp"
-              class="flex-1 rounded-xl border border-advent-border bg-white px-3.5 py-2.5 text-xs text-advent-text placeholder:text-advent-muted focus:border-advent-blue focus:ring-2 focus:ring-advent-blue/20 focus:outline-none min-h-[44px]"
+              class="flex-1 rounded-xl border border-advent-border bg-white px-3.5 py-2.5 text-base sm:text-xs text-advent-text placeholder:text-advent-muted focus:border-advent-blue focus:ring-2 focus:ring-advent-blue/20 focus:outline-none min-h-[44px]"
               aria-label="URL direta da imagem"
             />
             <app-ui-button

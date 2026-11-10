@@ -13,6 +13,7 @@ export interface ToastMessage {
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   private readonly _toasts = signal<ToastMessage[]>([]);
+  private readonly timers = new Map<string, ReturnType<typeof setTimeout>>();
   readonly toasts = this._toasts.asReadonly();
 
   show(toast: Omit<ToastMessage, 'id'>): string {
@@ -23,12 +24,33 @@ export class ToastService {
     this._toasts.update((current) => [...current, newToast]);
 
     if (duration > 0) {
-      setTimeout(() => {
-        this.dismiss(id);
-      }, duration);
+      this.scheduleDismiss(id, duration);
     }
 
     return id;
+  }
+
+  pause(id: string): void {
+    const timer = this.timers.get(id);
+    if (timer) {
+      clearTimeout(timer);
+      this.timers.delete(id);
+    }
+  }
+
+  resume(id: string): void {
+    const toast = this._toasts().find((t) => t.id === id);
+    if (toast && (toast.durationMs ?? 4000) > 0 && !this.timers.has(id)) {
+      this.scheduleDismiss(id, toast.durationMs ?? 4000);
+    }
+  }
+
+  private scheduleDismiss(id: string, duration: number): void {
+    const timer = setTimeout(() => {
+      this.timers.delete(id);
+      this.dismiss(id);
+    }, duration);
+    this.timers.set(id, timer);
   }
 
   success(message: string, title?: string, durationMs?: number): string {
@@ -48,10 +70,15 @@ export class ToastService {
   }
 
   dismiss(id: string): void {
+    this.pause(id);
     this._toasts.update((current) => current.filter((t) => t.id !== id));
   }
 
   clear(): void {
+    for (const timer of this.timers.values()) {
+      clearTimeout(timer);
+    }
+    this.timers.clear();
     this._toasts.set([]);
   }
 }

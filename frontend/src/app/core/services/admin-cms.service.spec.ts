@@ -50,5 +50,19 @@ describe('AdminCmsService', () => {
         service.saveAvisoHorario({ titulo: 'Aviso', mensagem: 'Msg' }),
       ).rejects.toThrow('Firestore indisponível');
     });
+
+    it('rejeita arquivo maior que 5 MB', async () => {
+      const largeFile = new File(['a'.repeat(5 * 1024 * 1024 + 1)], 'test.png');
+      await expect(service.uploadBanner(largeFile)).rejects.toThrow(
+        'O arquivo excede o tamanho máximo permitido de 5 MB.',
+      );
+    });
+
+    it('rejeita arquivo com magic bytes inválidos', async () => {
+      const fakePng = new File([new Uint8Array([0x4d, 0x5a, 0x90, 0x00, 0x03])], 'malicious.png');
+      await expect(service.uploadBanner(fakePng)).rejects.toThrow(
+        'Formato de imagem inválido. Utilize JPEG, PNG ou WebP.',
+      );
+    });
   });
 });

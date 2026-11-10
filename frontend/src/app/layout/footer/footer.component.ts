@@ -13,7 +13,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
         <section>
           <h2 class="font-brand text-2xl text-white">{{ site.name }}</h2>
           <p class="mt-3 text-sm text-white/80 leading-relaxed">{{ site.description }}</p>
-          <p class="mt-4 text-xs text-white/60">
+          <p class="mt-4 text-xs text-white/75 tabular-nums">
             © {{ currentYear }} {{ site.legalName }}. Todos os direitos reservados.
           </p>
         </section>
@@ -22,11 +22,11 @@ import { SITE_CONFIG } from '../../core/site/site.config';
             Encontre-nos & Cultos
           </h2>
           <p class="mt-2 text-sm font-medium text-white">{{ site.address.street }}</p>
-          <p class="text-xs text-white/70">{{ site.address.locality }}-{{ site.address.region }}</p>
-          <div class="mt-3 border-t border-white/10 pt-2 text-xs text-white/80 space-y-1">
-            <p>• <strong>Sábados:</strong> 09:00 e 10:15</p>
-            <p>• <strong>Domingos:</strong> 19:30</p>
-            <p>• <strong>Quartas:</strong> 19:30</p>
+          <p class="text-xs text-white/75">{{ site.address.locality }}-{{ site.address.region }}</p>
+          <div class="mt-3 border-t border-white/10 pt-2 text-xs text-white/80 space-y-1 tabular-nums">
+            <p class="tabular-nums">• <strong>Sábados:</strong> 09:00 e 10:15</p>
+            <p class="tabular-nums">• <strong>Domingos:</strong> 19:30</p>
+            <p class="tabular-nums">• <strong>Quartas:</strong> 19:30</p>
           </div>
           <div class="mt-3 flex flex-wrap items-center gap-3">
             <a

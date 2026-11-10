@@ -33,7 +33,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
       <!-- Trigger Input Box -->
       <div
-        class="group relative flex w-full items-center rounded-card border bg-white transition-all shadow-2xs"
+        class="group relative flex w-full items-center rounded-card border bg-white transition-all shadow-sm"
         [class.border-advent-border]="!isOpen()"
         [class.border-advent-blue]="isOpen()"
         [class.ring-2]="isOpen()"
@@ -45,7 +45,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
           type="button"
           (click)="toggleOpen()"
           [disabled]="isDisabled()"
-          class="flex flex-1 items-center gap-2.5 px-3.5 py-2 text-left text-sm cursor-pointer disabled:cursor-not-allowed min-h-[42px] focus:outline-none"
+          class="flex flex-1 items-center gap-2.5 px-3.5 py-2 text-left text-sm cursor-pointer disabled:cursor-not-allowed min-h-[44px] focus:outline-none"
           [attr.aria-expanded]="isOpen()"
           aria-haspopup="dialog"
         >
@@ -65,7 +65,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
           </svg>
 
           <span
-            class="truncate block"
+            class="truncate block tabular-nums"
             [class.text-advent-text]="displayValue()"
             [class.text-slate-400]="!displayValue()"
           >
@@ -77,11 +77,11 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
           <button
             type="button"
             (click)="clearValue($event)"
-            class="mr-2 p-1 rounded-md text-advent-muted hover:text-red-500 hover:bg-slate-100 transition-colors cursor-pointer min-h-[28px] min-w-[28px] flex items-center justify-center"
+            class="mr-1 p-1.5 rounded-md text-advent-muted hover:text-red-500 hover:bg-slate-100 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
             title="Limpar data"
             aria-label="Limpar data"
           >
-            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -91,7 +91,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       <!-- Dropdown Popover Dialog -->
       @if (isOpen()) {
         <div
-          class="absolute left-0 top-[calc(100%+6px)] z-50 w-72 sm:w-80 rounded-2xl border border-advent-border bg-white p-4 shadow-xl animate-fadeIn"
+          class="absolute left-0 top-[calc(100%+6px)] z-[var(--z-popover)] w-72 sm:w-80 rounded-2xl border border-advent-border bg-white p-4 shadow-xl animate-fadeIn"
           role="dialog"
           aria-modal="false"
         >
@@ -101,10 +101,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
               <button
                 type="button"
                 (click)="previousMonth()"
-                class="rounded-lg p-1.5 text-advent-muted hover:bg-slate-100 hover:text-advent-text cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
+                class="rounded-lg p-1.5 text-advent-muted hover:bg-slate-100 hover:text-advent-text cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
                 aria-label="Mês anterior"
               >
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                 </svg>
               </button>
@@ -112,7 +112,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
               <button
                 type="button"
                 (click)="viewMode.set('months')"
-                class="rounded-lg px-2.5 py-1 text-xs font-bold text-advent-text hover:bg-blue-50 hover:text-advent-blue transition-colors cursor-pointer"
+                class="rounded-lg px-2.5 py-1 min-h-[44px] text-xs font-bold text-advent-text hover:bg-blue-50 hover:text-advent-blue transition-colors cursor-pointer tabular-nums"
               >
                 {{ monthNames[currentViewMonth()] }} {{ currentViewYear() }}
               </button>
@@ -120,10 +120,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
               <button
                 type="button"
                 (click)="nextMonth()"
-                class="rounded-lg p-1.5 text-advent-muted hover:bg-slate-100 hover:text-advent-text cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
+                class="rounded-lg p-1.5 text-advent-muted hover:bg-slate-100 hover:text-advent-text cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
                 aria-label="Próximo mês"
               >
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                 </svg>
               </button>
@@ -134,22 +134,22 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
               <!-- Weekday Headers -->
               <div class="grid grid-cols-7 gap-1 text-center mb-1">
                 @for (w of weekDays; track w) {
-                  <span class="text-[10px] font-bold text-advent-muted uppercase">
+                  <span class="text-xs font-bold text-advent-muted uppercase">
                     {{ w }}
                   </span>
                 }
               </div>
 
               <!-- Calendar Day Cells -->
-              <div class="grid grid-cols-7 gap-1 text-center">
+              <div class="grid grid-cols-7 gap-1 text-center tabular-nums">
                 @for (day of calendarDays(); track $index) {
                   @if (day.empty) {
-                    <span class="h-8 w-8"></span>
+                    <span class="h-9 w-9"></span>
                   } @else {
                     <button
                       type="button"
                       (click)="selectDay(day.day)"
-                      class="relative h-8 w-8 rounded-lg text-xs font-medium transition-all flex items-center justify-center cursor-pointer mx-auto"
+                      class="relative h-9 w-9 rounded-lg text-xs font-medium tabular-nums transition-all flex items-center justify-center cursor-pointer mx-auto"
                       [class.bg-advent-blue]="isSelectedDay(day.day)"
                       [class.text-white]="isSelectedDay(day.day)"
                       [class.font-bold]="isSelectedDay(day.day)"
@@ -174,7 +174,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
               <button
                 type="button"
                 (click)="viewMode.set('years')"
-                class="text-xs font-semibold text-advent-blue hover:underline cursor-pointer"
+                class="text-xs font-semibold text-advent-blue hover:underline cursor-pointer min-h-[36px] px-2 tabular-nums"
               >
                 {{ currentViewYear() }} (Mudar Ano)
               </button>
@@ -184,7 +184,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
                 <button
                   type="button"
                   (click)="selectMonth($index)"
-                  class="rounded-xl py-2 text-xs font-semibold hover:bg-blue-50 hover:text-advent-blue transition-colors cursor-pointer border border-advent-border"
+                  class="rounded-xl py-2.5 min-h-[40px] text-xs font-semibold hover:bg-blue-50 hover:text-advent-blue transition-colors cursor-pointer border border-advent-border"
                   [class.bg-advent-blue]="currentViewMonth() === $index"
                   [class.text-white]="currentViewMonth() === $index"
                 >
@@ -198,27 +198,29 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
               <button
                 type="button"
                 (click)="previousDecade()"
-                class="p-1 text-advent-muted hover:text-advent-text cursor-pointer"
+                class="rounded-lg p-1.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-advent-muted hover:bg-slate-100 hover:text-advent-text cursor-pointer"
+                aria-label="Década anterior"
               >
                 ‹
               </button>
-              <span class="text-xs font-bold text-advent-text">
+              <span class="text-xs font-bold text-advent-text tabular-nums">
                 {{ baseDecadeYear() }} - {{ baseDecadeYear() + 11 }}
               </span>
               <button
                 type="button"
                 (click)="nextDecade()"
-                class="p-1 text-advent-muted hover:text-advent-text cursor-pointer"
+                class="rounded-lg p-1.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-advent-muted hover:bg-slate-100 hover:text-advent-text cursor-pointer"
+                aria-label="Próxima década"
               >
                 ›
               </button>
             </div>
-            <div class="grid grid-cols-3 gap-2 mt-3">
+            <div class="grid grid-cols-3 gap-2 mt-3 tabular-nums">
               @for (year of decadeYears(); track year) {
                 <button
                   type="button"
                   (click)="selectYear(year)"
-                  class="rounded-xl py-2 text-xs font-semibold hover:bg-blue-50 hover:text-advent-blue transition-colors cursor-pointer border border-advent-border"
+                  class="rounded-xl py-2.5 min-h-[40px] text-xs font-semibold tabular-nums hover:bg-blue-50 hover:text-advent-blue transition-colors cursor-pointer border border-advent-border"
                   [class.bg-advent-blue]="currentViewYear() === year"
                   [class.text-white]="currentViewYear() === year"
                 >
@@ -232,8 +234,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
           @if (comHorario()) {
             <div class="mt-4 pt-3 border-t border-advent-border">
               <div class="flex items-center justify-between">
-                <span class="text-[11px] font-bold uppercase tracking-wider text-advent-muted flex items-center gap-1">
-                  <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <span class="text-xs font-bold uppercase tracking-wider text-advent-muted flex items-center gap-1">
+                  <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   Horário
@@ -241,13 +243,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
                 <button
                   type="button"
                   (click)="setCurrentTime()"
-                  class="text-[10px] font-semibold text-advent-blue hover:underline cursor-pointer"
+                  class="text-xs font-semibold text-advent-blue hover:underline cursor-pointer px-2 py-1"
                 >
                   Agora
                 </button>
               </div>
 
-              <div class="flex items-center justify-center gap-2 mt-2">
+              <div class="flex items-center justify-center gap-2 mt-2 tabular-nums">
                 <!-- Horas -->
                 <div class="flex items-center gap-1 rounded-lg border border-advent-border bg-slate-50 px-2 py-1">
                   <input
@@ -256,21 +258,23 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
                     max="23"
                     [value]="padZero(selectedHour())"
                     (change)="onHourChange($event)"
-                    class="w-8 bg-transparent text-center text-xs font-bold text-advent-text focus:outline-none"
+                    class="w-10 bg-transparent text-center text-xs font-bold tabular-nums text-advent-text focus:outline-none"
                     aria-label="Hora"
                   />
                   <div class="flex flex-col">
                     <button
                       type="button"
                       (click)="stepHour(1)"
-                      class="text-[9px] text-advent-muted hover:text-advent-blue cursor-pointer"
+                      class="px-1.5 py-0.5 text-xs text-advent-muted hover:text-advent-blue cursor-pointer"
+                      aria-label="Aumentar hora"
                     >
                       ▲
                     </button>
                     <button
                       type="button"
                       (click)="stepHour(-1)"
-                      class="text-[9px] text-advent-muted hover:text-advent-blue cursor-pointer"
+                      class="px-1.5 py-0.5 text-xs text-advent-muted hover:text-advent-blue cursor-pointer"
+                      aria-label="Diminuir hora"
                     >
                       ▼
                     </button>
@@ -288,21 +292,23 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
                     step="5"
                     [value]="padZero(selectedMinute())"
                     (change)="onMinuteChange($event)"
-                    class="w-8 bg-transparent text-center text-xs font-bold text-advent-text focus:outline-none"
+                    class="w-10 bg-transparent text-center text-xs font-bold tabular-nums text-advent-text focus:outline-none"
                     aria-label="Minuto"
                   />
                   <div class="flex flex-col">
                     <button
                       type="button"
                       (click)="stepMinute(5)"
-                      class="text-[9px] text-advent-muted hover:text-advent-blue cursor-pointer"
+                      class="px-1.5 py-0.5 text-xs text-advent-muted hover:text-advent-blue cursor-pointer"
+                      aria-label="Aumentar minuto"
                     >
                       ▲
                     </button>
                     <button
                       type="button"
                       (click)="stepMinute(-5)"
-                      class="text-[9px] text-advent-muted hover:text-advent-blue cursor-pointer"
+                      class="px-1.5 py-0.5 text-xs text-advent-muted hover:text-advent-blue cursor-pointer"
+                      aria-label="Diminuir minuto"
                     >
                       ▼
                     </button>
@@ -317,14 +323,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
             <button
               type="button"
               (click)="goToToday()"
-              class="rounded-lg px-2.5 py-1 text-xs font-semibold text-advent-muted hover:text-advent-text hover:bg-slate-100 transition-colors cursor-pointer min-h-[36px]"
+              class="rounded-lg px-3 py-1.5 text-xs font-semibold text-advent-muted hover:text-advent-text hover:bg-slate-100 transition-colors cursor-pointer min-h-[44px]"
             >
               Hoje
             </button>
             <button
               type="button"
               (click)="applyAndClose()"
-              class="rounded-lg bg-advent-blue px-4 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-advent-blue-dark active:scale-95 transition-all cursor-pointer min-h-[36px]"
+              class="rounded-lg bg-advent-blue px-4 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-advent-blue-dark active:scale-95 transition-all cursor-pointer min-h-[44px]"
             >
               Concluir
             </button>

@@ -4,6 +4,9 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   selector: 'app-ui-skeleton',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'aria-hidden': 'true',
+  },
   template: `
     <div
       class="animate-pulse bg-slate-200"

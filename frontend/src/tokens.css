@@ -1,6 +1,3 @@
-/* Fonte canônica: templates/design/tokens.css (guia-universal-design-ui-ux-acessibilidade.md §2 z-index, §4 tokens dos 3 temas,
-   §7 safety checks) — instalado por UI-02. Importe este arquivo no entrypoint de estilos antes de qualquer outro CSS. */
-
 /* ===========================================================================
    ESCALA DE Z-INDEX (§2) — nunca use números literais em z-index
    =========================================================================== */
@@ -20,7 +17,10 @@
    TEMA 1: CLARO (Light Theme - Padrão Corporativo Arejado)
    =========================================================================== */
 :root,
-.theme-light {
+.theme-light,
+:root.light,
+.light,
+[data-theme="light"] {
   /* Superfícies & Fundos */
   --surface-canvas: #f8fafc;
   --surface-card: #ffffff;
@@ -59,28 +59,22 @@
   --glass-blur: blur(12px) saturate(160%);
 }
 
-/* ===========================================================================
-   TEMA 2: ESCURO (Dark Mode - Conforto Visual & Profundidade)
-   =========================================================================== */
+/* TEMA 2: ESCURO (Dark Mode - Conforto Visual & Profundidade) */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Superfícies em Camadas — Elevação por Luminosidade, não por sombra */
     --surface-canvas: #0f172a;
     --surface-card: #1e293b;
     --surface-subtle: #334155;
     --surface-overlay: rgba(0, 0, 0, 0.6);
-
-    --text-primary: #f8fafc; /* Contraste ≥ 13:1 */
-    --text-secondary: #94a3b8; /* Contraste ≥ 5.2:1 */
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
     --text-muted: #64748b;
     --text-inverse: #0f172a;
     --text-on-primary: #ffffff;
-
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-default: #334155;
     --border-strong: #475569;
     --border-focus: #60a5fa;
-
     --color-primary: #3b82f6;
     --color-primary-hover: #2563eb;
     --color-primary-subtle: rgba(59, 130, 246, 0.12);
@@ -92,34 +86,58 @@
     --status-danger-subtle: rgba(248, 113, 113, 0.12);
     --status-info: #38bdf8;
     --status-info-subtle: rgba(56, 189, 248, 0.12);
-
     --glass-bg: rgba(15, 23, 42, 0.82);
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-blur: blur(12px) saturate(180%);
   }
 }
 
-/* ===========================================================================
-   TEMA 3: ALTO CONTRASTE (High Contrast - WCAG AAA & Baixa Visão)
-   =========================================================================== */
+:root.dark, .dark, [data-theme="dark"] {
+  --surface-canvas: #0f172a;
+  --surface-card: #1e293b;
+  --surface-subtle: #334155;
+  --surface-overlay: rgba(0, 0, 0, 0.6);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #0f172a;
+  --text-on-primary: #ffffff;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-default: #334155;
+  --border-strong: #475569;
+  --border-focus: #60a5fa;
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-subtle: rgba(59, 130, 246, 0.12);
+  --status-success: #34d399;
+  --status-success-subtle: rgba(52, 211, 153, 0.12);
+  --status-warning: #fbbf24;
+  --status-warning-subtle: rgba(251, 191, 36, 0.12);
+  --status-danger: #f87171;
+  --status-danger-subtle: rgba(248, 113, 113, 0.12);
+  --status-info: #38bdf8;
+  --status-info-subtle: rgba(56, 189, 248, 0.12);
+  --glass-bg: rgba(15, 23, 42, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(12px) saturate(180%);
+}
+
+/* TEMA 3: ALTO CONTRASTE (High Contrast - WCAG AAA & Baixa Visão) */
 @media (prefers-contrast: more) {
   :root {
     --surface-canvas: #000000;
     --surface-card: #090d16;
     --surface-subtle: #172033;
     --surface-overlay: rgba(0, 0, 0, 0.85);
-
-    --text-primary: #ffffff; /* Contraste ≥ 15:1 */
-    --text-secondary: #facc15; /* Amarelo de altíssima legibilidade */
+    --text-primary: #ffffff;
+    --text-secondary: #facc15;
     --text-muted: #fef08a;
     --text-inverse: #000000;
     --text-on-primary: #000000;
-
     --border-subtle: #facc15;
     --border-default: #facc15;
     --border-strong: #ffffff;
     --border-focus: #ffffff;
-
     --color-primary: #facc15;
     --color-primary-hover: #eab308;
     --color-primary-subtle: rgba(250, 204, 21, 0.2);
@@ -131,12 +149,40 @@
     --status-danger-subtle: rgba(248, 113, 113, 0.2);
     --status-info: #38bdf8;
     --status-info-subtle: rgba(56, 189, 248, 0.2);
-
-    /* Glass completamente desabilitado no alto contraste */
     --glass-bg: var(--surface-card);
     --glass-border: var(--border-default);
     --glass-blur: none;
   }
+}
+
+:root.high-contrast, .high-contrast, [data-theme="high-contrast"] {
+  --surface-canvas: #000000;
+  --surface-card: #090d16;
+  --surface-subtle: #172033;
+  --surface-overlay: rgba(0, 0, 0, 0.85);
+  --text-primary: #ffffff;
+  --text-secondary: #facc15;
+  --text-muted: #fef08a;
+  --text-inverse: #000000;
+  --text-on-primary: #000000;
+  --border-subtle: #facc15;
+  --border-default: #facc15;
+  --border-strong: #ffffff;
+  --border-focus: #ffffff;
+  --color-primary: #facc15;
+  --color-primary-hover: #eab308;
+  --color-primary-subtle: rgba(250, 204, 21, 0.2);
+  --status-success: #4ade80;
+  --status-success-subtle: rgba(74, 222, 128, 0.2);
+  --status-warning: #facc15;
+  --status-warning-subtle: rgba(250, 204, 21, 0.2);
+  --status-danger: #f87171;
+  --status-danger-subtle: rgba(248, 113, 113, 0.2);
+  --status-info: #38bdf8;
+  --status-info-subtle: rgba(56, 189, 248, 0.2);
+  --glass-bg: var(--surface-card);
+  --glass-border: var(--border-default);
+  --glass-blur: none;
 }
 
 /* ===========================================================================

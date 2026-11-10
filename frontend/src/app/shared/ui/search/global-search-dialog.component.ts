@@ -21,21 +21,22 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
   template: `
     @if (isOpen()) {
       <div
-        class="fixed inset-0 z-50 flex items-start justify-center p-3 sm:p-6 md:p-12 lg:pt-16 bg-slate-900/60 backdrop-blur-md animate-fadeIn"
+        class="fixed inset-0 z-[var(--z-modal)] flex items-start justify-center p-3 sm:p-6 md:p-12 lg:pt-16 bg-slate-900/60 backdrop-blur-md animate-fadeIn"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="search-modal-title"
+        aria-label="Buscar no portal"
         (click)="onBackdropClick($event)"
       >
         <div
+          #dialogPanel
           class="w-full max-w-3xl rounded-3xl bg-white shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col max-h-[88vh] animate-modalSlideUp"
           (click)="$event.stopPropagation()"
         >
           <!-- Search Header Input -->
           <div class="relative flex items-center border-b border-slate-100 px-5 py-4 bg-white/90">
-            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-advent-blue shrink-0 mr-3.5 border border-blue-100/80 shadow-2xs">
+            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-advent-blue shrink-0 mr-3.5 border border-blue-100/80 shadow-sm">
               <svg
-                class="h-4.5 w-4.5"
+                class="h-[18px] w-[18px]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -58,6 +59,7 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
                 [ngModel]="query()"
                 (ngModelChange)="onQueryChange($event)"
                 placeholder="Busque por eventos, horários, versículos, PGs ou ministérios..."
+                aria-label="Buscar no portal"
                 class="w-full text-base sm:text-lg bg-transparent text-advent-text placeholder:text-slate-400 focus:outline-none focus:ring-0 border-0 p-0 font-normal leading-relaxed"
                 autocomplete="off"
               />
@@ -68,10 +70,11 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
                 <button
                   type="button"
                   (click)="clearQuery()"
-                  class="rounded-full p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                  class="rounded-full p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
                   title="Limpar pesquisa"
+                  aria-label="Limpar pesquisa"
                 >
-                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -80,11 +83,11 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
               <button
                 type="button"
                 (click)="close()"
-                class="rounded-xl px-2 py-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer flex items-center gap-1 min-h-[36px]"
+                class="rounded-xl px-2.5 py-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer flex items-center justify-center gap-1 min-h-[44px] min-w-[44px]"
                 aria-label="Fechar busca"
               >
-                <kbd class="hidden sm:inline-block rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-bold text-slate-500 shadow-2xs">ESC</kbd>
-                <svg class="h-4.5 w-4.5 sm:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <kbd class="hidden sm:inline-block rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-xs font-bold text-slate-500 shadow-sm">ESC</kbd>
+                <svg class="h-[18px] w-[18px] sm:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -95,20 +98,20 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
           @if (!query()) {
             <div class="px-5 py-3.5 sm:px-6 bg-gradient-to-r from-blue-50/50 via-slate-50/80 to-amber-50/20 border-b border-slate-100">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                  <span>💡</span> Sugestões Rápidas
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                  <span aria-hidden="true">💡</span> Sugestões Rápidas
                 </span>
-                <span class="text-[10px] text-slate-400 font-medium hidden sm:inline-block">Clique para testar</span>
+                <span class="text-xs text-slate-400 font-medium hidden sm:inline-block">Clique para testar</span>
               </div>
               <div class="flex flex-wrap gap-2">
                 @for (prompt of promptSuggestions; track prompt) {
                   <button
                     type="button"
                     (click)="applyPrompt(prompt)"
-                    class="group inline-flex items-center gap-1.5 rounded-xl border border-slate-200/90 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:border-advent-blue/60 hover:text-advent-blue hover:bg-blue-50/50 hover:shadow-2xs transition-all duration-150 cursor-pointer active:scale-98"
+                    class="group inline-flex items-center gap-1.5 rounded-xl border border-slate-200/90 bg-white px-3 py-1.5 min-h-[36px] text-xs font-medium text-slate-700 hover:border-advent-blue/60 hover:text-advent-blue hover:bg-blue-50/50 hover:shadow-sm transition-all duration-150 cursor-pointer active:scale-[0.98]"
                   >
                     <span>{{ prompt }}</span>
-                    <span class="text-slate-300 group-hover:text-advent-blue transition-colors text-[10px]">→</span>
+                    <span class="text-slate-300 group-hover:text-advent-blue transition-colors text-xs" aria-hidden="true">→</span>
                   </button>
                 }
               </div>
@@ -121,17 +124,17 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
               <button
                 type="button"
                 (click)="setCategory(cat.id)"
-                class="rounded-xl px-3 py-1 text-xs font-bold transition-all duration-150 whitespace-nowrap min-h-[30px] cursor-pointer flex items-center gap-1"
+                class="rounded-xl px-3 py-1.5 text-xs font-bold transition-all duration-150 whitespace-nowrap min-h-[36px] cursor-pointer flex items-center gap-1"
                 [class.bg-advent-blue]="selectedCategory() === cat.id"
                 [class.text-white]="selectedCategory() === cat.id"
-                [class.shadow-xs]="selectedCategory() === cat.id"
+                [class.shadow-sm]="selectedCategory() === cat.id"
                 [class.bg-white]="selectedCategory() !== cat.id"
                 [class.text-slate-600]="selectedCategory() !== cat.id"
                 [class.border]="selectedCategory() !== cat.id"
                 [class.border-slate-200]="selectedCategory() !== cat.id"
                 [class.hover:border-advent-blue]="selectedCategory() !== cat.id"
               >
-                <span>{{ cat.icon }}</span>
+                <span aria-hidden="true">{{ cat.icon }}</span>
                 <span>{{ cat.label }}</span>
               </button>
             }
@@ -141,8 +144,8 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
           <div class="overflow-y-auto p-3 sm:p-5 space-y-2.5 flex-1 divide-y divide-slate-50">
             @if (results().length === 0) {
               <div class="py-14 text-center text-slate-400">
-                <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-advent-blue mb-3 border border-blue-100 shadow-2xs">
-                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-advent-blue mb-3 border border-blue-100 shadow-sm">
+                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                   </svg>
                 </div>
@@ -157,14 +160,14 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
                   (click)="navigate(item.url)"
                   (keydown.enter)="navigate(item.url)"
                   tabindex="0"
-                  class="group relative flex flex-col md:flex-row md:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl transition-all duration-150 cursor-pointer border border-transparent hover:border-advent-blue/20 hover:bg-blue-50/40 hover:shadow-xs focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
+                  class="group relative flex flex-col md:flex-row md:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl transition-all duration-150 cursor-pointer border border-transparent hover:border-advent-blue/20 hover:bg-blue-50/40 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-advent-blue/30"
                   [class.bg-blue-50]="selectedIndex() === idx"
                   [class.border-advent-blue]="selectedIndex() === idx"
                 >
                   <div class="space-y-1.5 max-w-xl min-w-0">
                     <div class="flex flex-wrap items-center gap-2">
                       <span
-                        class="rounded-lg px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider shadow-2xs"
+                        class="rounded-lg px-2 py-0.5 text-xs font-extrabold uppercase tracking-wider shadow-sm"
                         [class.bg-blue-100]="item.type === 'evento' || item.type === 'horario'"
                         [class.text-advent-blue]="item.type === 'evento' || item.type === 'horario'"
                         [class.bg-purple-100]="item.type === 'ministerio'"
@@ -180,7 +183,7 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
                       </span>
 
                       @if (item.departmentOrCategory) {
-                        <span class="text-[11px] text-slate-400 font-medium truncate">
+                        <span class="text-xs text-slate-400 font-medium truncate">
                           • {{ item.departmentOrCategory }}
                         </span>
                       }
@@ -201,21 +204,21 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
                       <button
                         type="button"
                         (click)="$event.stopPropagation(); openWhatsApp(item)"
-                        class="text-xs font-semibold text-green-800 bg-green-50 hover:bg-green-100 border border-green-200/80 px-2.5 py-1.5 rounded-xl transition-all min-h-[34px] flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs"
+                        class="text-xs font-semibold text-green-800 bg-green-50 hover:bg-green-100 border border-green-200/80 px-3 py-1.5 rounded-xl transition-all min-h-[44px] flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm"
                         title="Falar no WhatsApp"
                       >
-                        <span class="text-sm">💬</span>
+                        <span class="text-sm" aria-hidden="true">💬</span>
                         <span class="hidden sm:inline">WhatsApp</span>
                       </button>
                     }
 
-                    <div class="flex items-center gap-1.5 bg-slate-100/80 group-hover:bg-advent-blue group-hover:text-white px-2.5 py-1 rounded-full text-[11px] font-bold text-slate-600 transition-colors shadow-2xs">
-                      <span>{{ item.matchPercentage }}%</span>
-                      <span class="text-[9px] uppercase tracking-wider opacity-80">afinidade</span>
+                    <div class="flex items-center gap-1.5 bg-slate-100/80 group-hover:bg-advent-blue group-hover:text-white px-2.5 py-1 rounded-full text-xs font-bold text-slate-600 transition-colors shadow-sm tabular-nums">
+                      <span class="tabular-nums">{{ item.matchPercentage }}%</span>
+                      <span class="text-xs uppercase tracking-wider opacity-80">afinidade</span>
                     </div>
 
-                    <div class="h-6 w-6 rounded-full flex items-center justify-center text-slate-300 group-hover:text-advent-blue group-hover:translate-x-0.5 transition-all">
-                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <div class="h-6 w-6 rounded-full flex items-center justify-center text-slate-300 group-hover:text-advent-blue group-hover:translate-x-0.5 transition-all" aria-hidden="true">
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                       </svg>
                     </div>
@@ -229,17 +232,17 @@ import { SearchEntityType, SemanticSearchResult } from '../../../core/models/sea
           <div class="px-5 py-3 bg-slate-50/90 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
             <div class="flex items-center gap-3">
               <span class="flex items-center gap-1">
-                <kbd class="rounded border border-slate-200 bg-white px-1 py-0.5 text-[10px] font-semibold text-slate-600 shadow-2xs">↑</kbd>
-                <kbd class="rounded border border-slate-200 bg-white px-1 py-0.5 text-[10px] font-semibold text-slate-600 shadow-2xs">↓</kbd>
+                <kbd class="rounded border border-slate-200 bg-white px-1 py-0.5 text-xs font-semibold text-slate-600 shadow-sm">↑</kbd>
+                <kbd class="rounded border border-slate-200 bg-white px-1 py-0.5 text-xs font-semibold text-slate-600 shadow-sm">↓</kbd>
                 <span class="hidden sm:inline">navegar</span>
               </span>
               <span class="flex items-center gap-1">
-                <kbd class="rounded border border-slate-200 bg-white px-1.5 py-0.5 text-[10px] font-semibold text-slate-600 shadow-2xs">↵</kbd>
+                <kbd class="rounded border border-slate-200 bg-white px-1.5 py-0.5 text-xs font-semibold text-slate-600 shadow-sm">↵</kbd>
                 <span class="hidden sm:inline">abrir</span>
               </span>
             </div>
 
-            <div class="flex items-center gap-1.5 font-semibold text-slate-400 text-[11px]">
+            <div class="flex items-center gap-1.5 font-semibold text-slate-400 text-xs">
               <span>IASD Mangueiras</span>
             </div>
           </div>
@@ -253,6 +256,7 @@ export class GlobalSearchDialogComponent {
   private readonly router = inject(Router);
 
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('dialogPanel') dialogPanel?: ElementRef<HTMLElement>;
 
   readonly isOpen = signal<boolean>(false);
   readonly query = signal<string>('');
@@ -319,6 +323,28 @@ export class GlobalSearchDialogComponent {
           this.navigate(item.url);
         }
       }
+    }
+  }
+
+  @HostListener('keydown.tab', ['$event'])
+  onTabKeydown(event: Event): void {
+    const keyboardEvent = event as KeyboardEvent;
+    if (!this.isOpen() || !this.dialogPanel) return;
+
+    const focusable = this.dialogPanel.nativeElement.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (keyboardEvent.shiftKey && document.activeElement === first) {
+      last.focus();
+      keyboardEvent.preventDefault();
+    } else if (!keyboardEvent.shiftKey && document.activeElement === last) {
+      first.focus();
+      keyboardEvent.preventDefault();
     }
   }
 

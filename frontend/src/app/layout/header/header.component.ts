@@ -18,21 +18,21 @@ import { SITE_CONFIG } from '../../core/site/site.config';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <a
-      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-card focus:bg-white focus:px-4 focus:py-2 focus:text-advent-blue shadow-lg border border-advent-blue"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[var(--z-toast)] focus:rounded-card focus:bg-white focus:px-4 focus:py-2 focus:text-advent-blue shadow-lg border border-advent-blue"
       href="#conteudo"
     >
       Ir para o conteúdo
     </a>
 
     <header
-      class="sticky top-0 z-40 border-b border-advent-border bg-white/95 backdrop-blur-md transition-all"
+      class="sticky top-0 z-[var(--z-sticky)] border-b border-advent-border bg-white/95 backdrop-blur-md transition-all"
     >
       <div class="mx-auto flex max-w-site items-center justify-between px-4 py-3.5 md:py-4">
         <!-- Logo -->
         <a
           class="font-brand text-xl text-advent-blue transition-opacity hover:opacity-90 tracking-tight"
           routerLink="/"
-          aria-label="IASD Mangueiras — início"
+          aria-label="IASD Mangueiras - início"
         >
           {{ site.name }}
         </a>
@@ -88,21 +88,21 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               <button
                 type="button"
                 (click)="onSearch()"
-                class="inline-flex items-center gap-2 rounded-xl border border-advent-border bg-slate-50 px-3 py-1.5 text-xs text-advent-muted hover:border-advent-blue/40 hover:text-advent-blue hover:bg-white transition-all cursor-pointer shadow-2xs"
+                class="inline-flex items-center gap-2 rounded-xl border border-advent-border bg-slate-50 px-3 py-1.5 text-xs text-advent-muted hover:border-advent-blue/40 hover:text-advent-blue hover:bg-white transition-all cursor-pointer shadow-sm min-h-[44px]"
                 title="Buscar no site (Ctrl + K)"
                 aria-label="Abrir busca"
               >
-                <svg class="h-4 w-4 text-advent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="h-4 w-4 text-advent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                 </svg>
                 <span>Buscar</span>
-                <kbd class="hidden lg:inline-block rounded bg-white px-1.5 py-0.5 text-[10px] font-semibold text-slate-500 border border-slate-200">⌘K</kbd>
+                <kbd class="hidden lg:inline-block rounded bg-white px-1.5 py-0.5 text-xs font-semibold text-slate-500 border border-slate-200">⌘K</kbd>
               </button>
             </li>
 
             <li>
               <a
-                class="rounded-card bg-advent-blue px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner"
+                class="inline-flex items-center min-h-[44px] rounded-card bg-advent-blue px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner"
                 routerLink="/contato"
               >
                 Contato
@@ -116,10 +116,10 @@ import { SITE_CONFIG } from '../../core/site/site.config';
           <button
             type="button"
             (click)="onSearch()"
-            class="flex h-10 w-10 items-center justify-center rounded-lg border border-advent-border text-advent-text transition-colors hover:bg-gray-100 active:scale-95 cursor-pointer"
+            class="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-advent-border text-advent-text transition-colors hover:bg-gray-100 active:scale-95 cursor-pointer"
             aria-label="Abrir busca"
           >
-            <svg class="h-5 w-5 text-advent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg class="h-5 w-5 text-advent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
           </button>
@@ -127,7 +127,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
           <button
             #hamburgerBtn
             type="button"
-            class="flex h-10 w-10 items-center justify-center rounded-lg border border-advent-border text-advent-text transition-colors hover:bg-gray-100 active:scale-95 cursor-pointer"
+            class="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-advent-border text-advent-text transition-colors hover:bg-gray-100 active:scale-95 cursor-pointer"
             (click)="toggleMenu()"
             [attr.aria-expanded]="menuOpen()"
             aria-controls="mobile-menu-drawer"
@@ -163,7 +163,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
       <!-- Mobile Drawer Container com Backdrop e Focus Trap -->
       @if (menuOpen()) {
         <div
-          class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm transition-opacity duration-300 md:hidden animate-fadeIn"
+          class="fixed inset-0 z-[var(--z-backdrop)] bg-black/40 backdrop-blur-sm transition-opacity duration-300 md:hidden animate-fadeIn"
           (click)="closeMenu()"
           aria-hidden="true"
         ></div>
@@ -171,7 +171,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
         <div
           #drawerElement
           id="mobile-menu-drawer"
-          class="fixed inset-y-0 right-0 z-50 flex w-full max-w-xs flex-col justify-between bg-white p-6 shadow-2xl transition-transform duration-300 md:hidden animate-slideInRight"
+          class="fixed inset-y-0 right-0 z-[var(--z-drawer)] flex w-full max-w-xs flex-col justify-between bg-white p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-2xl transition-transform duration-300 md:hidden animate-slideInRight"
           role="dialog"
           aria-modal="true"
           aria-label="Menu principal de navegação"
@@ -183,7 +183,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
               <button
                 #closeBtn
                 type="button"
-                class="rounded-lg p-1.5 text-advent-muted hover:bg-gray-100 hover:text-advent-text focus:outline-none focus:ring-2 focus:ring-advent-blue cursor-pointer"
+                class="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-advent-muted hover:bg-gray-100 hover:text-advent-text focus:outline-none focus:ring-2 focus:ring-advent-blue cursor-pointer"
                 (click)="closeMenu()"
                 aria-label="Fechar menu"
               >
@@ -198,11 +198,11 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 <li>
                   <button
                     type="button"
-                    class="w-full flex items-center justify-between rounded-lg px-3 py-2.5 bg-blue-50/70 text-advent-blue font-bold transition-colors cursor-pointer"
+                    class="w-full flex items-center justify-between rounded-lg px-3 py-2.5 min-h-[44px] bg-blue-50/70 text-advent-blue font-bold transition-colors cursor-pointer"
                     (click)="onSearch(); closeMenu()"
                   >
                     <span class="flex items-center gap-3">
-                      <svg class="h-5 w-5 text-advent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <svg class="h-5 w-5 text-advent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                       </svg>
                       Buscar no Site
@@ -212,8 +212,9 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                 </li>
                 <li>
                   <a
-                    class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
+                    class="flex items-center justify-between rounded-lg px-3 py-2.5 min-h-[44px] transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
                     routerLink="/horarios"
+                    routerLinkActive="bg-blue-50/70 text-advent-blue font-semibold"
                     (click)="closeMenu()"
                   >
                     <span class="flex items-center gap-3">
@@ -222,13 +223,14 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                       </svg>
                       Horários de Culto
                     </span>
-                    <span class="text-xs text-advent-muted">→</span>
+                    <span class="text-xs text-advent-muted" aria-hidden="true">→</span>
                   </a>
                 </li>
                 <li>
                   <a
-                    class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
+                    class="flex items-center justify-between rounded-lg px-3 py-2.5 min-h-[44px] transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
                     routerLink="/ao-vivo"
+                    routerLinkActive="bg-blue-50/70 text-advent-blue font-semibold"
                     (click)="closeMenu()"
                   >
                     <span class="flex items-center gap-3">
@@ -237,13 +239,14 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                       </svg>
                       Cultos Ao Vivo
                     </span>
-                    <span class="text-xs text-advent-muted">→</span>
+                    <span class="text-xs text-advent-muted" aria-hidden="true">→</span>
                   </a>
                 </li>
                 <li>
                   <a
-                    class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
+                    class="flex items-center justify-between rounded-lg px-3 py-2.5 min-h-[44px] transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
                     routerLink="/eventos"
+                    routerLinkActive="bg-blue-50/70 text-advent-blue font-semibold"
                     (click)="closeMenu()"
                   >
                     <span class="flex items-center gap-3">
@@ -252,13 +255,14 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                       </svg>
                       Eventos & Agenda
                     </span>
-                    <span class="text-xs text-advent-muted">→</span>
+                    <span class="text-xs text-advent-muted" aria-hidden="true">→</span>
                   </a>
                 </li>
                 <li>
                   <a
-                    class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
+                    class="flex items-center justify-between rounded-lg px-3 py-2.5 min-h-[44px] transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
                     routerLink="/ministerios"
+                    routerLinkActive="bg-blue-50/70 text-advent-blue font-semibold"
                     (click)="closeMenu()"
                   >
                     <span class="flex items-center gap-3">
@@ -267,13 +271,14 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                       </svg>
                       Ministérios
                     </span>
-                    <span class="text-xs text-advent-muted">→</span>
+                    <span class="text-xs text-advent-muted" aria-hidden="true">→</span>
                   </a>
                 </li>
                 <li>
                   <a
-                    class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
+                    class="flex items-center justify-between rounded-lg px-3 py-2.5 min-h-[44px] transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
                     routerLink="/estudos"
+                    routerLinkActive="bg-blue-50/70 text-advent-blue font-semibold"
                     (click)="closeMenu()"
                   >
                     <span class="flex items-center gap-3">
@@ -282,13 +287,14 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                       </svg>
                       Estudos Bíblicos & PGs
                     </span>
-                    <span class="text-xs text-advent-muted">→</span>
+                    <span class="text-xs text-advent-muted" aria-hidden="true">→</span>
                   </a>
                 </li>
                 <li>
                   <a
-                    class="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
+                    class="flex items-center justify-between rounded-lg px-3 py-2.5 min-h-[44px] transition-colors hover:bg-advent-neutral hover:text-advent-blue active:bg-advent-neutral"
                     routerLink="/sou-novo"
+                    routerLinkActive="bg-blue-50/70 text-advent-blue font-semibold"
                     (click)="closeMenu()"
                   >
                     <span class="flex items-center gap-3">
@@ -297,7 +303,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
                       </svg>
                       Sou Novo Aqui
                     </span>
-                    <span class="text-xs text-advent-muted">→</span>
+                    <span class="text-xs text-advent-muted" aria-hidden="true">→</span>
                   </a>
                 </li>
               </ul>
@@ -306,7 +312,7 @@ import { SITE_CONFIG } from '../../core/site/site.config';
 
           <div class="border-t border-advent-border pt-6">
             <a
-              class="block w-full rounded-card bg-advent-blue py-3 text-center text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner"
+              class="block w-full rounded-card bg-advent-blue py-3 min-h-[44px] text-center text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98] active:shadow-inner"
               routerLink="/contato"
               (click)="closeMenu()"
             >

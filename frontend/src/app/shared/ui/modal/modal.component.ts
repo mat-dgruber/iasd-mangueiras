@@ -9,6 +9,7 @@ import {
   effect,
   input,
   output,
+  inject,
 } from '@angular/core';
 
 @Component({
@@ -18,10 +19,11 @@ import {
   template: `
     @if (isOpen()) {
       <div
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-200 animate-fadeIn"
+        class="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-200 animate-fadeIn"
         (click)="onBackdropClick($event)"
         role="dialog"
         [attr.aria-modal]="true"
+        [attr.aria-labelledby]="titleId"
         [attr.aria-label]="title()"
         tabindex="-1"
       >
@@ -36,15 +38,15 @@ import {
         >
           <!-- Header do Modal -->
           <header class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-            <h2 class="text-lg font-bold text-advent-text">{{ title() }}</h2>
+            <h2 [id]="titleId" class="text-lg font-bold text-advent-text">{{ title() }}</h2>
             <button
               #closeBtn
               type="button"
-              class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors cursor-pointer"
+              class="flex h-11 w-11 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors cursor-pointer"
               (click)="close.emit()"
               aria-label="Fechar janela modal"
             >
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -66,7 +68,10 @@ import {
     }
   `,
 })
-export class ModalComponent implements AfterViewInit, OnDestroy {
+export class ModalComponent implements OnDestroy {
+  private static nextId = 0;
+  readonly titleId = `ui-modal-title-${++ModalComponent.nextId}`;
+
   readonly isOpen = input.required<boolean>();
   readonly title = input<string>('');
   readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
@@ -84,14 +89,11 @@ export class ModalComponent implements AfterViewInit, OnDestroy {
     effect(() => {
       if (this.isOpen()) {
         this.triggerElement = document.activeElement as HTMLElement;
+        setTimeout(() => this.closeBtn?.nativeElement?.focus(), 0);
+      } else {
+        this.restoreFocus();
       }
     });
-  }
-
-  ngAfterViewInit(): void {
-    if (this.isOpen()) {
-      setTimeout(() => this.closeBtn?.nativeElement?.focus(), 50);
-    }
   }
 
   ngOnDestroy(): void {

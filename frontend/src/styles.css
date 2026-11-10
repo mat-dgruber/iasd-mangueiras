@@ -53,12 +53,33 @@ a {
   outline-offset: 4px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-  }
+.dark .bg-white,
+.high-contrast .bg-white {
+  background-color: var(--surface-card);
+}
+
+.dark .bg-slate-50,
+.dark .bg-advent-neutral,
+.high-contrast .bg-slate-50,
+.high-contrast .bg-advent-neutral {
+  background-color: var(--surface-subtle);
+}
+
+.dark .text-advent-text,
+.high-contrast .text-advent-text {
+  color: var(--text-primary);
+}
+
+.dark .text-advent-muted,
+.high-contrast .text-advent-muted {
+  color: var(--text-secondary);
+}
+
+.dark .border-advent-border,
+.dark .border-slate-100,
+.dark .border-slate-200,
+.high-contrast .border-advent-border,
+.high-contrast .border-slate-100,
+.high-contrast .border-slate-200 {
+  border-color: var(--border-default);
 }
