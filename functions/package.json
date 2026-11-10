@@ -32,7 +32,7 @@
     "@types/express": "^4.17.21",
     "@types/node": "^20.17.24",
     "dependency-cruiser": "^18.7.2",
-    "typescript": "^5.7.3"
+    "typescript": "^7.0.2"
   },
   "private": true
 }
