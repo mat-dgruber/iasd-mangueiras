@@ -75,7 +75,7 @@ service cloud.firestore {
     // Mensagens de Contato
     // Criação pública com validação de payload; gestão e leitura restritas a administradores.
     match /mensagens_contato/{document} {
-      allow create: if request.resource.data.keys().hasAll(['nome', 'email', 'mensagem'])
+      allow create: if request.resource.data.keys().hasOnly(['nome', 'email', 'telefone', 'assunto', 'mensagem', 'criadoEm', 'lido'])
         && request.resource.data.nome is string
         && request.resource.data.nome.size() >= 2
         && request.resource.data.nome.size() <= 100
@@ -90,7 +90,8 @@ service cloud.firestore {
     // Criação pública com validação rigorosa de tipos e limites de payload (Anti-DoS).
     // Leitura, atualização e exclusão restritas exclusivamente à liderança autorizada (RBAC).
     match /pedidos_oracao/{document} {
-      allow create: if request.resource.data.nome is string
+      allow create: if request.resource.data.keys().hasOnly(['nome', 'email', 'telefone', 'pedido', 'privado', 'confidencial', 'criadoEm', 'orado', 'atendido', 'oracoesCount'])
+                    && request.resource.data.nome is string
                     && request.resource.data.nome.size() >= 2
                     && request.resource.data.nome.size() <= 120
                     && request.resource.data.pedido is string
@@ -104,7 +105,8 @@ service cloud.firestore {
     // Criação pública protegida com validação de campos.
     // Leitura e gestão restritas estritamente a administradores.
     match /pedidos_estudo/{document} {
-      allow create: if request.resource.data.nome is string
+      allow create: if request.resource.data.keys().hasOnly(['acao', 'estudoId', 'estudoTitulo', 'categoria', 'criadoEm', 'origem', 'nome', 'telefone', 'email'])
+                    && request.resource.data.nome is string
                     && request.resource.data.nome.size() >= 2
                     && request.resource.data.nome.size() <= 120
                     && (!('telefone' in request.resource.data) || (request.resource.data.telefone is string && request.resource.data.telefone.size() <= 30))
