@@ -1,18 +1,28 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+const isCloudRuntime = Boolean(process.env.K_SERVICE || process.env.FUNCTION_TARGET);
+const defaultCorsOrigins = [
+  'https://iasdmangueiras.org.br',
+  'https://www.iasdmangueiras.org.br',
+  'https://iasd-mangueiras-web.web.app',
+  'https://iasd-mangueiras-web.firebaseapp.com',
+  'https://iasd-mangueiras.web.app',
+  'https://iasd-mangueiras.firebaseapp.com',
+  'http://localhost:4200',
+  'http://localhost:4000',
+  'http://127.0.0.1:4200',
+  'http://127.0.0.1:4000',
+];
+const extraCorsOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
 export const config = {
   appName: process.env.APP_NAME || 'IASD Mangueiras API',
-  appEnv: process.env.APP_ENV || 'development',
-  corsOrigins: [
-    'https://iasdmangueiras.org.br',
-    'https://iasd-mangueiras-web.web.app',
-    'https://iasd-mangueiras-web.firebaseapp.com',
-    'http://localhost:4200',
-    'http://localhost:4000',
-    'http://127.0.0.1:4200',
-    'http://127.0.0.1:4000',
-  ],
+  appEnv: process.env.APP_ENV || (isCloudRuntime ? 'production' : 'development'),
+  corsOrigins: Array.from(new Set([...defaultCorsOrigins, ...extraCorsOrigins])),
   youtube: {
     apiKey: process.env.YOUTUBE_API_KEY || '',
     channelId: process.env.YOUTUBE_CHANNEL_ID || 'UC4x7BBBm6Ds1JZYit0yMhuQ',

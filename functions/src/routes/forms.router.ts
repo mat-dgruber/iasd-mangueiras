@@ -1,12 +1,12 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { ContatoIn, OracaoIn } from '../models/types';
 import { notificationService } from '../services/notification.service';
 
 export const formsRouter = Router();
 
-formsRouter.post('/contato', async (req: Request, res: Response) => {
+formsRouter.post('/contato', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = req.body as ContatoIn;
+    const data = (req.body ?? {}) as ContatoIn;
     if (!data.nome || !data.email || !data.mensagem) {
       return res.status(422).json({ error: 'Campos obrigatórios ausentes.' });
     }
@@ -21,13 +21,13 @@ formsRouter.post('/contato', async (req: Request, res: Response) => {
       message: 'Mensagem enviada com sucesso! Em breve entraremos em contato.',
     });
   } catch (error) {
-    return res.status(500).json({ error: 'Erro ao processar formulário de contato' });
+    return next(error);
   }
 });
 
-formsRouter.post('/oracao', async (req: Request, res: Response) => {
+formsRouter.post('/oracao', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = req.body as OracaoIn;
+    const data = (req.body ?? {}) as OracaoIn;
     if (!data.nome || !data.pedido) {
       return res.status(422).json({ error: 'Campos obrigatórios ausentes.' });
     }
@@ -42,7 +42,7 @@ formsRouter.post('/oracao', async (req: Request, res: Response) => {
       message: 'Pedido de oração recebido! Nossa equipe e congregação estarão em oração por você.',
     });
   } catch (error) {
-    return res.status(500).json({ error: 'Erro ao processar pedido de oração' });
+    return next(error);
   }
 });
 

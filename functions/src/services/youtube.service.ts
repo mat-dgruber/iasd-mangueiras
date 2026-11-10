@@ -189,98 +189,79 @@ export class YouTubeService {
 
     const playlistId = playlistIds[category] || '';
     const cacheKey = `yt_pl_${category}_${playlistId}`;
-    const cached = memoryCache.get<YouTubeLatestResponse>(cacheKey); // singleflight lock-free read
-    if (cached) return cached;
-
-    const vids = await this.fetchPlaylistDynamic(playlistId, limit);
-    const response: YouTubeLatestResponse = {
-      channel_id: config.youtube.channelId,
-      videos: vids,
-    };
-
-    if (vids.length > 0) {
-      memoryCache.set(cacheKey, response, config.youtube.cacheTtlSeconds);
-    }
-    return response;
+    return memoryCache.singleflight(cacheKey, config.youtube.cacheTtlSeconds, async () => {
+      const vids = await this.fetchPlaylistDynamic(playlistId, limit);
+      return {
+        channel_id: config.youtube.channelId,
+        videos: vids,
+      };
+    });
   }
 
   async getLatestVideos(): Promise<YouTubeLatestResponse> {
     const cacheKey = `yt_catalog_all_${config.youtube.channelId}`;
-    const cached = memoryCache.get<YouTubeLatestResponse>(cacheKey); // singleflight lock-free read
-    if (cached) return cached;
+    return memoryCache.singleflight(cacheKey, config.youtube.cacheTtlSeconds, async () => {
+      const [channel, presente7, sabado, domingo, quarta] = await Promise.all([
+        this.fetchChannelDynamic(15),
+        this.fetchPlaylistDynamic(config.youtube.playlists.presente7, 10),
+        this.fetchPlaylistDynamic(config.youtube.playlists.sabado, 6),
+        this.fetchPlaylistDynamic(config.youtube.playlists.domingo, 6),
+        this.fetchPlaylistDynamic(config.youtube.playlists.quarta, 6),
+      ]);
 
-    const [channel, presente7, sabado, domingo, quarta] = await Promise.all([
-      this.fetchChannelDynamic(15),
-      this.fetchPlaylistDynamic(config.youtube.playlists.presente7, 10),
-      this.fetchPlaylistDynamic(config.youtube.playlists.sabado, 6),
-      this.fetchPlaylistDynamic(config.youtube.playlists.domingo, 6),
-      this.fetchPlaylistDynamic(config.youtube.playlists.quarta, 6),
-    ]);
+      const mergedMap = new Map<string, VideoItem>();
+      const allResults = [...channel, ...presente7, ...sabado, ...domingo, ...quarta];
 
-    const mergedMap = new Map<string, VideoItem>();
-    const allResults = [...channel, ...presente7, ...sabado, ...domingo, ...quarta];
-
-    for (const item of allResults) {
-      if (item.id && !mergedMap.has(item.id)) {
-        mergedMap.set(item.id, item);
+      for (const item of allResults) {
+        if (item.id && !mergedMap.has(item.id)) {
+          mergedMap.set(item.id, item);
+        }
       }
-    }
 
-    const videoList = Array.from(mergedMap.values());
-    videoList.sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
+      const videoList = Array.from(mergedMap.values());
+      videoList.sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
 
-    const response: YouTubeLatestResponse = {
-      channel_id: config.youtube.channelId,
-      videos: videoList,
-    };
-
-    if (videoList.length > 0) {
-      memoryCache.set(cacheKey, response, config.youtube.cacheTtlSeconds);
-    }
-    return response;
+      return {
+        channel_id: config.youtube.channelId,
+        videos: videoList,
+      };
+    });
   }
 
   async getLiveStatus(): Promise<YouTubeLiveResponse> {
     const cacheKey = `yt_live_${config.youtube.channelId}`;
-    const cached = memoryCache.get<YouTubeLiveResponse>(cacheKey); // singleflight lock-free read
-    if (cached) return cached;
-
-    if (!config.youtube.apiKey) {
-      const res: YouTubeLiveResponse = { is_live: false, live_video: null };
-      memoryCache.set(cacheKey, res, 300);
-      return res;
-    }
-
-    try {
-      const url = `https://www.googleapis.com/youtube/v3/search?key=${config.youtube.apiKey}&channelId=${config.youtube.channelId}&part=snippet,id&eventType=live&type=video`;
-      const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
-      if (response.ok) {
-        const data = (await response.json()) as any;
-        const items = data.items || [];
-        if (items.length > 0) {
-          const item = items[0];
-          const vidId = item.id?.videoId || '';
-          const snippet = item.snippet || {};
-          const liveVid: VideoItem = {
-            id: vidId,
-            title: snippet.title || 'Culto Ao Vivo',
-            description: snippet.description || '',
-            thumbnail_url: snippet.thumbnails?.high?.url || `https://i.ytimg.com/vi/${vidId}/hqdefault.jpg`,
-            published_at: snippet.publishedAt || '',
-            video_url: `https://www.youtube.com/watch?v=${vidId}`,
-          };
-          const res: YouTubeLiveResponse = { is_live: true, live_video: liveVid };
-          memoryCache.set(cacheKey, res, 300);
-          return res;
-        }
+    return memoryCache.singleflight(cacheKey, 300, async () => {
+      if (!config.youtube.apiKey) {
+        return { is_live: false, live_video: null };
       }
-    } catch {
-      // Ignora erro
-    }
 
-    const fallbackRes: YouTubeLiveResponse = { is_live: false, live_video: null };
-    memoryCache.set(cacheKey, fallbackRes, 300);
-    return fallbackRes;
+      try {
+        const url = `https://www.googleapis.com/youtube/v3/search?key=${config.youtube.apiKey}&channelId=${config.youtube.channelId}&part=snippet,id&eventType=live&type=video`;
+        const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+        if (response.ok) {
+          const data = (await response.json()) as any;
+          const items = data.items || [];
+          if (items.length > 0) {
+            const item = items[0];
+            const vidId = item.id?.videoId || '';
+            const snippet = item.snippet || {};
+            const liveVid: VideoItem = {
+              id: vidId,
+              title: snippet.title || 'Culto Ao Vivo',
+              description: snippet.description || '',
+              thumbnail_url: snippet.thumbnails?.high?.url || `https://i.ytimg.com/vi/${vidId}/hqdefault.jpg`,
+              published_at: snippet.publishedAt || '',
+              video_url: `https://www.youtube.com/watch?v=${vidId}`,
+            };
+            return { is_live: true, live_video: liveVid };
+          }
+        }
+      } catch {
+        // Ignora erro
+      }
+
+      return { is_live: false, live_video: null };
+    });
   }
 }
 

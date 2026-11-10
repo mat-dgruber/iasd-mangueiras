@@ -10,24 +10,33 @@ export class NotificationService {
   async saveContato(data: ContatoIn): Promise<void> {
     try {
       await this.db.collection('mensagens_contato').add({
-        ...data,
+        nome: String(data.nome).trim(),
+        email: String(data.email).trim(),
+        ...(data.telefone ? { telefone: String(data.telefone).trim() } : {}),
+        assunto: String(data.assunto || 'Geral').trim(),
+        mensagem: String(data.mensagem).trim(),
         criadoEm: admin.firestore.FieldValue.serverTimestamp(),
         lido: false,
       });
     } catch (e) {
       console.error('Erro ao salvar contato no Firestore:', e);
+      throw e;
     }
   }
 
   async saveOracao(data: OracaoIn): Promise<void> {
     try {
       await this.db.collection('pedidos_oracao').add({
-        ...data,
+        nome: String(data.nome).trim(),
+        ...(data.telefone ? { telefone: String(data.telefone).trim() } : {}),
+        pedido: String(data.pedido).trim(),
+        confidencial: Boolean(data.confidencial),
         criadoEm: admin.firestore.FieldValue.serverTimestamp(),
         atendido: false,
       });
     } catch (e) {
       console.error('Erro ao salvar pedido de oração no Firestore:', e);
+      throw e;
     }
   }
 
@@ -53,6 +62,7 @@ export class NotificationService {
       await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(5000),
         body: JSON.stringify({
           chat_id: config.telegram.chatId,
           text,

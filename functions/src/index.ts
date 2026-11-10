@@ -24,8 +24,6 @@ app.use(
       if (
         !origin ||
         config.corsOrigins.includes(origin) ||
-        origin.endsWith('.web.app') ||
-        origin.endsWith('.firebaseapp.com') ||
         config.appEnv === 'development'
       ) {
         callback(null, true);

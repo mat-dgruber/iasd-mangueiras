@@ -13,8 +13,8 @@ export const openApiSpec = {
   },
   servers: [
     {
-      url: '/api',
-      description: 'API Base',
+      url: '/',
+      description: 'API Root',
     },
   ],
   components: {
@@ -23,6 +23,21 @@ export const openApiSpec = {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
+      },
+    },
+    schemas: {
+      LicaoHojeResponse: {
+        type: 'object',
+        required: ['titulo', 'tema', 'trimestre', 'versiculo_dia', 'referencia', 'link_cpb', 'licao_numero'],
+        properties: {
+          titulo: { type: 'string' },
+          tema: { type: 'string' },
+          trimestre: { type: 'string' },
+          versiculo_dia: { type: 'string' },
+          referencia: { type: 'string' },
+          link_cpb: { type: 'string', format: 'uri' },
+          licao_numero: { type: 'integer' },
+        },
       },
     },
   },
@@ -70,12 +85,77 @@ export const openApiSpec = {
         },
       },
     },
+    '/api/youtube/catalog': {
+      get: {
+        summary: 'Listar catálogo de vídeos',
+        responses: {
+          '200': {
+            description: 'Catálogo de vídeos',
+          },
+        },
+      },
+    },
+    '/api/youtube/playlist/{category}': {
+      get: {
+        summary: 'Listar vídeos de uma playlist',
+        parameters: [
+          {
+            name: 'category',
+            in: 'path',
+            required: true,
+            schema: { type: 'string' },
+          },
+          {
+            name: 'max_results',
+            in: 'query',
+            schema: { type: 'integer' },
+          },
+        ],
+        responses: {
+          '200': {
+            description: 'Vídeos da playlist',
+          },
+        },
+      },
+    },
+    '/api/youtube/presente7': {
+      get: {
+        summary: 'Listar episódios do Presente 7',
+        parameters: [
+          {
+            name: 'max_results',
+            in: 'query',
+            schema: { type: 'integer' },
+          },
+        ],
+        responses: {
+          '200': {
+            description: 'Episódios do Presente 7',
+          },
+        },
+      },
+    },
     '/api/youtube/live': {
       get: {
         summary: 'Verificar status de transmissão ao vivo',
         responses: {
           '200': {
             description: 'Status atual do culto ao vivo',
+          },
+        },
+      },
+    },
+    '/api/licao/hoje': {
+      get: {
+        summary: 'Obter lição de hoje',
+        responses: {
+          '200': {
+            description: 'Lição do dia',
+            content: {
+              'application/json': {
+                schema: { $ref: '#/components/schemas/LicaoHojeResponse' },
+              },
+            },
           },
         },
       },

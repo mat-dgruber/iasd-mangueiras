@@ -4,6 +4,115 @@
  */
 
 export interface paths {
+    "/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Verificar status da API */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description API em funcionamento */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/livez": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Liveness Probe */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Processo ativo e respondendo */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/readyz": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Readiness Probe */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Serviços externos e banco prontos */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Infraestrutura indisponível */
+                503: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/youtube/latest": {
         parameters: {
             query?: never;
@@ -11,11 +120,133 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Listar vídeos recentes do canal
-         * @description Retorna os últimos cultos, sermões e transmissões gravadas no canal oficial da IASD Mangueiras no YouTube.
-         */
-        get: operations["get_latest_videos_api_youtube_latest_get"];
+        /** Listar vídeos recentes do canal */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Lista dos últimos vídeos e transmissões */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/youtube/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Listar catálogo de vídeos */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Catálogo de vídeos */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/youtube/playlist/{category}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Listar vídeos de uma playlist */
+        get: {
+            parameters: {
+                query?: {
+                    max_results?: number;
+                };
+                header?: never;
+                path: {
+                    category: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Vídeos da playlist */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/youtube/presente7": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Listar episódios do Presente 7 */
+        get: {
+            parameters: {
+                query?: {
+                    max_results?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Episódios do Presente 7 */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         put?: never;
         post?: never;
         delete?: never;
@@ -31,11 +262,61 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Verificar status de transmissão ao vivo
-         * @description Informa se a IASD Mangueiras está com um culto ou programação sendo transmitida ao vivo neste momento.
-         */
-        get: operations["get_live_status_api_youtube_live_get"];
+        /** Verificar status de transmissão ao vivo */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Status atual do culto ao vivo */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/licao/hoje": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obter lição de hoje */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Lição do dia */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["LicaoHojeResponse"];
+                    };
+                };
+            };
+        };
         put?: never;
         post?: never;
         delete?: never;
@@ -53,11 +334,32 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * Enviar mensagem de contato
-         * @description Recebe mensagens e dúvidas de membros e visitantes e as encaminha com segurança para a equipe da igreja.
-         */
-        post: operations["submit_contato_api_contato_post"];
+        /** Enviar mensagem de contato */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Mensagem recebida com sucesso */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Campos obrigatórios ausentes */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -73,51 +375,32 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * Enviar pedido de oração
-         * @description Recebe pedidos de oração de visitantes e membros para a equipe de intercessão pastoral da IASD Mangueiras.
-         */
-        post: operations["submit_oracao_api_oracao_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/licao/hoje": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+        /** Enviar pedido de oração */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Pedido de oração recebido com sucesso */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Campos obrigatórios ausentes */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-        /**
-         * Consultar a Lição da Escola Sabatina e Versículo de Hoje
-         * @description Retorna os dados temáticos da lição bíblica diária da CPB e versículo de reflexão para o dia atual.
-         */
-        get: operations["get_licao_hoje_api_licao_hoje_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Verificar saúde da API
-         * @description Endpoint leve para sondas de liveness e readiness de infraestrutura.
-         */
-        get: operations["health_check_health_get"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -128,210 +411,15 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /**
-         * ContatoIn
-         * @example {
-         *       "email": "maria.silva@exemplo.com",
-         *       "mensagem": "Gostaria de saber mais sobre os horários dos cultos e pequenos grupos em Tatuí.",
-         *       "nome": "Maria Silva",
-         *       "telefone": "(15) 99876-5432"
-         *     }
-         */
-        ContatoIn: {
-            /**
-             * Nome
-             * @description Nome completo do visitante ou membro
-             * @example Maria Silva
-             */
-            nome: string;
-            /**
-             * Email
-             * @description Endereço de e-mail para retorno
-             * @example maria.silva@exemplo.com
-             */
-            email: string;
-            /**
-             * Telefone
-             * @description Número de WhatsApp ou telefone de contato
-             * @example (15) 99876-5432
-             */
-            telefone?: string | null;
-            /**
-             * Mensagem
-             * @description Conteúdo da mensagem ou dúvida enviada à secretaria/liderança
-             * @example Gostaria de saber mais sobre os horários dos cultos e pequenos grupos em Tatuí.
-             */
-            mensagem: string;
-        };
-        /**
-         * FormResponse
-         * @example {
-         *       "message": "Mensagem enviada com sucesso! Em breve entraremos em contato.",
-         *       "success": true
-         *     }
-         */
-        FormResponse: {
-            /**
-             * Success
-             * @description Status de sucesso do envio
-             * @example true
-             */
-            success: boolean;
-            /**
-             * Message
-             * @description Mensagem de retorno apresentada ao usuário
-             * @example Mensagem enviada com sucesso! Em breve entraremos em contato.
-             */
-            message: string;
-        };
-        /** LicaoHojeResponse */
         LicaoHojeResponse: {
-            /**
-             * Titulo
-             * @description Título da lição da semana da Escola Sabatina
-             */
             titulo: string;
-            /**
-             * Tema
-             * @description Tema geral do trimestre
-             */
             tema: string;
-            /**
-             * Trimestre
-             * @description Identificação do trimestre e ano
-             */
             trimestre: string;
-            /**
-             * Versiculo Dia
-             * @description Texto do versículo para reflexão do dia
-             */
             versiculo_dia: string;
-            /**
-             * Referencia
-             * @description Referência bíblica do versículo
-             */
             referencia: string;
-            /**
-             * Link Cpb
-             * @description Link oficial para leitura completa no portal da CPB
-             */
+            /** Format: uri */
             link_cpb: string;
-            /**
-             * Licao Numero
-             * @description Número da lição da semana
-             * @default 1
-             */
             licao_numero: number;
-        };
-        /**
-         * OracaoIn
-         * @example {
-         *       "confidencial": true,
-         *       "nome": "João Santos",
-         *       "pedido": "Peço oração pela saúde da minha família e por direção profissional.",
-         *       "telefone": "(15) 99123-4567"
-         *     }
-         */
-        OracaoIn: {
-            /**
-             * Nome
-             * @description Nome do solicitante da oração
-             * @example João Santos
-             */
-            nome: string;
-            /**
-             * Telefone
-             * @description Telefone opcional para contato pastoral ou da equipe de intercessão
-             * @example (15) 99123-4567
-             */
-            telefone?: string | null;
-            /**
-             * Pedido
-             * @description Motivo e detalhes do pedido de oração
-             * @example Peço oração pela saúde da minha família e por direção profissional.
-             */
-            pedido: string;
-            /**
-             * Confidencial
-             * @description Se verdadeiro, o pedido é visível estritamente para o pastor e líderes autorizados
-             * @default false
-             * @example true
-             */
-            confidencial: boolean;
-        };
-        /**
-         * VideoItem
-         * @example {
-         *       "description": "Transmissão ao vivo do culto de sábado pela manhã.",
-         *       "id": "Lp7C2-79Z-M",
-         *       "published_at": "2026-08-23T12:00:00Z",
-         *       "thumbnail_url": "https://i.ytimg.com/vi/Lp7C2-79Z-M/hqdefault.jpg",
-         *       "title": "Culto de Adoração — IASD Mangueiras Tatuí",
-         *       "video_url": "https://www.youtube.com/watch?v=Lp7C2-79Z-M"
-         *     }
-         */
-        VideoItem: {
-            /**
-             * Id
-             * @description ID único do vídeo no YouTube
-             * @example Lp7C2-79Z-M
-             */
-            id: string;
-            /**
-             * Title
-             * @description Título do culto ou sermão
-             * @example Culto de Adoração — IASD Mangueiras Tatuí
-             */
-            title: string;
-            /**
-             * Description
-             * @description Descrição do vídeo
-             * @example Transmissão ao vivo do culto de sábado pela manhã.
-             */
-            description: string;
-            /**
-             * Thumbnail Url
-             * @description URL da capa do vídeo
-             * @example https://i.ytimg.com/vi/Lp7C2-79Z-M/hqdefault.jpg
-             */
-            thumbnail_url: string;
-            /**
-             * Published At
-             * @description Data de publicação no formato ISO 8601
-             * @example 2026-08-23T12:00:00Z
-             */
-            published_at: string;
-            /**
-             * Video Url
-             * @description URL canônica para visualização no YouTube
-             * @example https://www.youtube.com/watch?v=Lp7C2-79Z-M
-             */
-            video_url: string;
-        };
-        /** YouTubeLatestResponse */
-        YouTubeLatestResponse: {
-            /**
-             * Channel Id
-             * @description ID do canal oficial no YouTube
-             * @example UC4x7BBBm6Ds1JZYit0yMhuQ
-             */
-            channel_id: string;
-            /**
-             * Videos
-             * @description Lista dos vídeos mais recentes publicados no canal
-             */
-            videos: components["schemas"]["VideoItem"][];
-        };
-        /** YouTubeLiveResponse */
-        YouTubeLiveResponse: {
-            /**
-             * Is Live
-             * @description Indica se o canal está transmitindo ao vivo no momento
-             * @example false
-             */
-            is_live: boolean;
-            /** @description Dados do vídeo da transmissão ao vivo ativa, se houver */
-            live_video?: components["schemas"]["VideoItem"] | null;
         };
     };
     responses: never;
@@ -341,191 +429,4 @@ export interface components {
     pathItems: never;
 }
 export type $defs = Record<string, never>;
-export interface operations {
-    get_latest_videos_api_youtube_latest_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Lista de vídeos recentes */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["YouTubeLatestResponse"];
-                };
-            };
-            /** @description Limite de requisições excedido */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Erro ao consultar a API do YouTube ou chave não configurada */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    get_live_status_api_youtube_live_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Status de transmissão ao vivo */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["YouTubeLiveResponse"];
-                };
-            };
-            /** @description Limite de requisições excedido */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Erro ao consultar status da transmissão */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    submit_contato_api_contato_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ContatoIn"];
-            };
-        };
-        responses: {
-            /** @description Mensagem enviada com sucesso */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FormResponse"];
-                };
-            };
-            /** @description Erro de validação nos campos informados */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Limite de envios excedido (Rate Limit) */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    submit_oracao_api_oracao_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["OracaoIn"];
-            };
-        };
-        responses: {
-            /** @description Pedido de oração recebido com sucesso */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FormResponse"];
-                };
-            };
-            /** @description Erro de validação nos campos informados */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Limite de envios excedido (Rate Limit) */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    get_licao_hoje_api_licao_hoje_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Dados da lição e versículo de hoje */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LicaoHojeResponse"];
-                };
-            };
-        };
-    };
-    health_check_health_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: string;
-                    };
-                };
-            };
-        };
-    };
-}
+export type operations = Record<string, never>;
