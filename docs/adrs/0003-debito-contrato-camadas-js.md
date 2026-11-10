@@ -5,6 +5,7 @@ LOG DE MANUTENÇÃO DE DOCUMENTAÇÃO
 Data       | Autor         | Descrição
 --------------------------------------------------------------------------------
 2026-11-09 | Matheus Diniz | Criação da ADR 0003 registrando dívida técnica do contrato de camadas JS/TS (ARCH-04).
+2026-11-10 | Matheus Diniz | Ativação do dependency-cruiser (.dependency-cruiser.js) escopado aos módulos puros (ARCH-04 ✅).
 ================================================================================
 -->
 

@@ -1,4 +1,4 @@
-ai_guides_version: 2.9.0
+ai_guides_version: 2.13.0
 project:
   purpose: fullstack
   stack:
@@ -186,7 +186,7 @@ guides:
       ARCH-01: pass
       ARCH-02: skip
       ARCH-03: skip
-      ARCH-04: warn
+      ARCH-04: pass
       ARCH-05: pass
       ARCH-06: skip
   system-design-distribuidos:
