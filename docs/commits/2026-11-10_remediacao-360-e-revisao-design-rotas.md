@@ -46,7 +46,7 @@ graph LR
 
 | Arquivo | Camada Técnica | Resumo da Modificação |
 | :--- | :--- | :--- |
-| `.github/workflows/{ci,adr-lint,gitleaks,openapi-diff}.yml` | CI/CD & DevSecOps | Pinning SHA-256, `permissions: contents: read`, `timeout-minutes` e job `validate-functions`. |
+| `.github/workflows/{ci,adr-lint,gitleaks,openapi-diff}.yml` & `.gitleaks*` | CI/CD & DevSecOps | Pinning SHA-256, `permissions: contents: read`, `timeout-minutes`, job `validate-functions`, fallback de primeira publicação no `openapi-diff` e allowlist Gitleaks para `.agents/`. |
 | `firestore.rules` & `docs/database/database-schema.md` | Persistência & Segurança | Restrição `.keys().hasOnly(...)` em coleções públicas e documentação ER Mermaid das 15 coleções. |
 | `functions/src/{config,index,openapi}.ts` | API / Cloud Functions | `appEnv` seguro por padrão (`K_SERVICE`), allowlist CORS estrita e contrato OpenAPI 3.1 completo. |
 | `functions/src/services/{notification,youtube}.ts` | Domínio / Serviços | Propagação de erros do Firestore, `AbortSignal.timeout(5000)` no Telegram e `memoryCache.singleflight`. |

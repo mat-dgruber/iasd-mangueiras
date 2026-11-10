@@ -18,6 +18,13 @@ jobs:
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
           node-version: 22
-      - run: git show "origin/${{ github.base_ref }}:docs/api/openapi.json" > /tmp/openapi.base.json
+      - env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if git cat-file -e "origin/${BASE_REF}:docs/api/openapi.json" 2>/dev/null; then
+            git show "origin/${BASE_REF}:docs/api/openapi.json" > /tmp/openapi.base.json
+          else
+            cp docs/api/openapi.json /tmp/openapi.base.json
+          fi
       - run: npm install --no-save @scalar/openapi-diff
       - run: node .agents/scripts/openapi_diff.mjs /tmp/openapi.base.json docs/api/openapi.json

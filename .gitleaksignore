@@ -1,0 +1,3 @@
+# Falsos positivos de exemplos didáticos/testes materializados em .agents/skills/
+81525f28dbd1b45f3888641a7223950f0ca29c35:.agents/skills/scrapling-official/references/mcp-server.md:generic-api-key:260
+81525f28dbd1b45f3888641a7223950f0ca29c35:.agents/skills/setup/tests/test_skill_security_audit.py:stripe-access-token:21
