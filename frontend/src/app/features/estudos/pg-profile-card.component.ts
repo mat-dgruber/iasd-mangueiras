@@ -14,12 +14,12 @@ import { UserPgProfile, UserProfileService } from '../../core/services/user-prof
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="overflow-hidden rounded-2xl border border-advent-blue/20 bg-linear-to-br from-advent-blue/5 via-white to-blue-50/20 shadow-sm transition-all">
+    <div class="overflow-hidden rounded-2xl border border-advent-blue/20 bg-gradient-to-br from-advent-blue/5 via-white to-blue-50/20 shadow-sm transition-all">
       @if (!isExpanded() && currentProfile()) {
         <!-- Modo Resumo / Colapsado -->
         <div class="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
           <div class="flex items-center gap-3">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-advent-blue text-white shadow-xs">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-advent-blue text-white shadow-sm">
               <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
               </svg>
@@ -27,7 +27,7 @@ import { UserPgProfile, UserProfileService } from '../../core/services/user-prof
             <div>
               <div class="flex items-center gap-2">
                 <span class="text-xs font-extrabold uppercase tracking-wider text-advent-blue">Seu Perfil Salvo</span>
-                <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-800">
+                <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-bold text-green-800">
                   IA Ativa
                 </span>
               </div>
@@ -41,14 +41,14 @@ import { UserPgProfile, UserProfileService } from '../../core/services/user-prof
             <button
               type="button"
               (click)="isExpanded.set(true)"
-              class="rounded-lg border border-advent-border bg-white px-3 py-1.5 text-xs font-bold text-advent-text hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+              class="rounded-lg border border-advent-border bg-white px-3 py-1.5 text-xs font-bold text-advent-text hover:bg-slate-50 transition-colors shadow-sm cursor-pointer min-h-[44px]"
             >
               Editar Perfil
             </button>
             <button
               type="button"
               (click)="clearProfile()"
-              class="rounded-lg px-2.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+              class="rounded-lg px-2.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer min-h-[44px]"
               title="Apagar dados salvos no navegador"
             >
               Esquecer
@@ -61,7 +61,7 @@ import { UserPgProfile, UserProfileService } from '../../core/services/user-prof
           <div class="flex items-start justify-between gap-4">
             <div>
               <div class="flex items-center gap-2">
-                <span class="rounded-full bg-advent-blue px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wider text-white">
+                <span class="rounded-full bg-advent-blue px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider text-white">
                   Rede Neural no Navegador
                 </span>
                 <span class="text-xs font-semibold text-advent-muted">Sem cookies • Sem cadastro</span>
@@ -78,9 +78,9 @@ import { UserPgProfile, UserProfileService } from '../../core/services/user-prof
               <button
                 type="button"
                 (click)="isExpanded.set(false)"
-                class="text-xs font-semibold text-advent-muted hover:text-advent-text cursor-pointer"
+                class="text-xs font-semibold text-advent-muted hover:text-advent-text cursor-pointer min-h-[44px] px-2 flex items-center"
               >
-                ✕ Fechar
+                <span aria-hidden="true">✕</span>&nbsp;Fechar
               </button>
             }
           </div>
@@ -97,10 +97,10 @@ import { UserPgProfile, UserProfileService } from '../../core/services/user-prof
                   <button
                     type="button"
                     (click)="selectedPerfil.set(p)"
-                    class="rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer"
+                    class="rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer min-h-[44px]"
                     [class.bg-advent-blue]="selectedPerfil() === p"
                     [class.text-white]="selectedPerfil() === p"
-                    [class.shadow-xs]="selectedPerfil() === p"
+                    [class.shadow-sm]="selectedPerfil() === p"
                     [class.bg-white]="selectedPerfil() !== p"
                     [class.border]="selectedPerfil() !== p"
                     [class.border-advent-border]="selectedPerfil() !== p"
@@ -123,7 +123,7 @@ import { UserPgProfile, UserProfileService } from '../../core/services/user-prof
                   id="profile-bairro"
                   [value]="selectedBairro()"
                   (change)="onBairroChange($event)"
-                  class="w-full rounded-xl border border-advent-border bg-white px-3.5 py-2 text-xs font-medium text-advent-text focus:border-advent-blue focus:outline-none shadow-2xs"
+                  class="w-full rounded-xl border border-advent-border bg-white px-3.5 py-2 text-xs font-medium text-advent-text focus:border-advent-blue focus:outline-none shadow-sm min-h-[44px]"
                 >
                   <option value="Todos">Qualquer bairro / Mais flexível</option>
                   @for (b of bairros(); track b) {
@@ -142,7 +142,7 @@ import { UserPgProfile, UserProfileService } from '../../core/services/user-prof
                     <button
                       type="button"
                       (click)="toggleTurno(turno.id)"
-                      class="flex-1 rounded-xl px-2.5 py-2 text-xs font-semibold transition-all border cursor-pointer text-center"
+                      class="flex-1 rounded-xl px-2.5 py-2 text-xs font-semibold transition-all border cursor-pointer text-center min-h-[44px]"
                       [class.bg-advent-blue]="isTurnoSelected(turno.id)"
                       [class.border-advent-blue]="isTurnoSelected(turno.id)"
                       [class.text-white]="isTurnoSelected(turno.id)"
@@ -150,7 +150,7 @@ import { UserPgProfile, UserProfileService } from '../../core/services/user-prof
                       [class.border-advent-border]="!isTurnoSelected(turno.id)"
                       [class.text-advent-text]="!isTurnoSelected(turno.id)"
                     >
-                      {{ turno.label }}
+                      <span aria-hidden="true">{{ turno.icon }}</span> {{ turno.label }}
                     </button>
                   }
                 </div>
@@ -167,7 +167,7 @@ import { UserPgProfile, UserProfileService } from '../../core/services/user-prof
                   <button
                     type="button"
                     (click)="toggleDia(dia)"
-                    class="rounded-lg px-3 py-1.5 text-xs font-semibold transition-all border cursor-pointer"
+                    class="rounded-lg px-3 py-1.5 text-xs font-semibold transition-all border cursor-pointer min-h-[44px]"
                     [class.bg-advent-blue]="isDiaSelected(dia)"
                     [class.border-advent-blue]="isDiaSelected(dia)"
                     [class.text-white]="isDiaSelected(dia)"
@@ -184,7 +184,7 @@ import { UserPgProfile, UserProfileService } from '../../core/services/user-prof
 
           <!-- Ações -->
           <div class="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-advent-border/60 pt-5">
-            <div class="flex items-center gap-1.5 text-[11px] text-advent-muted">
+            <div class="flex items-center gap-1.5 text-xs text-advent-muted">
               <svg class="h-3.5 w-3.5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
               </svg>
@@ -195,7 +195,7 @@ import { UserPgProfile, UserProfileService } from '../../core/services/user-prof
               <button
                 type="button"
                 (click)="save()"
-                class="inline-flex items-center gap-2 rounded-xl bg-advent-blue px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer"
+                class="inline-flex items-center gap-2 rounded-xl bg-advent-blue px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[44px]"
               >
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
@@ -226,10 +226,10 @@ export class PgProfileCardComponent {
   readonly selectedTurnos = signal<('manha' | 'tarde' | 'noite')[]>(['noite']);
   readonly selectedDias = signal<string[]>([]);
 
-  readonly turnos: { id: 'manha' | 'tarde' | 'noite'; label: string }[] = [
-    { id: 'manha', label: '☀️ Manhã' },
-    { id: 'tarde', label: '🌤️ Tarde' },
-    { id: 'noite', label: '🌙 Noite' },
+  readonly turnos: { id: 'manha' | 'tarde' | 'noite'; icon: string; label: string }[] = [
+    { id: 'manha', icon: '☀️', label: 'Manhã' },
+    { id: 'tarde', icon: '🌤️', label: 'Tarde' },
+    { id: 'noite', icon: '🌙', label: 'Noite' },
   ];
 
   readonly diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];

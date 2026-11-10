@@ -40,14 +40,14 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
         <!-- Banner de Evento em Destaque Especial (Hero) -->
         @if (featuredEvento(); as destaque) {
           <section
-            class="mt-10 overflow-hidden rounded-3xl border border-amber-200/80 bg-linear-to-r from-amber-500/10 via-amber-100/30 to-blue-50/20 p-6 md:p-8 shadow-md"
+            class="mt-10 overflow-hidden rounded-3xl border border-amber-200/80 bg-gradient-to-r from-amber-500/10 via-amber-100/30 to-blue-50/20 p-6 md:p-8 shadow-md"
             aria-label="Evento em destaque"
           >
             <div class="flex flex-col lg:flex-row items-center gap-8 justify-between">
               <div class="space-y-4 max-w-2xl">
                 <div class="flex flex-wrap items-center gap-2">
-                  <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-500 px-3 py-1 text-xs font-extrabold uppercase text-white shadow-xs">
-                    ⭐ Evento em destaque
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-500 px-3 py-1 text-xs font-extrabold uppercase text-white shadow-sm">
+                    <span aria-hidden="true">⭐</span> Evento em destaque
                   </span>
                   @if (destaque.departamento) {
                     <span class="rounded-full bg-white/80 border border-amber-200 px-3 py-1 text-xs font-semibold text-advent-blue">
@@ -55,8 +55,8 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
                     </span>
                   }
                   @if (getCountdownText(destaque); as countdown) {
-                    <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-advent-blue border border-blue-200">
-                      ⏳ {{ countdown }}
+                    <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-advent-blue border border-blue-200 tabular-nums">
+                      <span aria-hidden="true">⏳</span> {{ countdown }}
                     </span>
                   }
                 </div>
@@ -70,22 +70,22 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
                 </p>
 
                 <div class="flex flex-wrap gap-y-2 gap-x-6 text-sm text-advent-text font-medium">
-                  <span class="flex items-center gap-2">
-                    📅 <strong>Data:</strong> {{ destaque.data }} às {{ destaque.horario }}
+                  <span class="flex items-center gap-2 tabular-nums">
+                    <span aria-hidden="true">📅</span> <strong>Data:</strong> {{ destaque.data }} às {{ destaque.horario }}
                   </span>
                   @if (destaque.local || destaque.endereco) {
                     <span class="flex items-center gap-2">
-                      📍 <strong>Local:</strong> {{ destaque.endereco || destaque.local }}
+                      <span aria-hidden="true">📍</span> <strong>Local:</strong> {{ destaque.endereco || destaque.local }}
                     </span>
                   }
                   @if (destaque.palestrante) {
                     <span class="flex items-center gap-2 text-advent-blue font-bold">
-                      🎙️ <strong>Orador:</strong> {{ destaque.palestrante }}
+                      <span aria-hidden="true">🎙️</span> <strong>Orador:</strong> {{ destaque.palestrante }}
                     </span>
                   }
                   @if (destaque.valor_entrada) {
                     <span class="flex items-center gap-2 text-green-700 font-bold">
-                      🏷️ <strong>Entrada:</strong> {{ destaque.valor_entrada }}
+                      <span aria-hidden="true">🏷️</span> <strong>Entrada:</strong> {{ destaque.valor_entrada }}
                     </span>
                   }
                 </div>
@@ -114,9 +114,9 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
                       [href]="getGoogleCalendarUrlForEvento(destaque)"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="inline-flex items-center justify-center rounded-xl border border-advent-blue/40 bg-white/90 px-4 py-3 text-sm font-semibold text-advent-blue shadow-xs hover:bg-blue-50 transition-colors min-h-[44px]"
+                      class="inline-flex items-center justify-center rounded-xl border border-advent-blue/40 bg-white/90 px-4 py-3 text-sm font-semibold text-advent-blue shadow-sm hover:bg-blue-50 transition-colors min-h-[44px]"
                     >
-                      📅 Adicionar à agenda
+                      <span aria-hidden="true">📅</span> Adicionar à agenda
                     </a>
                   }
 
@@ -124,15 +124,15 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
                     [href]="getShareWhatsAppUrlForEvento(destaque)"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex items-center justify-center rounded-xl border border-green-600/40 bg-green-50 px-4 py-3 text-sm font-semibold text-green-800 shadow-xs hover:bg-green-100 transition-colors min-h-[44px]"
+                    class="inline-flex items-center justify-center rounded-xl border border-green-600/40 bg-green-50 px-4 py-3 text-sm font-semibold text-green-800 shadow-sm hover:bg-green-100 transition-colors min-h-[44px]"
                   >
-                    💬 Compartilhar
+                    <span aria-hidden="true">💬</span> Compartilhar
                   </a>
                 </div>
               </div>
 
               @if (destaque.banner_url || destaque.imagem_url) {
-                <div class="w-full lg:w-96 shrink-0 aspect-video lg:aspect-4/3 overflow-hidden rounded-2xl border border-advent-border shadow-lg bg-white">
+                <div class="w-full lg:w-96 shrink-0 aspect-video lg:aspect-[4/3] overflow-hidden rounded-2xl border border-advent-border shadow-lg bg-white">
                   <img
                     [src]="destaque.banner_url || destaque.imagem_url"
                     [alt]="destaque.titulo"
@@ -155,10 +155,10 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
               <button
                 type="button"
                 role="tab"
+                id="tab-proximos"
                 [attr.aria-selected]="activeTab() === 'proximos'"
-                [attr.aria-pressed]="activeTab() === 'proximos'"
                 (click)="activeTab.set('proximos')"
-                class="rounded-xl px-4 py-2.5 text-sm font-bold transition-all min-h-[44px] cursor-pointer"
+                class="rounded-xl px-4 py-2.5 text-sm font-bold transition-all min-h-[44px] cursor-pointer tabular-nums"
                 [class.bg-advent-blue]="activeTab() === 'proximos'"
                 [class.text-white]="activeTab() === 'proximos'"
                 [class.shadow-sm]="activeTab() === 'proximos'"
@@ -172,10 +172,10 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
               <button
                 type="button"
                 role="tab"
+                id="tab-comunicados"
                 [attr.aria-selected]="activeTab() === 'comunicados'"
-                [attr.aria-pressed]="activeTab() === 'comunicados'"
                 (click)="activeTab.set('comunicados')"
-                class="rounded-xl px-4 py-2.5 text-sm font-bold transition-all min-h-[44px] cursor-pointer"
+                class="rounded-xl px-4 py-2.5 text-sm font-bold transition-all min-h-[44px] cursor-pointer tabular-nums"
                 [class.bg-advent-blue]="activeTab() === 'comunicados'"
                 [class.text-white]="activeTab() === 'comunicados'"
                 [class.shadow-sm]="activeTab() === 'comunicados'"
@@ -189,10 +189,10 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
               <button
                 type="button"
                 role="tab"
+                id="tab-encerrados"
                 [attr.aria-selected]="activeTab() === 'encerrados'"
-                [attr.aria-pressed]="activeTab() === 'encerrados'"
                 (click)="activeTab.set('encerrados')"
-                class="rounded-xl px-4 py-2.5 text-sm font-bold transition-all min-h-[44px] cursor-pointer"
+                class="rounded-xl px-4 py-2.5 text-sm font-bold transition-all min-h-[44px] cursor-pointer tabular-nums"
                 [class.bg-advent-blue]="activeTab() === 'encerrados'"
                 [class.text-white]="activeTab() === 'encerrados'"
                 [class.shadow-sm]="activeTab() === 'encerrados'"
@@ -215,7 +215,7 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
                     [ngModel]="searchTerm()"
                     (ngModelChange)="searchTerm.set($event)"
                     placeholder="Buscar por nome, orador..."
-                    class="w-full rounded-xl border border-advent-border bg-white px-3.5 py-2.5 text-sm text-advent-text placeholder:text-advent-muted focus:border-advent-blue focus:outline-hidden min-h-[44px]"
+                    class="w-full rounded-xl border border-advent-border bg-white px-3.5 py-2.5 text-sm text-advent-text placeholder:text-advent-muted focus:border-advent-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-advent-blue min-h-[44px]"
                   />
                 </div>
 
@@ -226,7 +226,7 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
                       id="dept-filter"
                       [ngModel]="departmentFilter()"
                       (ngModelChange)="departmentFilter.set($event)"
-                      class="rounded-xl border border-advent-border bg-white px-3 py-2.5 text-sm text-advent-text focus:border-advent-blue focus:outline-hidden min-h-[44px]"
+                      class="rounded-xl border border-advent-border bg-white px-3 py-2.5 text-sm text-advent-text focus:border-advent-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-advent-blue min-h-[44px]"
                     >
                       <option value="">Todos os Departamentos</option>
                       @for (dept of availableDepartments(); track dept) {
@@ -252,13 +252,13 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
 
         <!-- Conteúdo Principal por Aba -->
         @if (activeTab() === 'proximos' || activeTab() === 'encerrados') {
-          <section class="mt-8" [attr.aria-labelledby]="activeTab() === 'proximos' ? 'proximos-title' : 'encerrados-title'">
-            <h2 id="proximos-title" class="sr-only">
+          <section class="mt-8" role="tabpanel" [attr.aria-labelledby]="activeTab() === 'proximos' ? 'proximos-title' : 'encerrados-title'">
+            <h2 [id]="activeTab() === 'proximos' ? 'proximos-title' : 'encerrados-title'" class="sr-only">
               {{ activeTab() === 'proximos' ? 'Próximos Eventos' : 'Eventos Encerrados' }}
             </h2>
 
             @if (filteredEventos().length === 0) {
-              <div class="mt-6 rounded-2xl border border-advent-border bg-white p-8 text-center text-advent-muted shadow-xs">
+              <div class="mt-6 rounded-2xl border border-advent-border bg-white p-8 text-center text-advent-muted shadow-sm">
                 <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-advent-neutral text-advent-blue mb-3">
                   <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -278,7 +278,7 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
                   <button
                     type="button"
                     (click)="clearFilters()"
-                    class="mt-4 inline-flex items-center justify-center rounded-xl bg-advent-blue px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-advent-blue-dark min-h-[44px] cursor-pointer"
+                    class="mt-4 inline-flex items-center justify-center rounded-xl bg-advent-blue px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-advent-blue-dark min-h-[44px] cursor-pointer"
                   >
                     Limpar filtros
                   </button>
@@ -288,7 +288,7 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
               <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 @for (evento of filteredEventos(); track (evento.id || evento.titulo)) {
                   <article
-                    class="flex flex-col justify-between rounded-2xl border border-advent-border bg-white overflow-hidden shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                    class="flex flex-col justify-between rounded-2xl border border-advent-border bg-white overflow-hidden shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                   >
                     <div>
                       <!-- Banner Visual -->
@@ -297,7 +297,7 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
                           <img
                             [src]="evento.banner_url || evento.imagem_url"
                             [alt]="evento.titulo"
-                            class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                            class="h-full w-full object-cover"
                             loading="lazy"
                             width="400"
                             height="225"
@@ -307,18 +307,18 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
 
                       <div class="p-6">
                         <div class="flex flex-wrap items-center gap-2">
-                          <span class="inline-flex items-center gap-1 rounded-md bg-advent-blue/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-advent-blue">
-                            📅 {{ evento.data }} • {{ evento.horario }}
+                          <span class="inline-flex items-center gap-1 rounded-md bg-advent-blue/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-advent-blue tabular-nums">
+                            <span aria-hidden="true">📅</span> {{ evento.data }} • {{ evento.horario }}
                           </span>
 
                           @if (evento.departamento) {
-                            <span class="rounded-md bg-purple-50 px-2 py-0.5 text-[11px] font-semibold text-purple-700">
+                            <span class="rounded-md bg-purple-50 px-2 py-0.5 text-xs font-semibold text-purple-700">
                               {{ evento.departamento }}
                             </span>
                           }
 
                           @if (evento.valor_entrada) {
-                            <span class="rounded-md bg-green-50 px-2 py-0.5 text-[11px] font-semibold text-green-700">
+                            <span class="rounded-md bg-green-50 px-2 py-0.5 text-xs font-semibold text-green-700">
                               {{ evento.valor_entrada }}
                             </span>
                           }
@@ -330,7 +330,7 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
 
                         @if (evento.palestrante) {
                           <p class="mt-1 text-xs font-bold text-advent-blue">
-                            🎙️ Orador: {{ evento.palestrante }}
+                            <span aria-hidden="true">🎙️</span> Orador: {{ evento.palestrante }}
                           </p>
                         }
 
@@ -353,7 +353,7 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
                     <div class="p-6 pt-0 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 mt-4">
                       @if (evento.link_inscricao || evento.href) {
                         <a
-                          class="text-xs font-bold text-white bg-advent-blue hover:bg-advent-blue-dark px-4 py-2 rounded-lg shadow-xs transition-colors min-h-[44px] flex items-center justify-center"
+                          class="text-xs font-bold text-white bg-advent-blue hover:bg-advent-blue-dark px-4 py-2 rounded-lg shadow-sm transition-colors min-h-[44px] flex items-center justify-center"
                           [href]="evento.link_inscricao || evento.href"
                           target="_blank"
                           rel="noopener noreferrer"
@@ -404,6 +404,7 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
         @if (activeTab() === 'comunicados' || activeTab() === 'proximos') {
           <section
             class="mt-16 rounded-3xl border border-advent-border bg-advent-neutral p-6 md:p-10"
+            role="tabpanel"
             aria-labelledby="comunicados-title"
           >
             <div class="flex items-center justify-between">
@@ -417,24 +418,24 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
             </p>
 
             @if (comunicados().length === 0) {
-              <div class="mt-6 rounded-2xl border border-advent-border bg-white p-8 text-center text-advent-muted shadow-xs">
+              <div class="mt-6 rounded-2xl border border-advent-border bg-white p-8 text-center text-advent-muted shadow-sm">
                 <p class="font-medium text-advent-text">Nenhum comunicado recente publicado.</p>
               </div>
             } @else {
               <div class="mt-6 grid gap-4 md:grid-cols-3">
                 @for (comunicado of comunicados(); track (comunicado.id || comunicado.titulo)) {
-                  <div class="rounded-2xl border border-advent-border bg-white p-6 shadow-xs flex flex-col justify-between">
+                  <div class="rounded-2xl border border-advent-border bg-white p-6 shadow-sm flex flex-col justify-between">
                     <div>
                       <div class="flex items-center justify-between gap-2">
-                        <span class="inline-block rounded bg-advent-blue/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-advent-blue">
+                        <span class="inline-block rounded bg-advent-blue/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-advent-blue tabular-nums">
                           {{ comunicado.data }}
                         </span>
                         @if (comunicado.tipo === 'urgente') {
-                          <span class="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold uppercase text-red-700">
+                          <span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-bold uppercase text-red-700">
                             Urgente
                           </span>
                         } @else if (comunicado.tipo === 'destaque_banner') {
-                          <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-800">
+                          <span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold uppercase text-amber-800">
                             Destaque
                           </span>
                         }
@@ -462,7 +463,7 @@ import { buildGoogleCalendarUrl, downloadIcsFile } from '../../core/utils/calend
                 </p>
               </div>
               <a
-                class="mt-4 md:mt-0 inline-flex items-center justify-center rounded-xl bg-advent-blue px-6 py-3 text-center text-sm font-semibold text-white shadow-xs transition-all hover:bg-advent-blue-dark active:scale-[0.98] min-h-[44px]"
+                class="mt-4 md:mt-0 inline-flex items-center justify-center rounded-xl bg-advent-blue px-6 py-3 text-center text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98] min-h-[44px]"
                 routerLink="/contato"
               >
                 Falar com a equipe
@@ -609,9 +610,35 @@ export class EventosPage {
 
   getGoogleCalendarUrlForEvento(evento: Evento): string {
     const address = evento.endereco || evento.local || 'IASD Mangueiras - Tatuí, SP';
-    const dayOfWeek = evento.data_inicio ? new Date(evento.data_inicio + 'T12:00:00Z').getUTCDay() : 6;
     const time = (evento.horario && /^\d{2}:\d{2}$/.test(evento.horario)) ? evento.horario : '19:30';
 
+    if (evento.data_inicio && /^\d{4}-\d{2}-\d{2}$/.test(evento.data_inicio)) {
+      const [year, month, day] = evento.data_inicio.split('-').map(Number);
+      const [hours, mins] = time.split(':').map(Number);
+      const startDate = new Date(year, month - 1, day, hours || 19, mins || 30, 0);
+
+      let endDate: Date;
+      if (evento.data_fim && /^\d{4}-\d{2}-\d{2}$/.test(evento.data_fim)) {
+        const [endY, endM, endD] = evento.data_fim.split('-').map(Number);
+        endDate = new Date(endY, endM - 1, endD, (hours || 19) + 2, mins || 30, 0);
+      } else {
+        endDate = new Date(startDate.getTime() + 120 * 60 * 1000);
+      }
+
+      const formatGCalDate = (d: Date): string =>
+        d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+
+      const params = new URLSearchParams({
+        action: 'TEMPLATE',
+        text: evento.titulo,
+        dates: `${formatGCalDate(startDate)}/${formatGCalDate(endDate)}`,
+        details: evento.descricao || '',
+        location: address,
+      });
+      return `https://calendar.google.com/calendar/render?${params.toString()}`;
+    }
+
+    const dayOfWeek = 6;
     return buildGoogleCalendarUrl({
       title: evento.titulo,
       description: evento.descricao,

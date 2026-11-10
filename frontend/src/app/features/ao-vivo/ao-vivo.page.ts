@@ -141,7 +141,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
   imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <main id="conteudo" class="py-8 md:py-12 bg-white min-h-screen">
+    <main id="conteudo" class="py-8 md:py-12 bg-white min-h-dvh">
       <div class="mx-auto max-w-site px-4 sm:px-6">
         <!-- Breadcrumb Oficial -->
         <nav class="mb-4 text-xs sm:text-sm text-advent-muted" aria-label="Navegação estrutural">
@@ -163,9 +163,9 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
           <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-advent-text sm:text-4xl md:text-5xl">
             Transmissões e Mensagens
           </h1>
-          <p class="mt-3 text-base text-advent-muted sm:text-lg leading-relaxed">
-            Cultos ao vivo aos <strong>sábados às 10:15</strong>, <strong>domingos às 19:30</strong> e às
-            <strong>quartas-feiras às 19:30</strong>. Assista onde estiver, participe e fortaleça sua fé.
+          <p class="mt-3 text-base text-advent-muted sm:text-lg leading-relaxed tabular-nums">
+            Cultos ao vivo aos <strong>sábados às <span class="tabular-nums">10:15</span></strong>, <strong>domingos às <span class="tabular-nums">19:30</span></strong> e às
+            <strong>quartas-feiras às <span class="tabular-nums">19:30</span></strong>. Assista onde estiver, participe e fortaleça sua fé.
           </p>
         </header>
 
@@ -249,8 +249,8 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                   <h2 class="mt-4 text-2xl sm:text-3xl font-extrabold text-advent-text leading-tight">
                     {{ countdown().targetService.title }}
                   </h2>
-                  <p class="mt-2 text-sm sm:text-base text-advent-muted">
-                    Transmissão ao vivo neste <strong>{{ countdown().targetService.dayName }} às {{ countdown().targetService.time }}</strong>.
+                  <p class="mt-2 text-sm sm:text-base text-advent-muted tabular-nums">
+                    Transmissão ao vivo neste <strong>{{ countdown().targetService.dayName }} às <span class="tabular-nums">{{ countdown().targetService.time }}</span></strong>.
                   </p>
 
                   <!-- Blocos do Contador Regressivo -->
@@ -262,7 +262,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                       <span class="text-xl sm:text-3xl font-extrabold text-advent-blue tracking-tight tabular-nums">
                         {{ countdown().formattedDays }}
                       </span>
-                      <span class="block mt-0.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-advent-muted">
+                      <span class="block mt-0.5 text-xs font-bold uppercase tracking-wider text-advent-muted">
                         Dias
                       </span>
                     </div>
@@ -271,7 +271,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                       <span class="text-xl sm:text-3xl font-extrabold text-advent-blue tracking-tight tabular-nums">
                         {{ countdown().formattedHours }}
                       </span>
-                      <span class="block mt-0.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-advent-muted">
+                      <span class="block mt-0.5 text-xs font-bold uppercase tracking-wider text-advent-muted">
                         Horas
                       </span>
                     </div>
@@ -280,7 +280,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                       <span class="text-xl sm:text-3xl font-extrabold text-advent-blue tracking-tight tabular-nums">
                         {{ countdown().formattedMinutes }}
                       </span>
-                      <span class="block mt-0.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-advent-muted">
+                      <span class="block mt-0.5 text-xs font-bold uppercase tracking-wider text-advent-muted">
                         Min
                       </span>
                     </div>
@@ -289,7 +289,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                       <span class="text-xl sm:text-3xl font-extrabold text-advent-blue tracking-tight tabular-nums">
                         {{ countdown().formattedSeconds }}
                       </span>
-                      <span class="block mt-0.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-advent-muted">
+                      <span class="block mt-0.5 text-xs font-bold uppercase tracking-wider text-advent-muted">
                         Seg
                       </span>
                     </div>
@@ -303,7 +303,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                     <button
                       type="button"
                       (click)="toggleCalendarMenu()"
-                      class="inline-flex items-center gap-2 rounded-lg bg-advent-blue px-4 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-xs hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[44px]"
+                      class="inline-flex items-center gap-2 rounded-lg bg-advent-blue px-4 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[44px]"
                       [attr.aria-expanded]="openCalendarMenu()"
                       aria-controls="live-calendar-menu"
                       aria-label="Adicionar próximo culto ao calendário"
@@ -389,7 +389,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                       <img
                         [src]="featuredVideo()!.thumbnail_url"
                         [alt]="featuredVideo()!.title"
-                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        class="w-full h-full object-cover"
                         loading="lazy"
                         width="480"
                         height="270"
@@ -447,7 +447,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
               [href]="getPrayerWhatsAppUrl()"
               target="_blank"
               rel="noopener noreferrer"
-              class="group flex flex-col justify-between rounded-xl border border-advent-border bg-white p-4 sm:p-5 shadow-2xs hover:border-advent-blue/40 hover:shadow-sm transition-all text-left"
+              class="group flex flex-col justify-between rounded-xl border border-advent-border bg-white p-4 sm:p-5 shadow-sm hover:border-advent-blue/40 hover:shadow-sm transition-all text-left"
             >
               <div class="flex items-center justify-between">
                 <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
@@ -472,7 +472,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
               [href]="site.resources.seteme"
               target="_blank"
               rel="noopener noreferrer"
-              class="group flex flex-col justify-between rounded-xl border border-advent-border bg-white p-4 sm:p-5 shadow-2xs hover:border-advent-blue/40 hover:shadow-sm transition-all text-left"
+              class="group flex flex-col justify-between rounded-xl border border-advent-border bg-white p-4 sm:p-5 shadow-sm hover:border-advent-blue/40 hover:shadow-sm transition-all text-left"
             >
               <div class="flex items-center justify-between">
                 <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-advent-blue group-hover:bg-advent-blue group-hover:text-white transition-colors">
@@ -497,7 +497,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
               [href]="site.resources.licaoAdultos"
               target="_blank"
               rel="noopener noreferrer"
-              class="group flex flex-col justify-between rounded-xl border border-advent-border bg-white p-4 sm:p-5 shadow-2xs hover:border-advent-blue/40 hover:shadow-sm transition-all text-left"
+              class="group flex flex-col justify-between rounded-xl border border-advent-border bg-white p-4 sm:p-5 shadow-sm hover:border-advent-blue/40 hover:shadow-sm transition-all text-left"
             >
               <div class="flex items-center justify-between">
                 <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50 text-amber-700 group-hover:bg-amber-600 group-hover:text-white transition-colors">
@@ -522,7 +522,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
               [href]="site.resources.bibliaOnline"
               target="_blank"
               rel="noopener noreferrer"
-              class="group flex flex-col justify-between rounded-xl border border-advent-border bg-white p-4 sm:p-5 shadow-2xs hover:border-advent-blue/40 hover:shadow-sm transition-all text-left"
+              class="group flex flex-col justify-between rounded-xl border border-advent-border bg-white p-4 sm:p-5 shadow-sm hover:border-advent-blue/40 hover:shadow-sm transition-all text-left"
             >
               <div class="flex items-center justify-between">
                 <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50 text-indigo-700 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
@@ -550,7 +550,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div class="max-w-2xl">
                 <div class="flex items-center gap-2">
-                  <span class="rounded bg-advent-blue px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
+                  <span class="rounded bg-advent-blue px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-white">
                     Série Exclusiva
                   </span>
                   <span class="text-xs text-advent-muted font-medium">Estudos e Lição da Semana</span>
@@ -564,11 +564,11 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
               </div>
 
               <div class="flex items-center gap-3 self-start md:self-auto">
-                <div class="flex items-center gap-1.5 bg-white p-1 rounded-lg border border-advent-border shadow-2xs">
+                <div class="flex items-center gap-1.5 bg-white p-1 rounded-lg border border-advent-border shadow-sm">
                   <button
                     type="button"
                     (click)="scrollPresente7('prev')"
-                    class="flex h-9 w-9 items-center justify-center rounded-md text-advent-text hover:bg-advent-neutral hover:text-advent-blue transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-advent-blue"
+                    class="flex h-11 w-11 items-center justify-center rounded-md text-advent-text hover:bg-advent-neutral hover:text-advent-blue transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-advent-blue"
                     aria-label="Episódios anteriores"
                   >
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -578,7 +578,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                   <button
                     type="button"
                     (click)="scrollPresente7('next')"
-                    class="flex h-9 w-9 items-center justify-center rounded-md text-advent-text hover:bg-advent-neutral hover:text-advent-blue transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-advent-blue"
+                    class="flex h-11 w-11 items-center justify-center rounded-md text-advent-text hover:bg-advent-neutral hover:text-advent-blue transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-advent-blue"
                     aria-label="Próximos episódios"
                   >
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -608,13 +608,13 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
             >
               @for (ep of presente7Videos(); track ep.id; let idx = $index) {
                 <article
-                  class="flex flex-col justify-between rounded-xl border border-advent-border bg-white overflow-hidden shadow-2xs transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 w-[280px] sm:w-[320px] shrink-0 snap-start"
+                  class="flex flex-col justify-between rounded-xl border border-advent-border bg-white overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 w-[280px] sm:w-[320px] shrink-0 snap-start"
                 >
                   <div class="relative aspect-video bg-slate-900 overflow-hidden group">
                     <img
                       [src]="ep.thumbnail_url"
                       [alt]="ep.title"
-                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      class="h-full w-full object-cover"
                       loading="lazy"
                       width="320"
                       height="180"
@@ -649,7 +649,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                     <div class="mt-4 pt-3 border-t border-advent-border flex items-center justify-between">
                       <button
                         type="button"
-                        class="text-xs font-bold text-advent-blue hover:underline cursor-pointer flex items-center gap-1 min-h-[36px]"
+                        class="text-xs font-bold text-advent-blue hover:underline cursor-pointer flex items-center gap-1 min-h-[44px]"
                         (click)="openModal(ep)"
                         aria-label="Assistir episódio no site"
                       >
@@ -659,7 +659,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                         <span>Assistir</span>
                       </button>
                       <a
-                        class="text-[11px] text-advent-muted hover:text-advent-blue hover:underline flex items-center gap-0.5"
+                        class="text-xs text-advent-muted hover:text-advent-blue hover:underline flex items-center gap-0.5"
                         [href]="ep.video_url"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -744,10 +744,10 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                 <button
                   type="button"
                   (click)="selectCategory(cat.id)"
-                  class="rounded-full px-4 py-2 text-xs font-semibold transition-all cursor-pointer min-h-[38px]"
+                  class="rounded-full px-4 py-2 text-xs font-semibold transition-all cursor-pointer min-h-[44px]"
                   [class.bg-advent-blue]="selectedCategory() === cat.id"
                   [class.text-white]="selectedCategory() === cat.id"
-                  [class.shadow-xs]="selectedCategory() === cat.id"
+                  [class.shadow-sm]="selectedCategory() === cat.id"
                   [class.bg-white]="selectedCategory() !== cat.id"
                   [class.border]="selectedCategory() !== cat.id"
                   [class.border-advent-border]="selectedCategory() !== cat.id"
@@ -762,7 +762,24 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
           </div>
 
           <!-- Grade de Resultados ou Empty State -->
-          @if (filteredVideos().length === 0) {
+          @if (loading() && filteredVideos().length === 0) {
+            <div
+              class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+              aria-busy="true"
+              aria-label="Carregando catálogo de mensagens"
+            >
+              @for (item of [1, 2, 3]; track item) {
+                <div class="rounded-2xl border border-advent-border bg-white overflow-hidden animate-pulse">
+                  <div class="aspect-video w-full bg-advent-neutral"></div>
+                  <div class="p-5 space-y-3">
+                    <div class="h-4 w-3/4 bg-advent-neutral rounded"></div>
+                    <div class="h-3 w-full bg-advent-neutral rounded"></div>
+                    <div class="h-3 w-2/3 bg-advent-neutral rounded"></div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else if (filteredVideos().length === 0) {
             <div
               class="mt-8 rounded-2xl border border-dashed border-advent-border bg-advent-neutral/50 p-12 text-center"
             >
@@ -780,7 +797,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
               <button
                 type="button"
                 (click)="resetFilters()"
-                class="mt-5 inline-flex items-center gap-2 rounded-lg bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[44px]"
+                class="mt-5 inline-flex items-center gap-2 rounded-lg bg-advent-blue px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all cursor-pointer min-h-[44px]"
               >
                 Limpar Busca e Filtros
               </button>
@@ -789,7 +806,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
             <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               @for (vid of filteredVideos(); track vid.id) {
                 <article
-                  class="group flex flex-col justify-between rounded-2xl border border-advent-border bg-white shadow-2xs overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-advent-blue"
+                  class="group flex flex-col justify-between rounded-2xl border border-advent-border bg-white shadow-sm overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-advent-blue"
                   tabindex="0"
                   role="button"
                   [attr.aria-label]="'Assistir vídeo: ' + vid.title"
@@ -799,7 +816,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                 >
                   <div class="aspect-video w-full bg-slate-900 relative overflow-hidden">
                     <img
-                      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      class="w-full h-full object-cover"
                       [src]="vid.thumbnail_url"
                       [alt]="vid.title"
                       width="320"
@@ -838,7 +855,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                         </svg>
                         Assistir no site
                       </span>
-                      <span class="text-[11px] text-advent-muted font-medium">IASD Mangueiras</span>
+                      <span class="text-xs text-advent-muted font-medium">IASD Mangueiras</span>
                     </div>
                   </div>
                 </article>
@@ -871,7 +888,7 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
                 [href]="getPrayerWhatsAppUrl()"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-6 py-3.5 text-sm font-semibold text-white shadow-xs hover:bg-emerald-700 active:scale-[0.98] transition-all min-h-[44px]"
+                class="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 active:scale-[0.98] transition-all min-h-[44px]"
               >
                 <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
@@ -893,8 +910,10 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
       <!-- Modal de Reprodução de Vídeo Inline Seguro -->
       @if (activeVideo()) {
         <div
-          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs transition-opacity"
+          id="video-modal-backdrop"
+          class="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity"
           (click)="closeModal()"
+          (keydown)="onModalKeydown($event)"
           role="dialog"
           aria-modal="true"
           aria-label="Player de vídeo"
@@ -909,8 +928,9 @@ export const CATEGORY_OPTIONS: readonly CategoryFilterOption[] = [
             >
               <h3 class="text-sm sm:text-base font-bold line-clamp-1 pr-4">{{ activeVideo()?.title }}</h3>
               <button
+                id="video-modal-close"
                 type="button"
-                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer"
+                class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer"
                 (click)="closeModal()"
                 aria-label="Fechar vídeo"
               >
@@ -1130,9 +1150,12 @@ export class AoVivoPage implements OnInit, OnDestroy {
     const container = document.getElementById('presente7Carousel');
     if (!container) return;
     const scrollAmount = 340;
-    container.scrollBy({
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    container.scrollBy?.({
       left: direction === 'next' ? scrollAmount : -scrollAmount,
-      behavior: 'smooth',
+      behavior: prefersReduced ? 'auto' : 'smooth',
     });
   }
 
@@ -1152,10 +1175,36 @@ export class AoVivoPage implements OnInit, OnDestroy {
 
   openModal(video: VideoItem): void {
     this.activeVideo.set(video);
+    if (typeof document !== 'undefined') {
+      setTimeout(() => {
+        document.getElementById('video-modal-close')?.focus();
+      });
+    }
   }
 
   closeModal(): void {
     this.activeVideo.set(null);
+  }
+
+  onModalKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'Tab' || typeof document === 'undefined') return;
+    const modal = document.getElementById('video-modal-backdrop');
+    if (!modal) return;
+    const focusable = Array.from(
+      modal.querySelectorAll<HTMLElement>(
+        'button, [href], iframe, [tabindex]:not([tabindex="-1"])',
+      ),
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   }
 
   toggleCalendarMenu(): void {

@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Ministerio } from '../../core/models/content.models';
 
@@ -9,11 +19,12 @@ import { Ministerio } from '../../core/models/content.models';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
+      class="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-ministerio-title"
       (click)="close.emit()"
+      (keydown)="onKeydown($event)"
     >
       <div
         class="w-full max-w-xl rounded-3xl bg-white p-6 md:p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
@@ -29,6 +40,7 @@ import { Ministerio } from '../../core/models/content.models';
             </h3>
           </div>
           <button
+            #closeBtn
             type="button"
             (click)="close.emit()"
             class="text-advent-muted hover:text-advent-text cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg"
@@ -41,7 +53,7 @@ import { Ministerio } from '../../core/models/content.models';
         </div>
 
         @if (ministerio().banner_url || ministerio().imagem_url) {
-          <div class="mt-4 aspect-video w-full overflow-hidden rounded-2xl border border-advent-border shadow-xs bg-slate-100">
+          <div class="mt-4 aspect-video w-full overflow-hidden rounded-2xl border border-advent-border shadow-sm bg-slate-100">
             <img
               [src]="ministerio().banner_url || ministerio().imagem_url"
               [alt]="ministerio().nome"
@@ -86,7 +98,7 @@ import { Ministerio } from '../../core/models/content.models';
               <ul class="space-y-1.5">
                 @for (ativ of ministerio().atividades; track ativ) {
                   <li class="flex items-start gap-2 text-xs md:text-sm text-advent-text">
-                    <span class="material-symbols-outlined text-sm text-advent-blue">check_circle</span>
+                    <span class="material-symbols-outlined text-sm text-advent-blue" aria-hidden="true">check_circle</span>
                     <span>{{ ativ }}</span>
                   </li>
                 }
@@ -129,7 +141,38 @@ import { Ministerio } from '../../core/models/content.models';
     </div>
   `,
 })
-export class MinisterioModalComponent {
+export class MinisterioModalComponent implements AfterViewInit {
+  private readonly hostRef: ElementRef<HTMLElement> = inject(ElementRef);
+  readonly closeBtn = viewChild<ElementRef<HTMLButtonElement>>('closeBtn');
+
   readonly ministerio = input.required<Ministerio>();
   readonly close = output<void>();
+
+  ngAfterViewInit(): void {
+    this.closeBtn()?.nativeElement.focus();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.close.emit();
+  }
+
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'Tab' || typeof document === 'undefined') return;
+    const focusable = Array.from(
+      this.hostRef.nativeElement.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      ),
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
 }

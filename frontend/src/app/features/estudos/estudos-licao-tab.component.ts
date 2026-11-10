@@ -8,15 +8,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     <section class="mt-8 space-y-12 animate-fadeIn" aria-label="Lição da Escola Sabatina">
       <!-- Destaque: Plataforma Open-Source Sabbath School (Adventech) -->
       <div
-        class="overflow-hidden rounded-3xl border border-blue-200 bg-linear-to-br from-advent-blue/5 via-white to-blue-50/20 p-6 md:p-8 shadow-xs"
+        class="overflow-hidden rounded-3xl border border-blue-200 bg-gradient-to-br from-advent-blue/5 via-white to-blue-50/20 p-6 md:p-8 shadow-sm"
       >
         <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
           <div class="space-y-3 max-w-2xl">
             <div class="flex items-center gap-2">
               <span
-                class="rounded-full bg-advent-blue px-3 py-1 text-xs font-extrabold uppercase text-white shadow-xs"
+                class="rounded-full bg-advent-blue px-3 py-1 text-xs font-extrabold uppercase text-white shadow-sm"
               >
-                🔥 Open-Source & Leitor Web
+                <span aria-hidden="true">🔥</span> Open-Source & Leitor Web
               </span>
               <span
                 class="rounded-full bg-white border border-blue-200 px-2.5 py-0.5 text-xs font-semibold text-advent-blue"
@@ -39,7 +39,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
                 href="https://sabbath-school.adventech.io/pt"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 rounded-xl bg-advent-blue px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all"
+                class="inline-flex items-center gap-2 rounded-xl bg-advent-blue px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all min-h-[44px]"
               >
                 Abrir Leitor Interativo Adventech ↗
               </a>
@@ -47,7 +47,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
                 href="https://www.adventistas.org/pt/escolasabatina/"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 rounded-xl border border-advent-border bg-white px-5 py-2.5 text-xs font-bold text-advent-text hover:bg-gray-50 transition-all shadow-xs"
+                class="inline-flex items-center gap-2 rounded-xl border border-advent-border bg-white px-5 py-2.5 text-xs font-bold text-advent-text hover:bg-gray-50 transition-all shadow-sm min-h-[44px]"
               >
                 Portal Oficial Adventistas ↗
               </a>
@@ -62,16 +62,16 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             >
             <ul class="space-y-1.5 text-xs text-advent-text">
               <li class="flex items-center gap-2">
-                ✓ <strong>Leitura Diária:</strong> Domingo a Sábado
+                <span aria-hidden="true">✓</span> <strong>Leitura Diária:</strong> Domingo a Sábado
               </li>
               <li class="flex items-center gap-2">
-                ✓ <strong>Textos Bíblicos:</strong> Clique e leia o verso
+                <span aria-hidden="true">✓</span> <strong>Textos Bíblicos:</strong> Clique e leia o verso
               </li>
               <li class="flex items-center gap-2">
-                ✓ <strong>Guia do Professor:</strong> Esboços didáticos
+                <span aria-hidden="true">✓</span> <strong>Guia do Professor:</strong> Esboços didáticos
               </li>
               <li class="flex items-center gap-2">
-                ✓ <strong>Multilíngue:</strong> PT, EN, ES, FR
+                <span aria-hidden="true">✓</span> <strong>Multilíngue:</strong> PT, EN, ES, FR
               </li>
             </ul>
           </div>
@@ -104,12 +104,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             <div class="relative z-10">
               <div class="flex items-center justify-between gap-2 mb-4">
                 <span
-                  class="inline-flex items-center rounded-full bg-orange-100/90 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-orange-900 border border-orange-200/80"
+                  class="inline-flex items-center rounded-full bg-orange-100/90 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-orange-900 border border-orange-200/80"
                 >
                   Juventude & Reflexão
                 </span>
                 <span
-                  class="inline-flex items-center gap-1.5 text-[11px] font-bold text-orange-700"
+                  class="inline-flex items-center gap-1.5 text-xs font-bold text-orange-700"
                 >
                   <span class="h-2 w-2 rounded-full bg-orange-500"></span>
                   YouTube
@@ -123,7 +123,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
                   <img
                     src="/logos/lamed-logo.png"
                     alt="Logo Canal Lamed"
-                    class="h-full w-full object-contain scale-120 drop-shadow-xs"
+                    class="h-full w-full object-contain scale-120 drop-shadow-sm"
                     loading="lazy"
                     width="64"
                     height="64"
@@ -151,12 +151,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
               <div class="mt-4 flex flex-wrap gap-1.5">
                 <span
-                  class="rounded-md bg-orange-50 px-2 py-0.5 text-[10px] font-bold text-orange-800 border border-orange-200/70"
+                  class="rounded-md bg-orange-50 px-2 py-0.5 text-xs font-bold text-orange-800 border border-orange-200/70"
                 >
                   Jovens & Adolescentes
                 </span>
                 <span
-                  class="rounded-md bg-orange-50 px-2 py-0.5 text-[10px] font-bold text-orange-800 border border-orange-200/70"
+                  class="rounded-md bg-orange-50 px-2 py-0.5 text-xs font-bold text-orange-800 border border-orange-200/70"
                 >
                   Reflexão Contemporânea
                 </span>
@@ -168,7 +168,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
                 href="https://www.youtube.com/@Lamed148"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="w-full flex items-center justify-center gap-2 rounded-xl bg-orange-600 px-4 py-3 text-xs font-bold text-white shadow-sm hover:bg-orange-700 active:scale-[0.98] transition-all"
+                class="w-full flex items-center justify-center gap-2 rounded-xl bg-orange-600 px-4 py-3 text-xs font-bold text-white shadow-sm hover:bg-orange-700 active:scale-[0.98] transition-all min-h-[44px]"
                 aria-label="Acessar Canal Lamed no YouTube"
               >
                 <svg
@@ -196,12 +196,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             <div class="relative z-10">
               <div class="flex items-center justify-between gap-2 mb-4">
                 <span
-                  class="inline-flex items-center rounded-full bg-emerald-100/90 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-emerald-900 border border-emerald-200/80"
+                  class="inline-flex items-center rounded-full bg-emerald-100/90 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-emerald-900 border border-emerald-200/80"
                 >
                   Comentários & Dicas
                 </span>
                 <span
-                  class="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700"
+                  class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700"
                 >
                   <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
                   Semanal
@@ -213,7 +213,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
                   class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-emerald-700 via-teal-800 to-emerald-950 border-2 border-emerald-500/40 text-white shadow-md shadow-emerald-950/20 p-2 transition-transform duration-300 group-hover:scale-105 overflow-hidden"
                 >
                   <span
-                    class="font-sans text-2xl font-black tracking-tight text-white drop-shadow-xs"
+                    class="font-sans text-2xl font-black tracking-tight text-white drop-shadow-sm"
                     >MB</span
                   >
                 </div>
@@ -238,12 +238,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
               <div class="mt-4 flex flex-wrap gap-1.5">
                 <span
-                  class="rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-800 border border-emerald-200/70"
+                  class="rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-800 border border-emerald-200/70"
                 >
                   Professores de ES
                 </span>
                 <span
-                  class="rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-800 border border-emerald-200/70"
+                  class="rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-800 border border-emerald-200/70"
                 >
                   Didática Bíblica
                 </span>
@@ -255,7 +255,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
                 href="https://www.youtube.com/@MichelsonBorges"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-xs font-bold text-white shadow-sm hover:bg-emerald-800 active:scale-[0.98] transition-all"
+                class="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-xs font-bold text-white shadow-sm hover:bg-emerald-800 active:scale-[0.98] transition-all min-h-[44px]"
                 aria-label="Acessar Canal do Pr. Michelson Borges no YouTube"
               >
                 <svg
@@ -283,12 +283,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             <div class="relative z-10">
               <div class="flex items-center justify-between gap-2 mb-4">
                 <span
-                  class="inline-flex items-center rounded-full bg-rose-100/90 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-rose-900 border border-rose-200/80"
+                  class="inline-flex items-center rounded-full bg-rose-100/90 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-rose-900 border border-rose-200/80"
                 >
                   IASD Mangueiras
                 </span>
                 <span
-                  class="inline-flex items-center gap-1.5 text-[11px] font-bold text-rose-800"
+                  class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-800"
                 >
                   <span class="h-2 w-2 rounded-full bg-rose-600"></span>
                   Canal Local
@@ -323,12 +323,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
               <div class="mt-4 flex flex-wrap gap-1.5">
                 <span
-                  class="rounded-md bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-900 border border-rose-200/70"
+                  class="rounded-md bg-rose-50 px-2 py-0.5 text-xs font-bold text-rose-900 border border-rose-200/70"
                 >
                   Projeto Maná
                 </span>
                 <span
-                  class="rounded-md bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-900 border border-rose-200/70"
+                  class="rounded-md bg-rose-50 px-2 py-0.5 text-xs font-bold text-rose-900 border border-rose-200/70"
                 >
                   IASD Mangueiras
                 </span>
@@ -340,7 +340,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
                 href="https://youtube.com/playlist?list=PLNgTlCgGyS2GLFNcIWz1_CuCYJOhWOe28"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="w-full flex items-center justify-center gap-2 rounded-xl bg-rose-800 px-4 py-3 text-xs font-bold text-white shadow-sm hover:bg-rose-900 active:scale-[0.98] transition-all"
+                class="w-full flex items-center justify-center gap-2 rounded-xl bg-rose-800 px-4 py-3 text-xs font-bold text-white shadow-sm hover:bg-rose-900 active:scale-[0.98] transition-all min-h-[44px]"
                 aria-label="Acessar Playlist da Série Presente 7 no YouTube"
               >
                 <svg
@@ -368,12 +368,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             <div class="relative z-10">
               <div class="flex items-center justify-between gap-2 mb-4">
                 <span
-                  class="inline-flex items-center rounded-full bg-blue-100/90 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-advent-blue border border-blue-200/80"
+                  class="inline-flex items-center rounded-full bg-blue-100/90 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-advent-blue border border-blue-200/80"
                 >
                   Oficial CPB
                 </span>
                 <span
-                  class="inline-flex items-center gap-1.5 text-[11px] font-bold text-advent-blue"
+                  class="inline-flex items-center gap-1.5 text-xs font-bold text-advent-blue"
                 >
                   <span class="h-2 w-2 rounded-full bg-advent-blue"></span>
                   Lições
@@ -387,7 +387,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
                   <img
                     src="/logos/licoes-logo.png"
                     alt="Logo Lições da Bíblia CPB"
-                    class="h-full w-full object-contain drop-shadow-xs"
+                    class="h-full w-full object-contain drop-shadow-sm"
                     loading="lazy"
                     width="64"
                     height="64"
@@ -414,12 +414,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
               <div class="mt-4 flex flex-wrap gap-1.5">
                 <span
-                  class="rounded-md bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-advent-blue border border-blue-200/70"
+                  class="rounded-md bg-blue-50 px-2 py-0.5 text-xs font-bold text-advent-blue border border-blue-200/70"
                 >
                   Pr. Vinícius Mendes
                 </span>
                 <span
-                  class="rounded-md bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-advent-blue border border-blue-200/70"
+                  class="rounded-md bg-blue-50 px-2 py-0.5 text-xs font-bold text-advent-blue border border-blue-200/70"
                 >
                   TV Novo Tempo
                 </span>
@@ -431,7 +431,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
                 href="https://www.youtube.com/@LicoesdaBiblia"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="w-full flex items-center justify-center gap-2 rounded-xl bg-advent-blue px-4 py-3 text-xs font-bold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all"
+                class="w-full flex items-center justify-center gap-2 rounded-xl bg-advent-blue px-4 py-3 text-xs font-bold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all min-h-[44px]"
                 aria-label="Acessar Lições da Bíblia no YouTube"
               >
                 <svg
@@ -474,7 +474,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             class="group rounded-3xl border border-advent-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md block"
           >
             <div
-              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-advent-blue font-bold shadow-xs transition-transform group-hover:scale-110"
+              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-advent-blue font-bold shadow-sm transition-transform group-hover:scale-110"
             >
               <svg
                 class="h-6 w-6"
@@ -512,7 +512,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             class="group rounded-3xl border border-advent-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-amber-500 hover:shadow-md block"
           >
             <div
-              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 font-bold shadow-xs transition-transform group-hover:scale-110"
+              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 font-bold shadow-sm transition-transform group-hover:scale-110"
             >
               <svg
                 class="h-6 w-6"
@@ -550,7 +550,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             class="group rounded-3xl border border-advent-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-600 hover:shadow-md block"
           >
             <div
-              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 font-bold shadow-xs transition-transform group-hover:scale-110"
+              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 font-bold shadow-sm transition-transform group-hover:scale-110"
             >
               <svg
                 class="h-6 w-6"
@@ -589,7 +589,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             class="group rounded-3xl border border-advent-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-purple-600 hover:shadow-md block"
           >
             <div
-              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-50 text-purple-600 font-bold shadow-xs transition-transform group-hover:scale-110"
+              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-50 text-purple-600 font-bold shadow-sm transition-transform group-hover:scale-110"
             >
               <svg
                 class="h-6 w-6"
@@ -626,14 +626,14 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             href="https://escolasabatina.net/"
             target="_blank"
             rel="noopener noreferrer"
-            class="rounded-2xl border border-advent-border bg-slate-50/70 p-4 hover:bg-white hover:border-advent-blue hover:shadow-xs transition-all flex items-center justify-between group"
+            class="rounded-2xl border border-advent-border bg-slate-50/70 p-4 hover:bg-white hover:border-advent-blue hover:shadow-sm transition-all flex items-center justify-between group"
           >
             <div>
               <strong
                 class="text-xs text-advent-text block group-hover:text-advent-blue transition-colors"
                 >EscolaSabatina.net</strong
               >
-              <span class="text-[11px] text-advent-muted"
+              <span class="text-xs text-advent-muted"
                 >Slides e Esboços para Professores</span
               >
             </div>
@@ -644,14 +644,14 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             href="https://mais.cpb.com.br/"
             target="_blank"
             rel="noopener noreferrer"
-            class="rounded-2xl border border-advent-border bg-slate-50/70 p-4 hover:bg-white hover:border-advent-blue hover:shadow-xs transition-all flex items-center justify-between group"
+            class="rounded-2xl border border-advent-border bg-slate-50/70 p-4 hover:bg-white hover:border-advent-blue hover:shadow-sm transition-all flex items-center justify-between group"
           >
             <div>
               <strong
                 class="text-xs text-advent-text block group-hover:text-advent-blue transition-colors"
                 >CPB Mais</strong
               >
-              <span class="text-[11px] text-advent-muted">Livros e Materiais Oficiais</span>
+              <span class="text-xs text-advent-muted">Livros e Materiais Oficiais</span>
             </div>
             <span class="text-xs font-bold text-advent-blue">↗</span>
           </a>
@@ -660,14 +660,14 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             href="https://m.egwwritings.org/pt"
             target="_blank"
             rel="noopener noreferrer"
-            class="rounded-2xl border border-advent-border bg-slate-50/70 p-4 hover:bg-white hover:border-advent-blue hover:shadow-xs transition-all flex items-center justify-between group"
+            class="rounded-2xl border border-advent-border bg-slate-50/70 p-4 hover:bg-white hover:border-advent-blue hover:shadow-sm transition-all flex items-center justify-between group"
           >
             <div>
               <strong
                 class="text-xs text-advent-text block group-hover:text-advent-blue transition-colors"
                 >Ellen G. White Writings</strong
               >
-              <span class="text-[11px] text-advent-muted">Espírito de Profecia Online</span>
+              <span class="text-xs text-advent-muted">Espírito de Profecia Online</span>
             </div>
             <span class="text-xs font-bold text-advent-blue">↗</span>
           </a>

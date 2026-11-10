@@ -51,11 +51,11 @@ interface FaqItem {
 
           <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <article
-              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm"
             >
               <div>
                 <span
-                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-advent-blue text-lg font-bold text-white shadow-sm"
+                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-advent-blue text-lg font-bold text-white shadow-sm tabular-nums"
                 >
                   1
                 </span>
@@ -68,45 +68,45 @@ interface FaqItem {
             </article>
 
             <article
-              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm"
             >
               <div>
                 <span
-                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-advent-blue text-lg font-bold text-white shadow-sm"
+                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-advent-blue text-lg font-bold text-white shadow-sm tabular-nums"
                 >
                   2
                 </span>
                 <h3 class="mt-4 text-lg font-bold text-advent-text">Escola Sabatina</h3>
                 <p class="mt-2 text-sm text-advent-muted leading-relaxed">
-                  Aos sábados às 09:00, nos reunimos em pequenas classes participativas para estudar
+                  Aos sábados às <span class="tabular-nums">09:00</span>, nos reunimos em pequenas classes participativas para estudar
                   a Bíblia e compartilhar experiências.
                 </p>
               </div>
             </article>
 
             <article
-              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm"
             >
               <div>
                 <span
-                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-advent-blue text-lg font-bold text-white shadow-sm"
+                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-advent-blue text-lg font-bold text-white shadow-sm tabular-nums"
                 >
                   3
                 </span>
                 <h3 class="mt-4 text-lg font-bold text-advent-text">Culto de Adoração</h3>
                 <p class="mt-2 text-sm text-advent-muted leading-relaxed">
-                  Às 10:15, desfrutamos de música inspiradora, oração comunitária e uma mensagem
+                  Às <span class="tabular-nums">10:15</span>, desfrutamos de música inspiradora, oração comunitária e uma mensagem
                   bíblica clara e prática para a semana.
                 </p>
               </div>
             </article>
 
             <article
-              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+              class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm"
             >
               <div>
                 <span
-                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-advent-blue text-lg font-bold text-white shadow-sm"
+                  class="flex h-10 w-10 items-center justify-center rounded-xl bg-advent-blue text-lg font-bold text-white shadow-sm tabular-nums"
                 >
                   4
                 </span>
@@ -144,7 +144,7 @@ interface FaqItem {
               >
                 <button
                   type="button"
-                  class="flex w-full items-center justify-between p-5 text-left font-bold text-advent-text hover:text-advent-blue transition-colors cursor-pointer"
+                  class="flex w-full items-center justify-between p-5 text-left font-bold text-advent-text hover:text-advent-blue transition-colors cursor-pointer min-h-[44px]"
                   (click)="toggleFaq(faq.id)"
                   [attr.aria-expanded]="isExpanded(faq.id)"
                   [attr.aria-controls]="'faq-answer-' + faq.id"
@@ -176,6 +176,7 @@ interface FaqItem {
                   class="grid transition-[grid-template-rows] duration-300 ease-in-out"
                   [class.grid-rows-[1fr]]="isExpanded(faq.id)"
                   [class.grid-rows-[0fr]]="!isExpanded(faq.id)"
+                  [inert]="!isExpanded(faq.id)"
                 >
                   <div class="overflow-hidden">
                     <div
@@ -194,13 +195,13 @@ interface FaqItem {
 
         <!-- Card Especial de Convite / Visita -->
         <section
-          class="mt-14 overflow-hidden rounded-3xl border border-advent-blue/20 bg-linear-to-br from-white via-blue-50/30 to-advent-neutral p-8 md:p-10 shadow-sm"
+          class="mt-14 overflow-hidden rounded-3xl border border-advent-blue/20 bg-gradient-to-br from-white via-blue-50/30 to-advent-neutral p-8 md:p-10 shadow-sm"
           aria-labelledby="visita-cta-title"
         >
           <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
             <div class="max-w-xl">
               <span class="inline-flex items-center gap-1.5 rounded-full bg-advent-blue/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-advent-blue">
-                📍 Estamos esperando por você
+                <span aria-hidden="true">📍</span> Estamos esperando por você
               </span>
               <h3 id="visita-cta-title" class="mt-3 text-2xl md:text-3xl font-bold text-advent-text">
                 Pronto para nos fazer uma visita?
@@ -212,7 +213,7 @@ interface FaqItem {
 
             <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 shrink-0">
               <a
-                class="rounded-xl bg-advent-blue px-6 py-3.5 text-center text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98] flex items-center justify-center gap-2"
+                class="rounded-xl bg-advent-blue px-6 py-3.5 text-center text-sm font-semibold text-white shadow-sm transition-all hover:bg-advent-blue-dark active:scale-[0.98] flex items-center justify-center gap-2 min-h-[44px]"
                 routerLink="/horarios"
               >
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -224,7 +225,7 @@ interface FaqItem {
 
               <button
                 type="button"
-                class="inline-flex items-center justify-center gap-2 rounded-xl border border-green-600/30 bg-green-50 px-5 py-3.5 text-center text-sm font-semibold text-green-800 shadow-xs transition-all hover:bg-green-100 active:scale-[0.98] cursor-pointer"
+                class="inline-flex items-center justify-center gap-2 rounded-xl border border-green-600/30 bg-green-50 px-5 py-3.5 text-center text-sm font-semibold text-green-800 shadow-sm transition-all hover:bg-green-100 active:scale-[0.98] cursor-pointer min-h-[44px]"
                 (click)="shareInvite()"
               >
                 <svg
@@ -240,7 +241,7 @@ interface FaqItem {
               </button>
 
               <a
-                class="rounded-xl border border-advent-border bg-white px-5 py-3.5 text-center text-sm font-semibold text-advent-text shadow-xs transition-all hover:bg-gray-50 active:scale-[0.98]"
+                class="rounded-xl border border-advent-border bg-white px-5 py-3.5 text-center text-sm font-semibold text-advent-text shadow-sm transition-all hover:bg-gray-50 active:scale-[0.98] flex items-center justify-center min-h-[44px]"
                 routerLink="/contato"
               >
                 Fale Conosco

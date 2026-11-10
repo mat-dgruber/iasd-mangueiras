@@ -41,16 +41,17 @@ import { MinisterioModalComponent } from './ministerio-modal.component';
         <section class="mt-10" aria-label="Filtros de ministérios">
           <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <!-- Chips de Categoria -->
-            <div class="flex overflow-x-auto pb-1 gap-2">
+            <div class="flex overflow-x-auto pb-1 gap-2" role="group" aria-label="Categorias de ministérios">
               @for (cat of categories(); track cat) {
                 <button
                   type="button"
-                  class="shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                  class="shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer min-h-[44px]"
                   [class]="
                     selectedCategory() === cat
                       ? 'bg-advent-blue text-white shadow-sm'
                       : 'bg-white border border-advent-border text-advent-muted hover:border-advent-blue hover:text-advent-blue'
                   "
+                  [attr.aria-pressed]="selectedCategory() === cat"
                   (click)="setCategory(cat)"
                 >
                   {{ cat }}
@@ -65,7 +66,7 @@ import { MinisterioModalComponent } from './ministerio-modal.component';
                 name="search"
                 autocomplete="off"
                 spellcheck="false"
-                class="w-full rounded-card border border-advent-border bg-white pl-4 pr-10 py-2 text-sm text-advent-text placeholder-advent-muted focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30 shadow-sm"
+                class="w-full rounded-card border border-advent-border bg-white pl-4 pr-11 py-2 text-base sm:text-sm text-advent-text placeholder-advent-muted focus:border-advent-blue focus:outline-none focus:ring-2 focus:ring-advent-blue/30 shadow-sm min-h-[44px]"
                 placeholder="Buscar ministério…"
                 [value]="searchQuery()"
                 (input)="onSearchInput($event)"
@@ -74,7 +75,7 @@ import { MinisterioModalComponent } from './ministerio-modal.component';
               @if (searchQuery()) {
                 <button
                   type="button"
-                  class="absolute right-1 top-1/2 -translate-y-1/2 text-advent-muted hover:text-advent-text min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg cursor-pointer"
+                  class="absolute right-0 top-1/2 -translate-y-1/2 text-advent-muted hover:text-advent-text min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg cursor-pointer"
                   (click)="clearSearch()"
                   aria-label="Limpar busca"
                 >
@@ -132,7 +133,7 @@ import { MinisterioModalComponent } from './ministerio-modal.component';
               </p>
               <button
                 type="button"
-                class="mt-4 rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white hover:bg-advent-blue-dark cursor-pointer"
+                class="mt-4 rounded-card bg-advent-blue px-4 py-2 text-xs font-semibold text-white hover:bg-advent-blue-dark cursor-pointer min-h-[44px]"
                 (click)="resetFilters()"
               >
                 Limpar Filtros

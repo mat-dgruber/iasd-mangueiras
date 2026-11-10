@@ -151,4 +151,36 @@ describe('MinisteriosPage', () => {
     expect(filtered.every(m => m.ativo !== false)).toBe(true);
     expect(filtered.find(m => m.nome === 'Ministério Inativo')).toBeUndefined();
   });
+
+  it('abre e fecha modal de detalhes do ministério com suporte a Escape e Focus Trap', () => {
+    const detailedMin: Ministerio = {
+      nome: 'Recepção e Acolhimento',
+      categoria: 'Comunicação & Acolhimento',
+      descricao: 'Acolhimento caloroso de membros e visitantes.',
+      lideres: 'Maria e João',
+      publico_alvo: 'Todos os membros',
+      reunioes_horario: 'Sábados às 08:30',
+      atividades: ['Boas-vindas', 'Entrega de boletins'],
+      contato_whatsapp: '5515999999999',
+      banner_url: 'https://example.com/banner.jpg',
+    };
+
+    component.openDetails(detailedMin);
+    fixture.detectChanges();
+
+    expect(component.selectedMinisterio()?.nome).toBe('Recepção e Acolhimento');
+    const modalDialog = fixture.nativeElement.querySelector('[role="dialog"]') as HTMLElement;
+    expect(modalDialog).toBeTruthy();
+    expect(modalDialog.textContent).toContain('Maria e João');
+    expect(modalDialog.textContent).toContain('Boas-vindas');
+
+    const closeBtn = modalDialog.querySelector('button[aria-label="Fechar modal"]') as HTMLButtonElement;
+    expect(closeBtn).toBeTruthy();
+    closeBtn.focus();
+    modalDialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    fixture.detectChanges();
+    expect(component.selectedMinisterio()).toBeNull();
+  });
 });

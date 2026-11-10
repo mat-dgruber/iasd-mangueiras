@@ -35,15 +35,15 @@ interface NextServiceInfo {
           aria-label="Aviso importante da congregação"
         >
           <div class="mx-auto flex max-w-site items-center justify-between gap-4 text-xs md:text-sm">
-            <div class="flex items-center gap-2.5 font-medium">
+            <div class="flex items-center gap-2.5 font-medium min-w-0">
               <span
-                class="inline-flex items-center rounded-full bg-amber-600 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white"
+                class="inline-flex shrink-0 items-center rounded-full bg-amber-600 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-white"
               >
                 {{ banner.tipo === 'urgente' ? 'Urgente' : 'Comunicado' }}
               </span>
-              <span class="font-bold text-advent-text">{{ banner.titulo }}</span>
+              <span class="font-bold text-advent-text shrink-0">{{ banner.titulo }}</span>
               @if (banner.mensagem || banner.descricao) {
-                <span class="hidden text-advent-muted md:inline">
+                <span class="line-clamp-1 text-advent-muted md:inline">
                   — {{ banner.mensagem || banner.descricao }}
                 </span>
               }
@@ -121,14 +121,14 @@ interface NextServiceInfo {
                 <span class="h-1.5 w-1.5 rounded-full bg-green-400"></span>
                 {{ nextService().isToday ? 'Hoje' : 'Próximo Encontro' }}
               </span>
-              <span class="text-xs font-medium text-white/75">{{
+              <span class="text-xs font-medium text-white/75 tabular-nums">{{
                 nextService().timeRemainingText
               }}</span>
             </div>
 
             <h2 class="mt-4 text-2xl font-bold text-white">{{ nextService().name }}</h2>
-            <p class="mt-1 text-sm font-semibold text-advent-gold">
-              {{ nextService().dayName }} às {{ nextService().timeStr }}
+            <p class="mt-1 text-sm font-semibold text-advent-gold tabular-nums">
+              {{ nextService().dayName }} às <span class="tabular-nums">{{ nextService().timeStr }}</span>
             </p>
 
             <div class="mt-5 space-y-3 border-t border-white/15 pt-4 text-white/90">
@@ -236,7 +236,7 @@ interface NextServiceInfo {
                     </svg>
                     {{ item.dia }}
                   </span>
-                  <p class="mt-3 text-2xl font-bold text-advent-text">{{ item.horario }}</p>
+                  <p class="mt-3 text-2xl font-bold text-advent-text tabular-nums">{{ item.horario }}</p>
                   <h3 class="mt-1 text-lg font-semibold leading-snug text-advent-text">
                     {{ item.titulo }}
                   </h3>
@@ -295,7 +295,7 @@ interface NextServiceInfo {
                   <img
                     [src]="video.thumbnail_url"
                     [alt]="video.title"
-                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    class="h-full w-full object-cover"
                     loading="lazy"
                     width="640"
                     height="360"
@@ -321,7 +321,7 @@ interface NextServiceInfo {
                         </svg>
                       </a>
                       <div class="min-w-0">
-                        <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-red-400">
+                        <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-red-400">
                           <span class="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse"></span>
                           Última Transmissão Oficial
                         </span>
@@ -331,7 +331,7 @@ interface NextServiceInfo {
                       </div>
                     </div>
                     <div class="mt-3 flex items-center justify-between border-t border-white/15 pt-3">
-                      <p class="text-xs text-gray-300">
+                      <p class="text-xs text-gray-300 tabular-nums">
                         Cultos ao vivo aos sábados às 10:15, domingos às 19:30 e quartas às 19:30
                       </p>
                       <a
@@ -360,7 +360,7 @@ interface NextServiceInfo {
                     </svg>
                   </div>
                   <p class="mt-4 font-bold text-lg text-white">IASD Mangueiras Online</p>
-                  <p class="text-xs text-gray-300 mt-1">
+                  <p class="text-xs text-gray-300 mt-1 tabular-nums">
                     Transmissões aos sábados às 10:15 e quartas às 19:30
                   </p>
                   <a
@@ -437,7 +437,7 @@ interface NextServiceInfo {
                       <img
                         [src]="evento.banner_url || evento.imagem_url"
                         [alt]="evento.titulo"
-                        class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                        class="h-full w-full object-cover"
                         loading="lazy"
                         width="400"
                         height="225"
@@ -448,7 +448,7 @@ interface NextServiceInfo {
                   <div class="p-6">
                     <div class="flex flex-wrap items-center gap-2">
                       <span
-                        class="inline-flex items-center gap-1.5 rounded bg-advent-blue/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-advent-blue"
+                        class="inline-flex items-center gap-1.5 rounded bg-advent-blue/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-advent-blue tabular-nums"
                       >
                         <svg
                           class="h-3.5 w-3.5"
@@ -464,11 +464,11 @@ interface NextServiceInfo {
                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                           />
                         </svg>
-                        {{ evento.data }} • {{ evento.horario }}
+                        <span class="tabular-nums">{{ evento.data }}</span> • <span class="tabular-nums">{{ evento.horario }}</span>
                       </span>
 
                       @if (evento.departamento) {
-                        <span class="rounded bg-purple-50 px-2 py-0.5 text-[11px] font-semibold text-purple-700">
+                        <span class="rounded bg-purple-50 px-2 py-0.5 text-xs font-semibold text-purple-700">
                           {{ evento.departamento }}
                         </span>
                       }
@@ -535,15 +535,15 @@ interface NextServiceInfo {
               >
                 <div>
                   @if (min.categoria) {
-                    <span class="inline-block rounded-md bg-advent-blue/10 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-advent-blue mb-2">
+                    <span class="inline-block rounded-md bg-advent-blue/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-advent-blue mb-2">
                       {{ min.categoria }}
                     </span>
                   }
                   <h3 class="text-lg font-bold text-advent-text">{{ min.nome }}</h3>
                   <p class="mt-1.5 text-xs text-advent-muted leading-relaxed">{{ min.descricao }}</p>
-                  
+
                   @if (min.lideres) {
-                    <p class="mt-3 flex items-center gap-1.5 text-[11px] font-medium text-advent-blue">
+                    <p class="mt-3 flex items-center gap-1.5 text-xs font-medium text-advent-blue">
                       <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                       </svg>
@@ -561,7 +561,7 @@ interface NextServiceInfo {
                   </a>
                   <a
                     routerLink="/contato"
-                    class="text-[11px] font-bold text-advent-muted hover:text-advent-blue"
+                    class="text-xs font-bold text-advent-muted hover:text-advent-blue"
                   >
                     Quero Servir
                   </a>
@@ -660,6 +660,7 @@ interface NextServiceInfo {
             <a
               class="flex flex-col justify-between rounded-section border border-advent-border bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
               routerLink="/contato"
+              [queryParams]="{ aba: 'oracao' }"
             >
               <div>
                 <div
@@ -695,6 +696,7 @@ interface NextServiceInfo {
             <a
               class="flex flex-col justify-between rounded-section border border-advent-border bg-advent-neutral/50 p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-advent-blue hover:shadow-md"
               routerLink="/contato"
+              [queryParams]="{ aba: 'estudo' }"
             >
               <div>
                 <div

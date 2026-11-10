@@ -17,14 +17,14 @@ import { Ministerio } from '../../core/models/content.models';
             <img
               [src]="ministerio().banner_url || ministerio().imagem_url"
               [alt]="ministerio().nome"
-              class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+              class="h-full w-full object-cover"
               loading="lazy"
               width="400"
               height="225"
             />
           </div>
         } @else {
-          <div class="h-3 bg-linear-to-r from-advent-blue via-blue-400 to-advent-gold/70"></div>
+          <div class="h-3 bg-gradient-to-r from-advent-blue via-blue-400 to-advent-gold/70"></div>
         }
 
         <div class="p-6">
@@ -38,8 +38,8 @@ import { Ministerio } from '../../core/models/content.models';
             }
 
             @if (ministerio().destaque) {
-              <span class="rounded-md bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-800">
-                <span class="material-symbols-outlined text-sm">star</span> Destaque
+              <span class="rounded-md bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800 inline-flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm" aria-hidden="true">star</span> Destaque
               </span>
             }
           </div>
@@ -53,21 +53,21 @@ import { Ministerio } from '../../core/models/content.models';
           <div class="mt-4 space-y-2 border-t border-advent-border/60 pt-3 text-xs text-advent-text">
             @if (ministerio().lideres) {
               <p class="flex items-center gap-1.5 font-medium">
-                <span class="text-advent-muted"><span class="material-symbols-outlined text-sm">group</span> Liderança:</span>
+                <span class="text-advent-muted inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm" aria-hidden="true">group</span> Liderança:</span>
                 <span class="font-semibold text-advent-blue">{{ ministerio().lideres }}</span>
               </p>
             }
 
             @if (ministerio().publico_alvo) {
               <p class="flex items-center gap-1.5 font-medium">
-                <span class="text-advent-muted"><span class="material-symbols-outlined text-sm">public</span> Público:</span>
+                <span class="text-advent-muted inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm" aria-hidden="true">public</span> Público:</span>
                 <span>{{ ministerio().publico_alvo }}</span>
               </p>
             }
 
             @if (ministerio().reunioes_horario) {
               <p class="flex items-start gap-1.5 font-medium">
-                <span class="text-advent-muted shrink-0"><span class="material-symbols-outlined text-sm">schedule</span> Encontros:</span>
+                <span class="text-advent-muted shrink-0 inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm" aria-hidden="true">schedule</span> Encontros:</span>
                 <span>{{ ministerio().reunioes_horario }}</span>
               </p>
             }
@@ -75,7 +75,7 @@ import { Ministerio } from '../../core/models/content.models';
             @if (ministerio().atividades && (ministerio().atividades?.length ?? 0) > 0) {
               <div class="pt-2">
                 <span class="text-advent-muted font-semibold block mb-1">Principais Atividades:</span>
-                <ul class="list-disc list-inside space-y-0.5 text-advent-muted text-[11px]">
+                <ul class="list-disc list-inside space-y-0.5 text-advent-muted text-xs">
                   @for (ativ of ministerio().atividades?.slice(0, 3); track ativ) {
                     <li class="truncate">{{ ativ }}</li>
                   }

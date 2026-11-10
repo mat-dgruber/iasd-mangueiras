@@ -146,6 +146,10 @@ describe('AoVivoPage', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('iframe')).not.toBeNull();
 
+    component.onModalKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
+    component.scrollPresente7('next');
+    component.scrollPresente7('prev');
+
     component.closeModal();
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('iframe')).toBeNull();

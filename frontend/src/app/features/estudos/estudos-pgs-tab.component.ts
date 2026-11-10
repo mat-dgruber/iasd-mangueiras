@@ -36,16 +36,16 @@ import { PgProfileCardComponent } from './pg-profile-card.component';
               for="semantic-search"
               class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-advent-blue mb-1"
             >
-              <span>🧠 Busca Inteligente em Linguagem Natural</span>
+              <span><span aria-hidden="true">🧠</span> Busca Inteligente em Linguagem Natural</span>
               @if (isAiLoading()) {
                 <span
-                  class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800 animate-pulse"
+                  class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800 animate-pulse"
                 >
                   Carregando modelo IA...
                 </span>
               } @else if (isAiReady()) {
                 <span
-                  class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-800"
+                  class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-800"
                 >
                   IA Pronta no Navegador
                 </span>
@@ -58,10 +58,10 @@ import { PgProfileCardComponent } from './pg-profile-card.component';
                 [value]="searchQuery()"
                 (input)="onSearchInput($event)"
                 placeholder="Descreva o que procura... ex: 'jovens que se reúnem na sexta à noite perto do centro'"
-                class="w-full rounded-xl border border-advent-border bg-slate-50/50 px-4 py-2.5 pl-10 text-xs font-medium text-advent-text focus:border-advent-blue focus:bg-white focus:outline-none transition-colors"
+                class="w-full rounded-xl border border-advent-border bg-slate-50/50 px-4 py-2.5 pl-10 pr-11 text-base sm:text-xs font-medium text-advent-text focus:border-advent-blue focus:bg-white focus:outline-none transition-colors min-h-[44px]"
               />
               <svg
-                class="absolute left-3.5 top-3 h-4 w-4 text-advent-muted"
+                class="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-advent-muted"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -78,10 +78,11 @@ import { PgProfileCardComponent } from './pg-profile-card.component';
                 <button
                   type="button"
                   (click)="clearSearch()"
-                  class="absolute right-3 top-2.5 rounded-full p-1 text-xs text-advent-muted hover:bg-slate-200 hover:text-advent-text cursor-pointer"
+                  class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center min-h-[44px] min-w-[44px] rounded-full text-xs text-advent-muted hover:bg-slate-200 hover:text-advent-text cursor-pointer"
                   title="Limpar busca"
+                  aria-label="Limpar busca"
                 >
-                  ✕
+                  <span aria-hidden="true">✕</span>
                 </button>
               }
             </div>
@@ -92,23 +93,24 @@ import { PgProfileCardComponent } from './pg-profile-card.component';
       <!-- 3. Seção de Recomendações por IA (Aparece se houver matches de IA) -->
       @if (recommendedPgs().length > 0) {
         <div
-          class="rounded-3xl border border-advent-blue/20 bg-linear-to-b from-blue-50/40 via-white to-white p-6 shadow-xs animate-fadeIn"
+          class="rounded-3xl border border-advent-blue/20 bg-gradient-to-b from-blue-50/40 via-white to-white p-6 shadow-sm animate-fadeIn"
         >
           <div class="flex items-center justify-between gap-2 mb-4">
             <div class="flex items-center gap-2">
               <span
                 class="flex h-7 w-7 items-center justify-center rounded-lg bg-advent-blue text-white text-xs font-bold"
+                aria-hidden="true"
               >
                 ✨
               </span>
               <div>
                 <h3 class="text-base font-bold text-advent-text">Recomendados para Você</h3>
-                <p class="text-[11px] text-advent-muted">
+                <p class="text-xs text-advent-muted">
                   Calculado por similaridade semântica via Universal Sentence Encoder
                 </p>
               </div>
             </div>
-            <span class="text-xs font-semibold text-advent-blue"
+            <span class="text-xs font-semibold text-advent-blue tabular-nums"
               >Top {{ recommendedPgs().length }} Encontros</span
             >
           </div>
@@ -119,7 +121,7 @@ import { PgProfileCardComponent } from './pg-profile-card.component';
                 class="flex flex-col justify-between rounded-2xl border-2 border-advent-blue/30 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md relative overflow-hidden"
               >
                 <div
-                  class="absolute top-0 right-0 bg-advent-blue text-white px-3 py-0.5 rounded-bl-xl text-[10px] font-extrabold tracking-wider"
+                  class="absolute top-0 right-0 bg-advent-blue text-white px-3 py-0.5 rounded-bl-xl text-xs font-extrabold tracking-wider tabular-nums"
                 >
                   {{ match.matchPercentage }}% MATCH
                 </div>
@@ -132,7 +134,7 @@ import { PgProfileCardComponent } from './pg-profile-card.component';
                       {{ match.pg.bairro }}
                     </span>
                     <span
-                      class="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-advent-muted"
+                      class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-advent-muted"
                     >
                       {{ match.pg.perfil }}
                     </span>
@@ -148,12 +150,12 @@ import { PgProfileCardComponent } from './pg-profile-card.component';
                   <div
                     class="mt-3.5 space-y-1 border-t border-advent-border/60 pt-2.5 text-xs text-advent-text"
                   >
-                    <p class="flex items-center gap-1.5">
-                      <span class="text-advent-muted">📅 Encontros:</span>
-                      <strong>{{ match.pg.dia }} às {{ match.pg.horario }}</strong>
+                    <p class="flex items-center gap-1.5 tabular-nums">
+                      <span class="text-advent-muted"><span aria-hidden="true">📅</span> Encontros:</span>
+                      <strong class="tabular-nums">{{ match.pg.dia }} às {{ match.pg.horario }}</strong>
                     </p>
                     <p class="flex items-center gap-1.5">
-                      <span class="text-advent-muted">👤 Líder:</span>
+                      <span class="text-advent-muted"><span aria-hidden="true">👤</span> Líder:</span>
                       <span>{{ match.pg.lider }}</span>
                     </p>
                   </div>
@@ -213,7 +215,7 @@ import { PgProfileCardComponent } from './pg-profile-card.component';
               id="bairro-filter"
               [value]="selectedBairro()"
               (change)="onBairroChange($event)"
-              class="rounded-card border border-advent-border bg-white px-3 py-1.5 text-xs font-medium text-advent-text focus:border-advent-blue focus:outline-none"
+              class="rounded-card border border-advent-border bg-white px-3 py-1.5 text-xs font-medium text-advent-text focus:border-advent-blue focus:outline-none min-h-[44px]"
             >
               <option value="Todos">Todos os Bairros</option>
               @for (b of availableBairros(); track b) {
@@ -232,13 +234,14 @@ import { PgProfileCardComponent } from './pg-profile-card.component';
             <button
               type="button"
               (click)="selectedPerfil.set(perfil)"
-              class="rounded-full px-3 py-1 text-xs font-semibold transition-all cursor-pointer"
+              class="rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer min-h-[44px]"
               [class.bg-advent-blue]="selectedPerfil() === perfil"
               [class.text-white]="selectedPerfil() === perfil"
-              [class.shadow-xs]="selectedPerfil() === perfil"
+              [class.shadow-sm]="selectedPerfil() === perfil"
               [class.bg-slate-100]="selectedPerfil() !== perfil"
               [class.text-advent-text]="selectedPerfil() !== perfil"
               [class.hover:bg-slate-200]="selectedPerfil() !== perfil"
+              [attr.aria-pressed]="selectedPerfil() === perfil"
             >
               {{ perfil }}
             </button>
@@ -260,7 +263,7 @@ import { PgProfileCardComponent } from './pg-profile-card.component';
                   {{ pg.bairro }}
                 </span>
                 <span
-                  class="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-advent-muted"
+                  class="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-advent-muted"
                 >
                   {{ pg.perfil }}
                 </span>
@@ -272,17 +275,17 @@ import { PgProfileCardComponent } from './pg-profile-card.component';
               <div
                 class="mt-4 space-y-1.5 border-t border-advent-border/60 pt-3 text-xs text-advent-text"
               >
-                <p class="flex items-center gap-1.5">
-                  <span class="text-advent-muted">📅 Encontros:</span>
-                  <strong>{{ pg.dia }} às {{ pg.horario }}</strong>
+                <p class="flex items-center gap-1.5 tabular-nums">
+                  <span class="text-advent-muted"><span aria-hidden="true">📅</span> Encontros:</span>
+                  <strong class="tabular-nums">{{ pg.dia }} às {{ pg.horario }}</strong>
                 </p>
                 <p class="flex items-center gap-1.5">
-                  <span class="text-advent-muted">👤 Líder:</span>
+                  <span class="text-advent-muted"><span aria-hidden="true">👤</span> Líder:</span>
                   <span>{{ pg.lider }}</span>
                 </p>
                 @if (pg.anfitriao) {
                   <p class="flex items-center gap-1.5">
-                    <span class="text-advent-muted">🏠 Anfitrião:</span>
+                    <span class="text-advent-muted"><span aria-hidden="true">🏠</span> Anfitrião:</span>
                     <span>{{ pg.anfitriao }}</span>
                   </p>
                 }

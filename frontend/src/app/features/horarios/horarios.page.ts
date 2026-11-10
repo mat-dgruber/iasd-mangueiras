@@ -45,9 +45,9 @@ import {
         <header class="max-w-3xl">
           <!-- Compact Pill Badge: Pôr do sol e Próximo Culto -->
           <div
-            class="mb-4 inline-flex flex-wrap items-center gap-2.5 rounded-full border border-advent-border bg-white px-3.5 py-1.5 text-xs font-medium text-advent-text shadow-xs"
+            class="mb-4 inline-flex flex-wrap items-center gap-2.5 rounded-full border border-advent-border bg-white px-3.5 py-1.5 text-xs font-medium text-advent-text shadow-sm"
           >
-            <span class="inline-flex items-center gap-1.5 text-amber-700">
+            <span class="inline-flex items-center gap-1.5 text-amber-700 tabular-nums">
               <svg
                 class="h-4 w-4 text-amber-500"
                 fill="none"
@@ -62,13 +62,13 @@ import {
                   d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
                 />
               </svg>
-              <span>Pôr do sol hoje em Tatuí: <strong>{{ sunsetToday() }}</strong></span>
+              <span>Pôr do sol hoje em Tatuí: <strong class="tabular-nums">{{ sunsetToday() }}</strong></span>
             </span>
 
             <span class="text-advent-border" aria-hidden="true">•</span>
 
             @if (nextService(); as next) {
-              <span class="inline-flex items-center gap-1.5 text-advent-blue">
+              <span class="inline-flex items-center gap-1.5 text-advent-blue tabular-nums">
                 <svg
                   class="h-4 w-4 text-advent-blue"
                   fill="none"
@@ -83,7 +83,7 @@ import {
                     d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <span>Próximo Culto: <strong>{{ next.text }}</strong> ({{ next.horario.titulo }})</span>
+                <span>Próximo Culto: <strong class="tabular-nums">{{ next.text }}</strong> ({{ next.horario.titulo }})</span>
               </span>
             }
           </div>
@@ -107,12 +107,12 @@ import {
           <section class="mt-8 space-y-3" aria-label="Avisos de alterações temporárias de horários">
             @for (aviso of avisosHorarios(); track (aviso.id || aviso.titulo)) {
               <div
-                class="flex flex-col gap-3 rounded-2xl border border-amber-300/80 bg-amber-500/10 p-5 backdrop-blur-xs sm:flex-row sm:items-center sm:justify-between"
+                class="flex flex-col gap-3 rounded-2xl border border-amber-300/80 bg-amber-500/10 p-5 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between"
               >
                 <div class="space-y-1">
                   <div class="flex items-center gap-2 flex-wrap">
                     <span
-                      class="inline-flex items-center rounded-full bg-amber-600 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white"
+                      class="inline-flex items-center rounded-full bg-amber-600 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-white tabular-nums"
                     >
                       {{ formatAvisoDate(aviso.data_evento) }}
                     </span>
@@ -137,7 +137,7 @@ import {
           <div class="mt-6 grid gap-6 md:grid-cols-2">
             @for (item of horarios(); track item.titulo) {
               <article
-                class="relative flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                class="relative flex flex-col justify-between rounded-section border border-advent-border bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                 [class.ring-2]="isTodayService(item)"
                 [class.ring-advent-blue]="isTodayService(item)"
               >
@@ -166,20 +166,20 @@ import {
 
                       @if (isTodayService(item)) {
                         <span
-                          class="inline-flex items-center rounded-full bg-emerald-600 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white"
+                          class="inline-flex items-center rounded-full bg-emerald-600 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-white"
                         >
                           Hoje
                         </span>
                       } @else if (isNextService(item)) {
                         <span
-                          class="inline-flex items-center rounded-full bg-advent-gold/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-900 border border-amber-300"
+                          class="inline-flex items-center rounded-full bg-advent-gold/30 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-amber-900 border border-amber-300"
                         >
                           Próximo
                         </span>
                       }
                     </div>
 
-                    <span class="text-2xl font-bold text-advent-blue">{{ item.horario }}</span>
+                    <span class="text-2xl font-bold text-advent-blue tabular-nums">{{ item.horario }}</span>
                   </div>
 
                   <h3 class="mt-4 text-2xl font-bold text-advent-text">{{ item.titulo }}</h3>
@@ -196,7 +196,7 @@ import {
                     <button
                       type="button"
                       (click)="toggleCalendarMenu(item.titulo)"
-                      class="inline-flex items-center gap-1.5 rounded-card border border-advent-border bg-advent-neutral/60 px-3 py-2 text-xs font-semibold text-advent-text hover:bg-advent-neutral hover:text-advent-blue transition-colors cursor-pointer min-h-[38px]"
+                      class="inline-flex items-center gap-1.5 rounded-card border border-advent-border bg-advent-neutral/60 px-3 py-2 text-xs font-semibold text-advent-text hover:bg-advent-neutral hover:text-advent-blue transition-colors cursor-pointer min-h-[44px]"
                       [attr.aria-expanded]="openCalendarMenuId() === item.titulo"
                       [attr.aria-controls]="'calendar-menu-' + item.titulo"
                       aria-label="Adicionar {{ item.titulo }} à agenda"
@@ -290,7 +290,7 @@ import {
                     [href]="getWhatsAppLink(item)"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex items-center gap-1.5 rounded-card border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800 hover:bg-emerald-100 transition-colors cursor-pointer min-h-[38px]"
+                    class="inline-flex items-center gap-1.5 rounded-card border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800 hover:bg-emerald-100 transition-colors cursor-pointer min-h-[44px]"
                     aria-label="Convidar no WhatsApp para {{ item.titulo }}"
                   >
                     <svg
@@ -307,6 +307,11 @@ import {
                   </a>
                 </div>
               </article>
+            } @empty {
+              <div class="col-span-full rounded-2xl border border-dashed border-advent-border bg-white p-8 text-center text-advent-muted shadow-sm">
+                <p class="font-medium text-advent-text">Carregando programação semanal...</p>
+                <p class="text-xs mt-1">Consulte nossos cultos regulares de sábado, domingo e quarta-feira.</p>
+              </div>
             }
           </div>
         </section>
@@ -330,7 +335,7 @@ import {
               </p>
 
               <!-- Card de Endereço Oficial com Copiar Endereço -->
-              <div class="mt-6 rounded-2xl border border-advent-border bg-white p-5 shadow-xs">
+              <div class="mt-6 rounded-2xl border border-advent-border bg-white p-5 shadow-sm">
                 <div class="flex items-start justify-between gap-4">
                   <div class="space-y-1">
                     <span class="text-xs font-bold uppercase tracking-wider text-advent-muted"
@@ -342,7 +347,7 @@ import {
                   <button
                     type="button"
                     (click)="copyAddress()"
-                    class="shrink-0 inline-flex items-center gap-1.5 rounded-xl border border-advent-border bg-advent-neutral px-3.5 py-2 text-xs font-semibold text-advent-blue hover:bg-advent-blue hover:text-white transition-all active:scale-95 cursor-pointer min-h-[40px]"
+                    class="shrink-0 inline-flex items-center gap-1.5 rounded-xl border border-advent-border bg-advent-neutral px-3.5 py-2 text-xs font-semibold text-advent-blue hover:bg-advent-blue hover:text-white transition-all active:scale-95 cursor-pointer min-h-[44px]"
                     aria-label="Copiar endereço completo da IASD Mangueiras"
                   >
                     <svg
@@ -375,11 +380,11 @@ import {
                     [href]="googleMapsUrl()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-advent-border bg-white p-3 text-center transition-all hover:-translate-y-0.5 hover:border-advent-blue hover:shadow-xs cursor-pointer"
+                    class="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-advent-border bg-white p-3 text-center transition-all hover:-translate-y-0.5 hover:border-advent-blue hover:shadow-sm cursor-pointer min-h-[44px]"
                     aria-label="Traçar rota no Google Maps"
                   >
                     <span class="text-sm font-bold text-advent-text">Google Maps</span>
-                    <span class="text-[10px] text-advent-muted">Abrir mapa ↗</span>
+                    <span class="text-xs text-advent-muted">Abrir mapa ↗</span>
                   </a>
 
                   <!-- Waze -->
@@ -387,11 +392,11 @@ import {
                     [href]="wazeUrl()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-advent-border bg-white p-3 text-center transition-all hover:-translate-y-0.5 hover:border-advent-blue hover:shadow-xs cursor-pointer"
+                    class="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-advent-border bg-white p-3 text-center transition-all hover:-translate-y-0.5 hover:border-advent-blue hover:shadow-sm cursor-pointer min-h-[44px]"
                     aria-label="Navegar com Waze"
                   >
                     <span class="text-sm font-bold text-advent-text">Waze</span>
-                    <span class="text-[10px] text-advent-muted">Navegar ↗</span>
+                    <span class="text-xs text-advent-muted">Navegar ↗</span>
                   </a>
 
                   <!-- Apple Maps -->
@@ -399,11 +404,11 @@ import {
                     [href]="appleMapsUrl()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-advent-border bg-white p-3 text-center transition-all hover:-translate-y-0.5 hover:border-advent-blue hover:shadow-xs cursor-pointer"
+                    class="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-advent-border bg-white p-3 text-center transition-all hover:-translate-y-0.5 hover:border-advent-blue hover:shadow-sm cursor-pointer min-h-[44px]"
                     aria-label="Abrir no Apple Maps"
                   >
                     <span class="text-sm font-bold text-advent-text">Apple Maps</span>
-                    <span class="text-[10px] text-advent-muted">Abrir mapa ↗</span>
+                    <span class="text-xs text-advent-muted">Abrir mapa ↗</span>
                   </a>
 
                   <!-- Uber -->
@@ -411,11 +416,11 @@ import {
                     [href]="uberUrl()"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-advent-border bg-white p-3 text-center transition-all hover:-translate-y-0.5 hover:border-advent-blue hover:shadow-xs cursor-pointer"
+                    class="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-advent-border bg-white p-3 text-center transition-all hover:-translate-y-0.5 hover:border-advent-blue hover:shadow-sm cursor-pointer min-h-[44px]"
                     aria-label="Pedir Uber para IASD Mangueiras"
                   >
                     <span class="text-sm font-bold text-advent-text">Uber</span>
-                    <span class="text-[10px] text-advent-muted">Chamar corrida ↗</span>
+                    <span class="text-xs text-advent-muted">Chamar corrida ↗</span>
                   </a>
                 </div>
               </div>
@@ -448,7 +453,7 @@ import {
             <!-- Coluna Direita: Comodidades & Dúvidas Frequentes -->
             <div class="space-y-6">
               <!-- Comodidades & Acessibilidade -->
-              <div class="rounded-2xl border border-advent-border bg-white p-6 shadow-xs">
+              <div class="rounded-2xl border border-advent-border bg-white p-6 shadow-sm">
                 <h3 class="text-base font-bold text-advent-text">Comodidades & Acessibilidade</h3>
                 <p class="text-xs text-advent-muted mt-1">
                   Nossa estrutura foi preparada para acolher você e sua família com conforto.
@@ -475,7 +480,7 @@ import {
                     </div>
                     <div>
                       <h4 class="text-xs font-bold text-advent-text">Estacionamento</h4>
-                      <p class="text-[11px] text-advent-muted mt-0.5">
+                      <p class="text-xs text-advent-muted mt-0.5">
                         Vagas gratuitas e seguras no entorno.
                       </p>
                     </div>
@@ -501,7 +506,7 @@ import {
                     </div>
                     <div>
                       <h4 class="text-xs font-bold text-advent-text">Acessibilidade</h4>
-                      <p class="text-[11px] text-advent-muted mt-0.5">
+                      <p class="text-xs text-advent-muted mt-0.5">
                         Rampas de acesso e assentos prioritários.
                       </p>
                     </div>
@@ -527,7 +532,7 @@ import {
                     </div>
                     <div>
                       <h4 class="text-xs font-bold text-advent-text">Espaço Infantil</h4>
-                      <p class="text-[11px] text-advent-muted mt-0.5">
+                      <p class="text-xs text-advent-muted mt-0.5">
                         Classes infantis e berçário acolhedor.
                       </p>
                     </div>
@@ -553,7 +558,7 @@ import {
                     </div>
                     <div>
                       <h4 class="text-xs font-bold text-advent-text">Ambiente Climatizado</h4>
-                      <p class="text-[11px] text-advent-muted mt-0.5">
+                      <p class="text-xs text-advent-muted mt-0.5">
                         Templo e salas com ar-condicionado.
                       </p>
                     </div>
@@ -562,7 +567,7 @@ import {
               </div>
 
               <!-- FAQ Accordion -->
-              <div class="rounded-2xl border border-advent-border bg-white p-6 shadow-xs">
+              <div class="rounded-2xl border border-advent-border bg-white p-6 shadow-sm">
                 <h3 class="text-base font-bold text-advent-text">Dúvidas Frequentes do Visitante</h3>
                 <div class="mt-4 space-y-3">
                   @for (faq of faqs; track faq.question) {
@@ -571,7 +576,7 @@ import {
                     >
                       <button
                         type="button"
-                        class="flex w-full items-center justify-between p-3.5 text-left text-sm font-bold text-advent-text hover:text-advent-blue transition-colors cursor-pointer"
+                        class="flex w-full items-center justify-between p-3.5 text-left text-sm font-bold text-advent-text hover:text-advent-blue transition-colors cursor-pointer min-h-[44px]"
                         (click)="toggleFaq(faq.question)"
                         [attr.aria-expanded]="isExpanded(faq.question)"
                       >
@@ -597,6 +602,7 @@ import {
                         class="grid transition-[grid-template-rows] duration-300 ease-in-out"
                         [class.grid-rows-[1fr]]="isExpanded(faq.question)"
                         [class.grid-rows-[0fr]]="!isExpanded(faq.question)"
+                        [inert]="!isExpanded(faq.question)"
                       >
                         <div class="overflow-hidden">
                           <div

@@ -22,7 +22,7 @@ import { StoryBackground, StoryFormat } from '../../core/models/story.models';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <main id="conteudo" class="min-h-screen bg-slate-50 py-12 md:py-16">
+    <main id="conteudo" class="min-h-dvh bg-slate-50 py-12 md:py-16">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <!-- Header da Página -->
         <header class="text-center max-w-3xl mx-auto space-y-4">
@@ -48,8 +48,10 @@ import { StoryBackground, StoryFormat } from '../../core/models/story.models';
         >
           <div class="flex flex-wrap gap-2 sm:gap-8 justify-center">
             <button
+              id="tab-pgs"
               type="button"
               role="tab"
+              aria-controls="panel-pgs"
               [attr.aria-selected]="activeTab() === 'pgs'"
               (click)="setTab('pgs')"
               class="flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-bold transition-all cursor-pointer min-h-[44px]"
@@ -77,8 +79,10 @@ import { StoryBackground, StoryFormat } from '../../core/models/story.models';
             </button>
 
             <button
+              id="tab-licao"
               type="button"
               role="tab"
+              aria-controls="panel-licao"
               [attr.aria-selected]="activeTab() === 'licao'"
               (click)="setTab('licao')"
               class="flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-bold transition-all cursor-pointer min-h-[44px]"
@@ -106,8 +110,10 @@ import { StoryBackground, StoryFormat } from '../../core/models/story.models';
             </button>
 
             <button
+              id="tab-versiculo"
               type="button"
               role="tab"
+              aria-controls="panel-versiculo"
               [attr.aria-selected]="activeTab() === 'versiculo'"
               (click)="setTab('versiculo')"
               class="flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-bold transition-all cursor-pointer min-h-[44px]"
@@ -138,15 +144,21 @@ import { StoryBackground, StoryFormat } from '../../core/models/story.models';
 
         <!-- Conteúdo das Abas Delegado para Subcomponentes Especializados -->
         @if (activeTab() === 'pgs') {
-          <app-estudos-pgs-tab #pgsTab />
+          <div id="panel-pgs" role="tabpanel" aria-labelledby="tab-pgs">
+            <app-estudos-pgs-tab #pgsTab />
+          </div>
         }
 
         @if (activeTab() === 'licao') {
-          <app-estudos-licao-tab />
+          <div id="panel-licao" role="tabpanel" aria-labelledby="tab-licao">
+            <app-estudos-licao-tab />
+          </div>
         }
 
         @if (activeTab() === 'versiculo') {
-          <app-estudos-versiculo-tab #versiculoTab />
+          <div id="panel-versiculo" role="tabpanel" aria-labelledby="tab-versiculo">
+            <app-estudos-versiculo-tab #versiculoTab />
+          </div>
         }
       </div>
     </main>

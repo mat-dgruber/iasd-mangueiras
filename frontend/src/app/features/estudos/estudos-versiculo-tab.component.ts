@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostListener,
   computed,
   inject,
   signal,
@@ -43,7 +44,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
 
           <!-- 1. SELETOR DE FORMATO (9:16 Story vs 1:1 Feed) -->
           <div
-            class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-3 w-full min-w-0"
+            class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-sm space-y-3 w-full min-w-0"
           >
             <div class="flex items-center justify-between">
               <span
@@ -64,7 +65,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 </svg>
                 Formato da Imagem
               </span>
-              <span class="text-[11px] font-semibold text-advent-muted">
+              <span class="text-xs font-semibold text-advent-muted tabular-nums">
                 {{ selectedFormat() === 'story' ? '9:16 (1080×1920)' : '1:1 (1080×1080)' }}
               </span>
             </div>
@@ -76,7 +77,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 class="flex items-center justify-center gap-2.5 rounded-2xl p-3.5 border transition-all cursor-pointer min-h-[44px]"
                 [class]="
                   selectedFormat() === 'story'
-                    ? 'border-advent-blue bg-blue-50/70 text-advent-blue font-bold shadow-xs ring-2 ring-advent-blue/20'
+                    ? 'border-advent-blue bg-blue-50/70 text-advent-blue font-bold shadow-sm ring-2 ring-advent-blue/20'
                     : 'border-advent-border bg-white text-advent-text hover:bg-slate-50'
                 "
                 aria-label="Selecionar formato Story 9 para 16"
@@ -99,8 +100,8 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                   />
                 </svg>
                 <div class="text-left">
-                  <div class="text-xs font-bold leading-tight">Story (9:16)</div>
-                  <div class="text-[10px] text-advent-muted">Instagram / WhatsApp</div>
+                  <div class="text-xs font-bold leading-tight tabular-nums">Story (9:16)</div>
+                  <div class="text-xs text-advent-muted">Instagram / WhatsApp</div>
                 </div>
               </button>
 
@@ -110,7 +111,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 class="flex items-center justify-center gap-2.5 rounded-2xl p-3.5 border transition-all cursor-pointer min-h-[44px]"
                 [class]="
                   selectedFormat() === 'feed'
-                    ? 'border-advent-blue bg-blue-50/70 text-advent-blue font-bold shadow-xs ring-2 ring-advent-blue/20'
+                    ? 'border-advent-blue bg-blue-50/70 text-advent-blue font-bold shadow-sm ring-2 ring-advent-blue/20'
                     : 'border-advent-border bg-white text-advent-text hover:bg-slate-50'
                 "
                 aria-label="Selecionar formato Feed 1 para 1"
@@ -125,8 +126,8 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                   <rect x="3" y="3" width="18" height="18" rx="2" />
                 </svg>
                 <div class="text-left">
-                  <div class="text-xs font-bold leading-tight">Feed Post (1:1)</div>
-                  <div class="text-[10px] text-advent-muted">Instagram / Facebook</div>
+                  <div class="text-xs font-bold leading-tight tabular-nums">Feed Post (1:1)</div>
+                  <div class="text-xs text-advent-muted">Instagram / Facebook</div>
                 </div>
               </button>
             </div>
@@ -134,7 +135,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
 
           <!-- 2. BUSCA INTELIGENTE POR SENTIMENTO (IA TENSORFLOW/SEMÂNTICA) -->
           <div
-            class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-4 w-full min-w-0"
+            class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0"
           >
             <div class="flex items-center justify-between">
               <span
@@ -156,7 +157,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 Sentimento & Inspiração com IA
               </span>
               <span
-                class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200"
+                class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200"
               >
                 Busca Semântica
               </span>
@@ -173,14 +174,15 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 [value]="aiQuery()"
                 (input)="onAiQueryInput($event)"
                 (keydown.enter)="searchByFeeling()"
+                aria-label="Buscar versículo por sentimento ou necessidade"
                 placeholder="Ex: ansioso com o futuro, precisando de paz, grato por livramento..."
-                class="w-full min-w-0 rounded-xl border border-advent-border bg-slate-50/70 px-3.5 py-2.5 text-xs text-advent-text placeholder:text-advent-muted focus:border-advent-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-advent-blue/20 transition-all min-h-[44px]"
+                class="w-full min-w-0 rounded-xl border border-advent-border bg-slate-50/70 px-3.5 py-2.5 text-base sm:text-xs text-advent-text placeholder:text-advent-muted focus:border-advent-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-advent-blue/20 transition-all min-h-[44px]"
               />
               <button
                 type="button"
                 (click)="searchByFeeling()"
                 [disabled]="isSearchingAi()"
-                class="rounded-xl bg-advent-blue px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-advent-blue-dark active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-1.5 cursor-pointer shrink-0 min-h-[44px]"
+                class="rounded-xl bg-advent-blue px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-1.5 cursor-pointer shrink-0 min-h-[44px]"
               >
                 @if (isSearchingAi()) {
                   <svg
@@ -224,12 +226,12 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
 
             <!-- Chips de sentimentos rápidos -->
             <div class="flex flex-wrap items-center gap-1.5 pt-1">
-              <span class="text-[11px] text-advent-muted py-1">Sentimentos:</span>
+              <span class="text-xs text-advent-muted py-1">Sentimentos:</span>
               @for (mood of quickMoodChips; track mood) {
                 <button
                   type="button"
                   (click)="searchByFeeling(mood)"
-                  class="rounded-full bg-slate-100 px-3.5 py-1.5 text-xs font-semibold text-advent-text hover:bg-advent-blue/10 hover:text-advent-blue transition-colors cursor-pointer min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center"
+                  class="rounded-full bg-slate-100 px-3.5 py-1.5 text-xs font-semibold text-advent-text hover:bg-advent-blue/10 hover:text-advent-blue transition-colors cursor-pointer min-h-[44px] inline-flex items-center justify-center"
                 >
                   {{ mood }}
                 </button>
@@ -239,7 +241,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
             <!-- Resultados da busca semântica -->
             @if (aiMatches().length > 0) {
               <div class="pt-2 space-y-2 border-t border-slate-100 animate-fadeIn">
-                <span class="text-[11px] font-bold text-advent-blue uppercase tracking-wider">
+                <span class="text-xs font-bold text-advent-blue uppercase tracking-wider">
                   Recomendações da IA para seu coração:
                 </span>
                 <div class="grid gap-2">
@@ -250,7 +252,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                       class="w-full text-left rounded-2xl p-3 text-xs transition-all flex items-center justify-between border cursor-pointer min-w-0 min-h-[44px]"
                       [class]="
                         currentVerse().id === match.verse.id
-                          ? 'border-advent-blue bg-blue-50/80 text-advent-text font-bold shadow-xs'
+                          ? 'border-advent-blue bg-blue-50/80 text-advent-text font-bold shadow-sm'
                           : 'border-advent-border/60 bg-white text-advent-muted hover:border-advent-blue/50 hover:bg-slate-50'
                       "
                     >
@@ -260,19 +262,19 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                             match.verse.referencia
                           }}</strong>
                           <span
-                            class="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-[10px] font-bold"
+                            class="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-xs font-bold tabular-nums"
                           >
                             {{ match.matchPercentage }}% Afinidade
                           </span>
                         </div>
                         <span
-                          class="text-[11px] font-normal text-advent-muted truncate block mt-0.5"
+                          class="text-xs font-normal text-advent-muted truncate block mt-0.5"
                         >
                           “{{ match.verse.texto }}”
                         </span>
                       </div>
                       <span
-                        class="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-advent-muted ml-2"
+                        class="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-advent-muted ml-2"
                       >
                         {{ match.verse.tema }}
                       </span>
@@ -285,7 +287,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
 
           <!-- 3. ESTÚDIO DE FUNDOS (FOTOS REAIS, GRADIENTES & FOTO DO USUÁRIO) -->
           <div
-            class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-4 w-full min-w-0"
+            class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0"
           >
             <div class="flex items-center justify-between">
               <span
@@ -306,37 +308,43 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 </svg>
                 Estúdio de Fundos & Cores
               </span>
-              <span class="text-[11px] font-bold text-advent-muted">
+              <span class="text-xs font-bold text-advent-muted">
                 {{ selectedBackground().nome }}
               </span>
             </div>
 
             <!-- Abas do Estúdio de Fundos -->
-            <div class="flex border-b border-slate-200">
+            <div class="flex border-b border-slate-200" role="tablist" aria-label="Tipos de fundo do Story">
               <button
                 type="button"
+                role="tab"
+                [attr.aria-selected]="activeBackgroundTab() === 'photo'"
                 (click)="setBackgroundTab('photo')"
-                class="pb-2.5 px-3 text-xs font-bold transition-all border-b-2 cursor-pointer min-h-[44px]"
+                class="pb-2.5 px-3 text-xs font-bold transition-all border-b-2 cursor-pointer min-h-[44px] tabular-nums"
                 [class.border-advent-blue]="activeBackgroundTab() === 'photo'"
                 [class.text-advent-blue]="activeBackgroundTab() === 'photo'"
                 [class.border-transparent]="activeBackgroundTab() !== 'photo'"
                 [class.text-advent-muted]="activeBackgroundTab() !== 'photo'"
               >
-                🏞️ Fotos Reais (6)
+                <span aria-hidden="true">🏞️</span> Fotos Reais (6)
               </button>
               <button
                 type="button"
+                role="tab"
+                [attr.aria-selected]="activeBackgroundTab() === 'gradient'"
                 (click)="setBackgroundTab('gradient')"
-                class="pb-2.5 px-3 text-xs font-bold transition-all border-b-2 cursor-pointer min-h-[44px]"
+                class="pb-2.5 px-3 text-xs font-bold transition-all border-b-2 cursor-pointer min-h-[44px] tabular-nums"
                 [class.border-advent-blue]="activeBackgroundTab() === 'gradient'"
                 [class.text-advent-blue]="activeBackgroundTab() === 'gradient'"
                 [class.border-transparent]="activeBackgroundTab() !== 'gradient'"
                 [class.text-advent-muted]="activeBackgroundTab() !== 'gradient'"
               >
-                🎨 Gradientes Nobres (4)
+                <span aria-hidden="true">🎨</span> Gradientes Nobres (4)
               </button>
               <button
                 type="button"
+                role="tab"
+                [attr.aria-selected]="activeBackgroundTab() === 'custom'"
                 (click)="setBackgroundTab('custom')"
                 class="pb-2.5 px-3 text-xs font-bold transition-all border-b-2 cursor-pointer min-h-[44px]"
                 [class.border-advent-blue]="activeBackgroundTab() === 'custom'"
@@ -344,13 +352,13 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 [class.border-transparent]="activeBackgroundTab() !== 'custom'"
                 [class.text-advent-muted]="activeBackgroundTab() !== 'custom'"
               >
-                📷 Usar Minha Foto
+                <span aria-hidden="true">📷</span> Usar Minha Foto
               </button>
             </div>
 
             <!-- Galeria: Fotos Reais -->
             @if (activeBackgroundTab() === 'photo') {
-              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 w-full min-w-0">
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 w-full min-w-0" role="tabpanel">
                 @for (preset of photoPresets; track preset.id) {
                   <button
                     type="button"
@@ -371,7 +379,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                     <div
                       class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-2"
                     >
-                      <span class="text-[11px] font-bold text-white leading-tight truncate">
+                      <span class="text-xs font-bold text-white leading-tight truncate">
                         {{ preset.nome }}
                       </span>
                     </div>
@@ -401,7 +409,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
 
             <!-- Galeria: Gradientes Nobres -->
             @if (activeBackgroundTab() === 'gradient') {
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full min-w-0">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full min-w-0" role="tabpanel">
                 @for (preset of gradientPresets; track preset.id) {
                   <button
                     type="button"
@@ -409,7 +417,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                     class="flex flex-col items-center gap-2 rounded-2xl p-3 border transition-all cursor-pointer text-center min-w-0 min-h-[44px] focus-visible:ring-2 focus-visible:ring-advent-blue"
                     [class]="
                       selectedBackground().id === preset.id
-                        ? 'border-advent-blue ring-2 ring-advent-blue/20 bg-blue-50/40 shadow-xs'
+                        ? 'border-advent-blue ring-2 ring-advent-blue/20 bg-blue-50/40 shadow-sm'
                         : 'border-advent-border bg-white hover:border-slate-300'
                     "
                   >
@@ -417,7 +425,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                       class="h-10 w-full rounded-xl shadow-inner border border-white/20"
                       [style.background]="preset.bgGradientCss"
                     ></div>
-                    <span class="text-[11px] font-bold text-advent-text truncate w-full">{{
+                    <span class="text-xs font-bold text-advent-text truncate w-full">{{
                       preset.nome
                     }}</span>
                   </button>
@@ -427,7 +435,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
 
             <!-- Galeria: Minha Foto (Upload Customizado) -->
             @if (activeBackgroundTab() === 'custom') {
-              <div class="space-y-3">
+              <div class="space-y-3" role="tabpanel">
                 <input
                   #customFileInput
                   type="file"
@@ -443,13 +451,13 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                     <img
                       [src]="customImagePreview()"
                       alt="Prévia da foto personalizada"
-                      class="h-16 w-16 rounded-xl object-cover border border-slate-300 shadow-xs"
+                      class="h-16 w-16 rounded-xl object-cover border border-slate-300 shadow-sm"
                     />
                     <div class="flex-1 min-w-0">
                       <div class="text-xs font-bold text-advent-text">
                         Sua Foto Personalizada
                       </div>
-                      <div class="text-[11px] text-advent-muted">
+                      <div class="text-xs text-advent-muted">
                         Carregada e pronta para o story
                       </div>
                       <div class="flex gap-2 mt-2">
@@ -493,7 +501,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                     <span class="text-xs font-bold text-advent-blue"
                       >Carregar Foto do Celular / Computador</span
                     >
-                    <span class="text-[11px] text-advent-muted mt-0.5"
+                    <span class="text-xs text-advent-muted mt-0.5"
                       >JPG, PNG ou WebP em alta resolução</span
                     >
                   </button>
@@ -504,10 +512,10 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
             <!-- Slider de Escurecimento / Dimming -->
             <div class="pt-2 space-y-2 border-t border-slate-100">
               <div class="flex items-center justify-between">
-                <label for="dimming-range" class="text-xs font-bold text-advent-text">
+                <label for="dimming-range" class="text-xs font-bold text-advent-text tabular-nums">
                   Escurecimento do Fundo: {{ overlayOpacityPercent() }}%
                 </label>
-                <span class="text-[10px] font-semibold text-advent-muted">
+                <span class="text-xs font-semibold text-advent-muted">
                   {{
                     overlayOpacityPercent() < 50 ? 'Mais claro' : 'Alto contraste (WCAG AAA)'
                   }}
@@ -520,7 +528,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 max="85"
                 [value]="overlayOpacityPercent()"
                 (input)="onOpacityChange($event)"
-                class="w-full h-2.5 rounded-lg appearance-none cursor-pointer accent-[#003767] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-advent-blue transition-all"
+                class="w-full h-2.5 rounded-lg appearance-none cursor-pointer accent-[#003767] focus:outline-none focus-visible:ring-2 focus-visible:ring-advent-blue transition-all"
                 [style.background]="
                   'linear-gradient(to right, #003767 0%, #003767 ' +
                   dimmingSliderFillPercent() +
@@ -530,12 +538,12 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 "
                 aria-label="Controle de opacidade do escurecimento do fundo"
               />
-              <div class="flex items-center justify-between text-[10px] font-medium text-advent-muted px-0.5">
+              <div class="flex items-center justify-between text-xs font-medium text-advent-muted px-0.5 tabular-nums">
                 <span>35% (Sutil)</span>
                 <span>60% (Recomendado)</span>
                 <span>85% (Forte)</span>
               </div>
-              <p class="text-[10px] text-advent-muted">
+              <p class="text-xs text-advent-muted">
                 Ajuste o contraste escuro sobre a foto para garantir máxima legibilidade do texto
                 sagrado.
               </p>
@@ -544,7 +552,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
 
           <!-- 4. BUSCA BÍBLICA NA API & PROMESSAS POR CATEGORIA -->
           <div
-            class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-4 w-full min-w-0"
+            class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-sm space-y-4 w-full min-w-0"
           >
             <div class="flex items-center justify-between gap-2">
               <span
@@ -565,7 +573,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 </svg>
                 Buscar Passagem na Bíblia
               </span>
-              <span class="text-[11px] font-semibold text-advent-muted shrink-0"
+              <span class="text-xs font-semibold text-advent-muted shrink-0"
                 >Tradução Almeida</span
               >
             </div>
@@ -576,14 +584,15 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 [value]="bibleQuery()"
                 (input)="onBibleQueryInput($event)"
                 (keydown.enter)="searchBiblePassage()"
+                aria-label="Buscar passagem bíblica por referência"
                 placeholder="Ex: João 14:1-3, Salmos 91, Romanos 8:28, Isaías 40:31..."
-                class="w-full min-w-0 rounded-xl border border-advent-border bg-slate-50/70 px-3.5 py-2.5 text-xs text-advent-text placeholder:text-advent-muted focus:border-advent-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-advent-blue/20 transition-all min-h-[44px]"
+                class="w-full min-w-0 rounded-xl border border-advent-border bg-slate-50/70 px-3.5 py-2.5 text-base sm:text-xs text-advent-text placeholder:text-advent-muted focus:border-advent-blue focus:bg-white focus:outline-none focus:ring-2 focus:ring-advent-blue/20 transition-all min-h-[44px]"
               />
               <button
                 type="button"
                 (click)="searchBiblePassage()"
                 [disabled]="isSearchingBible()"
-                class="rounded-xl bg-advent-blue px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-advent-blue-dark active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-1.5 cursor-pointer shrink-0 min-h-[44px]"
+                class="rounded-xl bg-advent-blue px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-advent-blue-dark active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-1.5 cursor-pointer shrink-0 min-h-[44px]"
               >
                 @if (isSearchingBible()) {
                   <svg
@@ -627,7 +636,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 type="button"
                 (click)="drawRandomOnlineVerse()"
                 [disabled]="isSearchingBible()"
-                class="rounded-xl border border-blue-200 bg-blue-50/80 px-4 py-2.5 text-xs font-bold text-advent-blue shadow-xs hover:bg-blue-100 hover:border-blue-300 active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-1.5 cursor-pointer shrink-0 min-h-[44px]"
+                class="rounded-xl border border-blue-200 bg-blue-50/80 px-4 py-2.5 text-xs font-bold text-advent-blue shadow-sm hover:bg-blue-100 hover:border-blue-300 active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-1.5 cursor-pointer shrink-0 min-h-[44px]"
                 title="Sortear uma passagem bíblica online aleatória"
               >
                 <svg
@@ -643,18 +652,18 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                     d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3"
                   />
                 </svg>
-                <span>🎲 Sortear</span>
+                <span><span aria-hidden="true">🎲</span> Sortear</span>
               </button>
             </div>
 
             <!-- Sugestões Rápidas de Passagens Bíblicas -->
             <div class="flex flex-wrap items-center gap-1.5 pt-1">
-              <span class="text-[11px] text-advent-muted">Sugestões rápidas:</span>
+              <span class="text-xs text-advent-muted">Sugestões rápidas:</span>
               @for (sug of quickSuggestions; track sug) {
                 <button
                   type="button"
                   (click)="quickSearchPassage(sug)"
-                  class="rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-advent-text hover:bg-advent-blue/10 hover:text-advent-blue transition-colors cursor-pointer min-h-[32px]"
+                  class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-advent-text hover:bg-advent-blue/10 hover:text-advent-blue transition-colors cursor-pointer min-h-[44px]"
                 >
                   {{ sug }}
                 </button>
@@ -681,7 +690,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                   class="inline-flex items-center gap-1 text-xs font-bold text-advent-blue hover:underline cursor-pointer min-h-[44px]"
                 >
                   <span>Sortear Promessa</span>
-                  <span>↻</span>
+                  <span aria-hidden="true">↻</span>
                 </button>
               </div>
 
@@ -689,74 +698,74 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 <button
                   type="button"
                   (click)="selectedCategory.set('todas')"
-                  class="rounded-full px-3 py-1 text-xs font-bold transition-all cursor-pointer min-h-[36px]"
+                  class="rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer min-h-[44px]"
                   [class]="
                     selectedCategory() === 'todas'
-                      ? 'bg-advent-blue text-white shadow-xs'
+                      ? 'bg-advent-blue text-white shadow-sm'
                       : 'bg-slate-100 text-advent-text hover:bg-slate-200'
                   "
                 >
-                  ✨ Todas
+                  <span aria-hidden="true">✨</span> Todas
                 </button>
                 <button
                   type="button"
                   (click)="selectedCategory.set('paz')"
-                  class="rounded-full px-3 py-1 text-xs font-bold transition-all cursor-pointer min-h-[36px]"
+                  class="rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer min-h-[44px]"
                   [class]="
                     selectedCategory() === 'paz'
-                      ? 'bg-blue-600 text-white shadow-xs'
+                      ? 'bg-blue-600 text-white shadow-sm'
                       : 'bg-slate-100 text-advent-text hover:bg-slate-200'
                   "
                 >
-                  🕊️ Paz & Conforto
+                  <span aria-hidden="true">🕊️</span> Paz & Conforto
                 </button>
                 <button
                   type="button"
                   (click)="selectedCategory.set('esperanca')"
-                  class="rounded-full px-3 py-1 text-xs font-bold transition-all cursor-pointer min-h-[36px]"
+                  class="rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer min-h-[44px]"
                   [class]="
                     selectedCategory() === 'esperanca'
-                      ? 'bg-amber-600 text-white shadow-xs'
+                      ? 'bg-amber-600 text-white shadow-sm'
                       : 'bg-slate-100 text-advent-text hover:bg-slate-200'
                   "
                 >
-                  🌅 Esperança
+                  <span aria-hidden="true">🌅</span> Esperança
                 </button>
                 <button
                   type="button"
                   (click)="selectedCategory.set('oracao')"
-                  class="rounded-full px-3 py-1 text-xs font-bold transition-all cursor-pointer min-h-[36px]"
+                  class="rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer min-h-[44px]"
                   [class]="
                     selectedCategory() === 'oracao'
-                      ? 'bg-purple-600 text-white shadow-xs'
+                      ? 'bg-purple-600 text-white shadow-sm'
                       : 'bg-slate-100 text-advent-text hover:bg-slate-200'
                   "
                 >
-                  🙏 Oração
+                  <span aria-hidden="true">🙏</span> Oração
                 </button>
                 <button
                   type="button"
                   (click)="selectedCategory.set('coragem')"
-                  class="rounded-full px-3 py-1 text-xs font-bold transition-all cursor-pointer min-h-[36px]"
+                  class="rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer min-h-[44px]"
                   [class]="
                     selectedCategory() === 'coragem'
-                      ? 'bg-emerald-600 text-white shadow-xs'
+                      ? 'bg-emerald-600 text-white shadow-sm'
                       : 'bg-slate-100 text-advent-text hover:bg-slate-200'
                   "
                 >
-                  🛡️ Coragem
+                  <span aria-hidden="true">🛡️</span> Coragem
                 </button>
                 <button
                   type="button"
                   (click)="selectedCategory.set('amor')"
-                  class="rounded-full px-3 py-1 text-xs font-bold transition-all cursor-pointer min-h-[36px]"
+                  class="rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer min-h-[44px]"
                   [class]="
                     selectedCategory() === 'amor'
-                      ? 'bg-rose-600 text-white shadow-xs'
+                      ? 'bg-rose-600 text-white shadow-sm'
                       : 'bg-slate-100 text-advent-text hover:bg-slate-200'
                   "
                 >
-                  ❤️ Amor
+                  <span aria-hidden="true">❤️</span> Amor
                 </button>
               </div>
 
@@ -769,7 +778,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                     class="w-full text-left rounded-2xl p-3 text-xs transition-all flex items-center justify-between border cursor-pointer min-w-0 min-h-[44px]"
                     [class]="
                       currentVerse().id === v.id
-                        ? 'border-advent-blue bg-blue-50/70 text-advent-text font-bold shadow-xs'
+                        ? 'border-advent-blue bg-blue-50/70 text-advent-text font-bold shadow-sm'
                         : 'border-advent-border/60 bg-white text-advent-muted hover:border-advent-blue/50 hover:bg-slate-50'
                     "
                   >
@@ -777,12 +786,12 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                       <strong class="text-advent-text block truncate">{{
                         v.referencia
                       }}</strong>
-                      <span class="text-[11px] font-normal text-advent-muted truncate block"
+                      <span class="text-xs font-normal text-advent-muted truncate block"
                         >“{{ v.texto }}”</span
                       >
                     </div>
                     <span
-                      class="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-advent-muted ml-2"
+                      class="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-advent-muted ml-2"
                     >
                       {{ v.tema }}
                     </span>
@@ -794,7 +803,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
 
           <!-- 5. AÇÕES RÁPIDAS DE COMPARTILHAMENTO DE TEXTO -->
           <div
-            class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-xs space-y-3 w-full min-w-0"
+            class="rounded-3xl border border-advent-border bg-white p-5 sm:p-6 shadow-sm space-y-3 w-full min-w-0"
           >
             <span class="text-xs font-bold uppercase tracking-wider text-advent-blue block">
               Citação & Compartilhamento Direto:
@@ -826,7 +835,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 [href]="getWhatsAppShareLink()"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center justify-center gap-2 rounded-xl bg-green-700 px-3.5 py-3 text-xs font-bold text-white shadow-xs hover:bg-green-800 transition-colors text-center min-h-[44px]"
+                class="inline-flex items-center justify-center gap-2 rounded-xl bg-green-700 px-3.5 py-3 text-xs font-bold text-white shadow-sm hover:bg-green-800 transition-colors text-center min-h-[44px]"
               >
                 <svg class="h-4 w-4 fill-current shrink-0" viewBox="0 0 24 24">
                   <path
@@ -848,7 +857,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
               <span class="text-xs font-bold uppercase tracking-wider text-advent-blue">
                 Pré-Visualização em Tempo Real:
               </span>
-              <span class="text-[11px] font-semibold text-advent-muted">
+              <span class="text-xs font-semibold text-advent-muted tabular-nums">
                 {{
                   selectedFormat() === 'story' ? 'Formato 9:16 (Story)' : 'Formato 1:1 (Feed)'
                 }}
@@ -921,13 +930,13 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 <!-- Cabeçalho do Story / Card -->
                 <div class="pt-4 text-center space-y-1 relative z-10">
                   <span
-                    class="text-[10px] font-extrabold uppercase tracking-widest block transition-colors"
+                    class="text-xs font-extrabold uppercase tracking-widest block transition-colors"
                     [style.color]="selectedBackground().accentColor"
                   >
                     IASD MANGUEIRAS • TATUÍ
                   </span>
                   <span
-                    class="text-[11px] font-bold text-white/90 uppercase tracking-wider block"
+                    class="text-xs font-bold text-white/90 uppercase tracking-wider block"
                   >
                     Versículo do Dia
                   </span>
@@ -977,7 +986,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
 
                 <!-- Rodapé Institucional -->
                 <div class="pb-1 text-center space-y-0.5 relative z-10">
-                  <span class="text-[9px] font-medium tracking-wider text-white/75 block">
+                  <span class="text-xs font-medium tracking-wider text-white/75 block">
                     iasdmangueiras.org.br
                   </span>
                 </div>
@@ -1034,7 +1043,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 type="button"
                 (click)="shareStoryGraphic()"
                 [disabled]="isSharing()"
-                class="w-full rounded-xl bg-slate-900 px-4 py-3 text-xs font-bold text-white shadow-xs hover:bg-slate-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 min-h-[44px]"
+                class="w-full rounded-xl bg-slate-900 px-4 py-3 text-xs font-bold text-white shadow-sm hover:bg-slate-800 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 min-h-[44px]"
               >
                 @if (isSharing()) {
                   <svg
@@ -1079,20 +1088,20 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
                 type="button"
                 (click)="generateAndDownloadStory(true)"
                 [disabled]="isDownloading()"
-                class="w-full rounded-xl border border-advent-border bg-white px-3 py-2 text-[11px] font-bold text-advent-text hover:bg-slate-50 transition-all text-center cursor-pointer min-h-[44px]"
+                class="w-full rounded-xl border border-advent-border bg-white px-3 py-2 text-xs font-bold text-advent-text hover:bg-slate-50 transition-all text-center cursor-pointer min-h-[44px]"
               >
-                🔍 Pré-visualizar Imagem em Tela Cheia
+                <span aria-hidden="true">🔍</span> Pré-visualizar Imagem em Tela Cheia
               </button>
 
               @if (downloadSuccess()) {
                 <div
                   class="rounded-xl bg-emerald-50 border border-emerald-200 p-2.5 text-center text-xs font-bold text-emerald-700 animate-fadeIn"
                 >
-                  ✓ {{ downloadSuccess() }}
+                  <span aria-hidden="true">✓</span> {{ downloadSuccess() }}
                 </div>
               }
 
-              <p class="text-[11px] text-center text-advent-muted">
+              <p class="text-xs text-center text-advent-muted tabular-nums">
                 Renderização direta no navegador em resolução 1080p ({{
                   selectedFormat() === 'story' ? '1080×1920' : '1080×1080'
                 }}).
@@ -1106,7 +1115,7 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
     <!-- Modal de Preview da Imagem Gerada em Alta Resolução -->
     @if (generatedPreviewUrl()) {
       <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fadeIn p-4"
+        class="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fadeIn p-4"
         (click)="closePreviewModal()"
         role="dialog"
         aria-modal="true"
@@ -1125,14 +1134,14 @@ import { STORY_BACKGROUND_PRESETS } from '../../core/constants/story-presets';
             <button
               type="button"
               (click)="closePreviewModal()"
-              class="rounded-2xl border border-white/30 bg-white/10 px-6 py-3 text-sm font-bold text-white backdrop-blur-sm hover:bg-white/20 transition-all cursor-pointer"
+              class="rounded-2xl border border-white/30 bg-white/10 px-6 py-3 text-sm font-bold text-white backdrop-blur-sm hover:bg-white/20 transition-all cursor-pointer min-h-[44px]"
             >
               Fechar
             </button>
             <button
               type="button"
               (click)="downloadGeneratedStory()"
-              class="rounded-2xl bg-advent-blue px-6 py-3 text-sm font-black text-white shadow-lg hover:bg-advent-blue-dark active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
+              class="rounded-2xl bg-advent-blue px-6 py-3 text-sm font-black text-white shadow-lg hover:bg-advent-blue-dark active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer min-h-[44px]"
             >
               <svg
                 class="h-4 w-4"
@@ -1414,6 +1423,13 @@ export class EstudosVersiculoTabComponent {
       `*Versículo do Dia:*\n"${v.texto}"\n— _${v.referencia}_\n\nIgreja Adventista do Sétimo Dia das Mangueiras (Tatuí-SP)\nhttps://iasdmangueiras.org.br`,
     );
     return `https://api.whatsapp.com/send?text=${text}`;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.generatedPreviewUrl()) {
+      this.closePreviewModal();
+    }
   }
 
   closePreviewModal(): void {
